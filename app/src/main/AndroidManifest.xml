@@ -25,6 +25,9 @@
         <activity
             android:name=".menu.main.MainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".menu.registration.RegistrationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
