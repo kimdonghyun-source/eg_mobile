@@ -28,49 +28,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/popup_text_wh"/>
-        <LinearLayout
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:orientation="horizontal"
-            android:background="@drawable/popup_inputbox2">
-            <TextView
-                android:id="@+id/tv_warehouse"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:layout_gravity="center|left"
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
-            <ImageButton
-                android:id="@+id/bt_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:padding="2dp"
-                android:src="@drawable/popup_bt_dropdown"
-                android:background="@android:color/transparent"/>
-        </LinearLayout>
+            android:fadingEdge = "none"
+            android:layout_gravity="right|center"
+            android:background="@color/white"/>
         <ImageButton
             android:id="@id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/popup_bt_search"
             android:background="@color/trans"/>
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="@drawable/popup_grid"/>
     <ListView
         android:id="@+id/list"

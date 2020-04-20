@@ -96,30 +96,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/menu_inhouse_warehouse"/>
-        <LinearLayout
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:orientation="horizontal"
-            android:background="@drawable/menu_inhouse_select">
-            <TextView
-                android:id="@+id/tv_warehouse"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:layout_gravity="center|left"
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
-            <ImageButton
-                android:id="@+id/bt_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:padding="5dp"
-                android:src="@drawable/menu_inhouse_bt_dropdown"
-                android:background="@android:color/transparent"/>
-        </LinearLayout>
+            android:fadingEdge = "none"
+            android:layout_gravity="right|center"
+            android:background="@color/white"/>
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
