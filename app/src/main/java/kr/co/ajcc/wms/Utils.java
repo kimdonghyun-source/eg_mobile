@@ -1,11 +1,12 @@
-package kr.co.ajcc.wms.menu.common;
+package kr.co.ajcc.wms;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import kr.co.ajcc.wms.BuildConfig;
+import java.text.DecimalFormat;
 
-public class Util {
+public class Utils {
+
     public static void Log(String msg){
         if(BuildConfig.DEBUG)
             android.util.Log.d("WMS", msg);
@@ -29,5 +30,10 @@ public class Util {
 
     public static void Toast(Context context, String msg){
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static String setComma(double number){
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        return formatter.format(number);
     }
 }

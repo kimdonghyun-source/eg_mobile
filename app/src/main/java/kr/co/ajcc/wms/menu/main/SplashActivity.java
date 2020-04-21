@@ -29,7 +29,9 @@ public class SplashActivity extends BaseCompatActivity {
             @Override
             public void run() {
                 // TODO
-                startActivity(new Intent(mContext, LoginActivity.class));
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         }, 1000);
     }

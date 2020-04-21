@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.menu.common.Util;
+import kr.co.ajcc.wms.Utils;
 import kr.co.ajcc.wms.menu.spinner.SpinnerAdapter;
 import kr.co.ajcc.wms.menu.spinner.SpinnerPopupAdapter;
 
@@ -109,7 +109,7 @@ public class LocationListPopup {
         dialog.findViewById(R.id.bt_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.Toast(mActivity, "검색");
+                Utils.Toast(mActivity, "검색");
             }
         });
 
@@ -134,7 +134,7 @@ public class LocationListPopup {
             mSpinnerSelect = position;
 
             String item = (String) mSpinner.getSelectedItem();
-            Util.Toast(mActivity, item+" 선택");
+            Utils.Toast(mActivity, item+" 선택");
         }
 
         @Override
