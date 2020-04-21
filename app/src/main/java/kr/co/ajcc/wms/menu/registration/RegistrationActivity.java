@@ -7,17 +7,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.menu.common.Util;
+import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.custom.MergeAdapter;
 import kr.co.ajcc.wms.menu.custom.BaseCompatActivity;
 import kr.co.ajcc.wms.menu.popup.LocationListPopup;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
 import kr.co.ajcc.wms.menu.spinner.SpinnerAdapter;
+import kr.co.ajcc.wms.model.RegistrationModel;
 
 /**
  * 입고등록
@@ -31,6 +36,14 @@ public class RegistrationActivity extends BaseCompatActivity {
 
     Spinner mSpinner;
     int mSpinnerSelect = 0;
+
+    MergeAdapter mMergeAdapter;
+
+    EditText et_location;
+
+    ListView mListView;
+    //리스트가 없을때 보여지는 text
+    TextView tv_empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,12 @@ public class RegistrationActivity extends BaseCompatActivity {
         mSpinner.setAdapter(spinnerAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
         mSpinner.setSelection(mSpinnerSelect);
+
+        et_location = findViewById(R.id.et_location);
+
+        tv_empty = findViewById(R.id.tv_empty);
+        mListView = findViewById(R.id.listview);
+        mMergeAdapter = new MergeAdapter();
     }
 
     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener(){
@@ -71,14 +90,13 @@ public class RegistrationActivity extends BaseCompatActivity {
             mSpinnerSelect = position;
 
             String item = (String) mSpinner.getSelectedItem();
-            Util.Toast(mContext, item+" 선택");
+            Utils.Toast(mContext, item+" 선택");
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
 
         }
-
     };
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -105,8 +123,26 @@ public class RegistrationActivity extends BaseCompatActivity {
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
                                 String result = (String)msg.obj;
-                                Util.Toast(mContext, result);
+                                et_location.setText(result);
                                 mLocationListPopup.hideDialog();
+
+                                for(int i = 0; i < 3; i++) {
+                                    RegistrationModel model = new RegistrationModel();
+                                    model.setProduct("품명 "+(i+1));
+                                    model.setStandard("규격 "+(i+1));
+                                    model.setCount(1000-(i*100));
+
+                                    RegistrationView view = new RegistrationView(RegistrationActivity.this);
+                                    view.setData(model);
+
+                                    mMergeAdapter.addView(view);
+                                }
+
+                                mListView.setAdapter(mMergeAdapter);
+                                mMergeAdapter.notifyDataSetChanged();
+
+                                tv_empty.setVisibility(View.GONE);
+                                mListView.setVisibility(View.VISIBLE);
                             }
                         }
                     });
@@ -117,7 +153,7 @@ public class RegistrationActivity extends BaseCompatActivity {
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
                                 String result = (String)msg.obj;
-                                Util.Toast(mContext, result);
+                                Utils.Toast(mContext, result);
                                 mOneBtnPopup.hideDialog();
                             }
                         }
