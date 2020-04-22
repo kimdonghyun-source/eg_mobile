@@ -7,6 +7,7 @@ import android.view.View;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.menu.custom.BaseCompatActivity;
+import kr.co.ajcc.wms.menu.location.Location;
 import kr.co.ajcc.wms.menu.print.ConfigActivity;
 import kr.co.ajcc.wms.menu.registration.RegistrationActivity;
 
@@ -41,6 +42,8 @@ public class MainActivity extends BaseCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.bt_menu_2:
+                    intent = new Intent(mContext, Location.class);
+                    startActivity(intent);
                     break;
                 case R.id.bt_menu_3:
                     break;

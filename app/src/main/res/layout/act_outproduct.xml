@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/menu_setting_title" />
+            android:background="@drawable/menu_outproduct_title" />
 
         <ImageButton
             android:id="@+id/btn_back"
@@ -49,53 +49,93 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="8dp"
-            android:src="@drawable/menu_setting_text_print" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/menu_outproduct_outno" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true">
 
-        </EditText>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.03"
+        android:orientation="vertical">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/print_grid" />
-    </LinearLayout>
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/menu_inhouse_search"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_location"
+                style="@style/EditTextLocation" />
+
+            <ImageButton
+                android:id="@+id/bt_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/menu_inhouse_bt_search" />
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="12dp"
-            android:src="@drawable/menu_setting_guidetext">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/menu_outproduct_custname" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/menu_outproduct_carinfo" />
 
-        </ImageView>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/print_grid" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:gravity="top|left"
+            android:textColor="@color/color_a3a3a3"
+            android:textSize="18dp" />
 
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
 
     </LinearLayout>
@@ -111,17 +151,17 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/print_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/print_grid" />
-
 
         <ImageButton
             android:id="@+id/btn_printAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:src="@drawable/menu_setting_bt_setting" />
+            android:src="@drawable/menu_outproduct_bt_outproduct" />
 
         <ImageView
             android:layout_width="match_parent"
