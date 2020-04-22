@@ -1,4 +1,4 @@
-package kr.co.ajcc.wms.menu.spinner;
+package kr.co.ajcc.wms.spinner;
 
 import android.content.Context;
 import android.view.LayoutInflater;

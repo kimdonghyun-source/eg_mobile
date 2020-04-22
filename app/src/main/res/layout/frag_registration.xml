@@ -6,35 +6,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="3dp"
-        android:background="@drawable/titilbar">
-        <ImageButton
-            android:id="@+id/bt_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:layout_marginLeft="6dp"
-            android:padding="5dp"
-            android:src="@drawable/bt_menu"
-            android:background="@android:color/transparent"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/menu_inhouse_title"/>
-        <ImageButton
-            android:id="@+id/bt_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:layout_marginRight="6dp"
-            android:padding="5dp"
-            android:src="@drawable/bt_back"
-            android:background="@android:color/transparent"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:paddingTop="5dp"
         android:paddingLeft="15dp">
         <ImageView

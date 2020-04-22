@@ -2,7 +2,6 @@ package kr.co.ajcc.wms.menu.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -15,9 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,8 +24,7 @@ import java.util.List;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.Utils;
-import kr.co.ajcc.wms.menu.spinner.SpinnerAdapter;
-import kr.co.ajcc.wms.menu.spinner.SpinnerPopupAdapter;
+import kr.co.ajcc.wms.spinner.SpinnerPopupAdapter;
 
 public class LocationListPopup {
     Activity mActivity;

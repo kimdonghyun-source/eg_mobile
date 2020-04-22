@@ -26,10 +26,7 @@
             android:name=".menu.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".menu.registration.RegistrationActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".menu.location.Location"
+            android:name=".menu.main.BaseActivity"
             android:screenOrientation="portrait" />
     </application>
 

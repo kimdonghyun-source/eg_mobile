@@ -1,6 +1,10 @@
 package kr.co.ajcc.wms;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
@@ -35,5 +39,46 @@ public class Utils {
     public static String setComma(double number){
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         return formatter.format(number);
+    }
+
+    public static int stringToInt(String number) {
+        int num = 0;
+        try {
+            num = Integer.parseInt(number);
+        } catch (Exception e) {
+            num = 0;
+        }
+        return num;
+    }
+
+    public static String appVersionName(Context context) {
+        String version = "0";
+        try {
+            PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            version = i.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        return version;
+    }
+
+    //버전에 따른 getColor를 return
+    public static int getColor(Context context, int id) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
+        }
+    }
+
+    public static int getDpToPixel(Context context, float DP) {
+        float px = 0;
+        try {
+            px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DP, context.getResources().getDisplayMetrics());
+        } catch (Exception e) {
+            Utils.LogLine(e.getMessage());
+        }
+        return (int) px;
     }
 }

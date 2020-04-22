@@ -8,10 +8,10 @@ import android.os.Looper;
 import android.widget.ImageView;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.menu.custom.BaseCompatActivity;
+import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.menu.login.LoginActivity;
 
-public class SplashActivity extends BaseCompatActivity {
+public class SplashActivity extends CommonCompatActivity {
     Context mContext;
 
     @Override

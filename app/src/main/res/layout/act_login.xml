@@ -33,7 +33,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
                         android:textSize="15dp"
-                        android:text="Ver. 1.0.0"
                         android:textColor="@color/red"/>
                     <LinearLayout
                         android:layout_width="match_parent"

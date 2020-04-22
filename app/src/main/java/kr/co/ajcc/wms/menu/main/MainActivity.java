@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.menu.custom.BaseCompatActivity;
-import kr.co.ajcc.wms.menu.location.Location;
-import kr.co.ajcc.wms.menu.print.ConfigActivity;
-import kr.co.ajcc.wms.menu.registration.RegistrationActivity;
+import kr.co.ajcc.wms.common.Define;
+import kr.co.ajcc.wms.custom.CommonCompatActivity;
 
-public class MainActivity extends BaseCompatActivity {
+public class MainActivity extends CommonCompatActivity {
     Context mContext;
 
     @Override
@@ -35,29 +33,31 @@ public class MainActivity extends BaseCompatActivity {
         @Override
         public void onClick(View v) {
             int view = v.getId();
-            Intent intent = null;
+            Intent intent = new Intent(mContext, BaseActivity.class);
             switch (view){
                 case R.id.bt_menu_1:
-                    intent = new Intent(mContext, RegistrationActivity.class);
-                    startActivity(intent);
+                    intent.putExtra("menu", Define.MENU_REGISTRATION);
                     break;
                 case R.id.bt_menu_2:
-                    intent = new Intent(mContext, Location.class);
-                    startActivity(intent);
+                    intent.putExtra("menu", Define.MENU_LOCATION);
                     break;
                 case R.id.bt_menu_3:
+                    intent.putExtra("menu", Define.MENU_MATERIAL_OUT);
                     break;
                 case R.id.bt_menu_4:
+                    intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
                     break;
                 case R.id.bt_menu_5:
+                    intent.putExtra("menu", Define.MENU_PRODUCT_OUT);
                     break;
                 case R.id.bt_menu_6:
+                    intent.putExtra("menu", Define.MENU_PALLET);
                     break;
                 case R.id.bt_menu_7:
-                    intent = new Intent(mContext, ConfigActivity.class);
-                    startActivity(intent);
+                    intent.putExtra("menu", Define.MENU_CONFIG);
                     break;
             }
+            startActivity(intent);
         }
     };
 }
