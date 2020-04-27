@@ -3,11 +3,16 @@ package kr.co.ajcc.wms.menu.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
+import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
+import kr.co.ajcc.wms.menu.registration.RegistrationView;
+import kr.co.ajcc.wms.model.RegistrationModel;
 
 public class MainActivity extends CommonCompatActivity {
     Context mContext;
@@ -27,6 +32,19 @@ public class MainActivity extends CommonCompatActivity {
         findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_7).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TwoBtnPopup(MainActivity.this, "로그아웃 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == 1) {
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

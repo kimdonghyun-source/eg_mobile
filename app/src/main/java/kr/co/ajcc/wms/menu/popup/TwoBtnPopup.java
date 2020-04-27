@@ -17,13 +17,13 @@ import android.widget.TextView;
 
 import kr.co.ajcc.wms.R;
 
-public class TowBtnPopup {
+public class TwoBtnPopup {
     Activity mActivity;
 
     Dialog dialog;
     Handler mHandler;
 
-    public TowBtnPopup(Activity activity, String message, int title, Handler handler){
+    public TwoBtnPopup(Activity activity, String message, int title, Handler handler){
         mActivity = activity;
         mHandler = handler;
         showPopUpDialog(activity, message, title);

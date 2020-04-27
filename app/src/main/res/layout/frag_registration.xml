@@ -28,11 +28,6 @@
                 android:textSize="15dp"
                 android:text="변경"
                 android:textColor="@color/black"/>
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"/>
         </FrameLayout>
     </FrameLayout>
     <LinearLayout

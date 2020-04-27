@@ -3,7 +3,15 @@ package kr.co.ajcc.wms.model;
 import java.util.List;
 
 public class UserInfoModel extends ResultModel{
-    Items items;
+    List<Items> items;
+
+    public List<Items> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Items> items) {
+        this.items = items;
+    }
 
     public class Items extends ResultModel{
         //부서코드

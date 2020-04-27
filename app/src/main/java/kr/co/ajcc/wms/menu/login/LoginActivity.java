@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -39,7 +40,27 @@ public class LoginActivity extends CommonCompatActivity {
         findViewById(R.id.bt_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestLogin();
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                if(Utils.isEmpty(et_user_id.getText().toString())) {
+                    Utils.Toast(mContext, "아이디를 입력해주세요.");
+                    et_user_id.requestFocus();
+                    return;
+                }
+                if(Utils.isEmpty(et_pass.getText().toString())) {
+                    Utils.Toast(mContext, "비밀번호를 입력해주세요.");
+                    et_pass.requestFocus();
+                    return;
+                }
+            }
+        });
+
+        findViewById(R.id.bt_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -48,9 +69,11 @@ public class LoginActivity extends CommonCompatActivity {
 
         et_user_id = findViewById(R.id.et_user_id);
         et_pass = findViewById(R.id.et_pass);
+
+        et_user_id.setText("axlrose");
+        et_pass.setText("1234");
     }
 
-    //원격접수 취소
     private void requestLogin() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
@@ -63,7 +86,8 @@ public class LoginActivity extends CommonCompatActivity {
                 if(response.isSuccessful()){
                     UserInfoModel model = response.body();
                     if (model != null) {
-                        if(model.getFlag().equals(ResultModel.SUCCESS)) {
+                        if(model.getFlag() == ResultModel.SUCCESS) {
+                            requestLogin();
                         }else{
                             Utils.Toast(mContext, model.getMSG());
                         }

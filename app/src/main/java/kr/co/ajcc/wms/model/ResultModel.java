@@ -3,15 +3,15 @@ package kr.co.ajcc.wms.model;
 import java.io.Serializable;
 
 public class ResultModel implements Serializable {
-    public static final String SUCCESS = "0";
-    String Flag;
+    public static final int SUCCESS = 0;
+    int Flag;
     String MSG;
 
-    public String getFlag() {
+    public int getFlag() {
         return Flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         Flag = flag;
     }
 

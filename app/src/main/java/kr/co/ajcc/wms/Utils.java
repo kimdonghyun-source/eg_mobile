@@ -81,4 +81,11 @@ public class Utils {
         }
         return (int) px;
     }
+
+    //string null 체크
+    public static boolean isEmpty(String str){
+        if(str == null)return true;
+        if(str.isEmpty())return true;
+        return false;
+    }
 }

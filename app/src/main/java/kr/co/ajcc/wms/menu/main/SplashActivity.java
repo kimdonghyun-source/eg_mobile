@@ -22,7 +22,7 @@ public class SplashActivity extends CommonCompatActivity {
 
         mContext = this;
 
-        ImageView iv_splash = findViewById(R.id.iv_splash);
+        //ImageView iv_splash = findViewById(R.id.iv_splash);
 
         Handler delayHandler = new Handler(Looper.getMainLooper());
         delayHandler.postDelayed(new Runnable() {
