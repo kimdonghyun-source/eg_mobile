@@ -17,8 +17,6 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/menu_outproduct_outno" />
 
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -50,20 +48,49 @@
                 android:src="@drawable/menu_inhouse_bt_search" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/menu_outproduct_custname" />
 
+            <TextView
+                android:id="@+id/text_customer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/menu_outproduct_carinfo" />
-
+            <TextView
+                android:id="@+id/text_info"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -85,7 +112,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/text_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="20dp"
@@ -95,7 +122,7 @@
             android:textSize="18dp" />
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/o_listView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
