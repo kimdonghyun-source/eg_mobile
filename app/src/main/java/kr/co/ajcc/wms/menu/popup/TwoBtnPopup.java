@@ -59,6 +59,7 @@ public class TwoBtnPopup {
         wlp.gravity = Gravity.CENTER;
         window.setAttributes(wlp);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ImageView iv_title = dialog.findViewById(R.id.iv_title);
         iv_title.setBackgroundResource(title);

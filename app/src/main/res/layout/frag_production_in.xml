@@ -5,67 +5,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center"
             android:layout_marginLeft="10dp"
             android:src="@drawable/menu_inproduct_location" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
             android:layout_marginRight="30dp"
-            android:layout_weight="0.3"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="3"
-                android:textColor="#000000"
+                android:id="@+id/tv_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
                 android:textSize="15dp" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:gravity="center"
                 android:text="/"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="15dp" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:id="@+id/tv_total_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="9"
-                android:textColor="#000000"
+                android:text="0"
+                android:textColor="@color/black"
                 android:textSize="15dp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.03"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +69,8 @@
 
             <EditText
                 android:id="@+id/et_location"
-                style="@style/EditTextLocation" />
+                style="@style/EditTextLocation"
+                android:enabled="false"/>
 
             <ImageButton
                 android:id="@+id/bt_search"
@@ -88,76 +81,59 @@
                 android:padding="5dp"
                 android:src="@drawable/menu_inhouse_bt_search" />
         </LinearLayout>
-
-
     </LinearLayout>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/print_grid" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/menu_inhouse_grid"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    </LinearLayout>
-
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:gravity="top|left"
-            android:textColor="@color/color_a3a3a3"
-            android:textSize="18dp" />
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-
-    </LinearLayout>
-
+        android:nestedScrollingEnabled="false"/>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-    <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/print_grid"
+        <!-- 정제영 테스트 -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/print_grid" />
-
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_scan_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="로케이션스캔"/>
+            <Button
+                android:id="@+id/bt_scan_pallet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="팔레트스캔"/>
+        </LinearLayout>
+        <!-- 정제영 테스트 끝 -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/menu_inhouse_grid"/>
         <ImageButton
-            android:id="@+id/btn_printAdd"
-            android:layout_width="match_parent"
+            android:id="@+id/bt_next"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:src="@drawable/menu_inproduct_bt_inproduct" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/menu_bg" />
-
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/menu_inproduct_bt_inproduct"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
-
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/menu_bg"/>
 </LinearLayout>

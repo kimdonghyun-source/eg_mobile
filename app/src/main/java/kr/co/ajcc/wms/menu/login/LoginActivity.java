@@ -5,20 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-
+import kr.co.ajcc.wms.GlobalApplication;
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.common.Utils;
+import kr.co.ajcc.wms.common.SharedData;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.menu.main.MainActivity;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.UserInfoModel;
 import kr.co.ajcc.wms.network.ApiClientService;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +26,7 @@ public class LoginActivity extends CommonCompatActivity {
 
     EditText et_user_id;
     EditText et_pass;
+    ImageButton bt_check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +39,6 @@ public class LoginActivity extends CommonCompatActivity {
         findViewById(R.id.bt_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-
                 if(Utils.isEmpty(et_user_id.getText().toString())) {
                     Utils.Toast(mContext, "아이디를 입력해주세요.");
                     et_user_id.requestFocus();
@@ -54,6 +49,7 @@ public class LoginActivity extends CommonCompatActivity {
                     et_pass.requestFocus();
                     return;
                 }
+                requestLogin();
             }
         });
 
@@ -69,7 +65,22 @@ public class LoginActivity extends CommonCompatActivity {
 
         et_user_id = findViewById(R.id.et_user_id);
         et_pass = findViewById(R.id.et_pass);
+        bt_check = findViewById(R.id.bt_check);
+        bt_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bt_check.setSelected(!bt_check.isSelected());
+            }
+        });
 
+        boolean isSave = (boolean) SharedData.getSharedData(mContext, SharedData.UserValue.SAVE_ID.name(), false);
+        bt_check.setSelected(isSave);
+        if(isSave) {
+            String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+            et_user_id.setText(userID);
+        }
+
+        //정제영 테스트
         et_user_id.setText("axlrose");
         et_pass.setText("1234");
     }
@@ -77,7 +88,6 @@ public class LoginActivity extends CommonCompatActivity {
     private void requestLogin() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        //proc, id, pass, version
         Call<UserInfoModel> call = service.postLogin("sp_pda_login", et_user_id.getText().toString(), et_pass.getText().toString(), Utils.appVersionName(mContext));
 
         call.enqueue(new Callback<UserInfoModel>() {
@@ -87,7 +97,16 @@ public class LoginActivity extends CommonCompatActivity {
                     UserInfoModel model = response.body();
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
-                            requestLogin();
+                            SharedData.setSharedData(mContext, SharedData.UserValue.USER_ID.name(), et_user_id.getText().toString());
+                            SharedData.setSharedData(mContext, SharedData.UserValue.IS_LOGIN.name(), true);
+                            SharedData.setSharedData(mContext, SharedData.UserValue.SAVE_ID.name(), bt_check.isSelected());
+
+                            GlobalApplication application = (GlobalApplication)getApplicationContext();
+                            application.setUserInfoModel(model.getItems().get(0));
+
+                            Intent intent = new Intent(mContext, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         }else{
                             Utils.Toast(mContext, model.getMSG());
                         }

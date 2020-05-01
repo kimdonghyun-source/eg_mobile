@@ -1,4 +1,4 @@
-package kr.co.ajcc.wms;
+package kr.co.ajcc.wms.common;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -8,6 +8,8 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+
+import kr.co.ajcc.wms.BuildConfig;
 
 public class Utils {
 

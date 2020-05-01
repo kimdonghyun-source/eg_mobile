@@ -18,8 +18,6 @@ import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.custom.MergeAdapter;
 import kr.co.ajcc.wms.menu.popup.OutProductListPopup;
-import kr.co.ajcc.wms.menu.registration.RegistrationView;
-import kr.co.ajcc.wms.model.RegistrationModel;
 
 public class ProductOutFragment extends CommonFragment {
     Context mContext;
@@ -75,15 +73,15 @@ public class ProductOutFragment extends CommonFragment {
                                 mLocationListPopup.hideDialog();
 
                                 for (int i=0; i< 3; i++){
-                                    RegistrationModel model = new RegistrationModel();
+                                    /*RegistrationModel model = new RegistrationModel();
                                     model.setProduct("품명"+(i+1));
                                     model.setStandard("규격"+(i+1));
                                     model.setCount(1000-(i*100));
 
-                                    RegistrationView view = new RegistrationView(getActivity());
+                                    LotItemsView view = new LotItemsView(getActivity());
                                     view.setData(model);
 
-                                    mMergeAdapter.addView(view);
+                                    mMergeAdapter.addView(view);*/
                                 }
 
                                 o_listView.setAdapter(mMergeAdapter);

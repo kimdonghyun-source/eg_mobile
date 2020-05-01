@@ -3,4 +3,9 @@
 
     <!-- 팝업 또는 토스트 메세지 -->
     <string name="error_network">네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
+    <string name="error_location_from">FROM 로케이션을 선택해주세요.</string>
+    <string name="error_location_to">TO 로케이션을 선택해주세요.</string>
+    <string name="error_location_items">이동할 품목을 등록해주세요.</string>
+    <string name="error_location">로케이션을 선택해주세요.</string>
+    <string name="error_in_items">입고할 품목을 등록해주세요.</string>
 </resources>

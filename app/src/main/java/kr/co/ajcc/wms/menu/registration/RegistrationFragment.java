@@ -17,13 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.custom.MergeAdapter;
 import kr.co.ajcc.wms.menu.popup.LocationListPopup;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
 import kr.co.ajcc.wms.spinner.SpinnerAdapter;
-import kr.co.ajcc.wms.model.RegistrationModel;
 
 /**
  * 입고등록
@@ -112,40 +111,6 @@ public class RegistrationFragment extends CommonFragment {
                 case R.id.bt_change:
                     break;
                 case R.id.bt_search:
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("로케이션 1");
-                    list.add("로케이션 2");
-                    list.add("로케이션 3");
-                    list.add("로케이션 4");
-                    list.add("로케이션 5");
-                    mLocationListPopup = new LocationListPopup(getActivity(), list, R.drawable.popup_title_searchloc, new Handler() {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            if (msg.what == 1) {
-                                String result = (String)msg.obj;
-                                et_location.setText(result);
-                                mLocationListPopup.hideDialog();
-
-                                for(int i = 0; i < 3; i++) {
-                                    RegistrationModel model = new RegistrationModel();
-                                    model.setProduct("품명 "+(i+1));
-                                    model.setStandard("규격 "+(i+1));
-                                    model.setCount(1000-(i*100));
-
-                                    RegistrationView view = new RegistrationView(getActivity());
-                                    view.setData(model);
-
-                                    mMergeAdapter.addView(view);
-                                }
-
-                                mListView.setAdapter(mMergeAdapter);
-                                mMergeAdapter.notifyDataSetChanged();
-
-                                tv_empty.setVisibility(View.GONE);
-                                mListView.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
                     break;
                 case R.id.bt_next:
                     mOneBtnPopup = new OneBtnPopup(getActivity(), "품질 검사 완료 후 입고등록을 하십시오.", R.drawable.popup_title_alert, new Handler() {

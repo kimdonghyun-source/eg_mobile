@@ -15,30 +15,44 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.common.Utils;
+import kr.co.ajcc.wms.model.LocationModel;
+import kr.co.ajcc.wms.model.ResultModel;
+import kr.co.ajcc.wms.model.WarehouseModel;
+import kr.co.ajcc.wms.network.ApiClientService;
 import kr.co.ajcc.wms.spinner.SpinnerPopupAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LocationListPopup {
     Activity mActivity;
 
     Dialog dialog;
-    ArrayList<String> mList;
+    List<WarehouseModel.Items> mWarehouseList;
     Handler mHandler;
 
     Spinner mSpinner;
     int mSpinnerSelect = 0;
 
-    public LocationListPopup(Activity activity, ArrayList<String> list, int title, Handler handler){
+    ListView mListView;
+    ListAdapter mAdapter;
+    List<LocationModel.Items> mLocationList;
+
+    public LocationListPopup(Activity activity, List<WarehouseModel.Items> list, int title, Handler handler){
         mActivity = activity;
-        mList = list;
+        mWarehouseList = list;
         mHandler = handler;
         showPopUpDialog(activity, title);
     }
@@ -61,8 +75,8 @@ public class LocationListPopup {
 
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
 
         dialog.setContentView(R.layout.popup_location_list);
 
@@ -73,16 +87,14 @@ public class LocationListPopup {
         wlp.gravity = Gravity.CENTER;
         window.setAttributes(wlp);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         ImageView iv_title = dialog.findViewById(R.id.iv_title);
         iv_title.setBackgroundResource(title);
 
-        List<String> list = new ArrayList<String>();
-        list.add("창고 1");
-        list.add("창고 2");
-        list.add("창고 3");
-        list.add("창고 4");
-        list.add("창고 5");
+        List<String> list = new ArrayList<>();
+        for (WarehouseModel.Items item : mWarehouseList)
+            list.add(item.getWh_name());
 
         mSpinner =  dialog.findViewById(R.id.spinner);
         SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, list, mSpinner);
@@ -90,17 +102,9 @@ public class LocationListPopup {
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
         mSpinner.setSelection(mSpinnerSelect);
 
-        ListView listView = dialog.findViewById(R.id.list);
-
-        /*View header = activity.getLayoutInflater().inflate(R.layout.header_blank, null, false);
-        header.setPadding(0, Util.getDpToPixel(activity, 13.33f), 0, 0);
-        listView.addHeaderView(header);
-        View footer = activity.getLayoutInflater().inflate(R.layout.header_blank, null, false);
-        footer.setPadding(0, Util.getDpToPixel(activity, 6.67f), 0, 0);
-        listView.addFooterView(footer);*/
-
-        ListAdapter adapter = new ListAdapter();
-        listView.setAdapter(adapter);
+        mListView = dialog.findViewById(R.id.list);
+        mAdapter = new ListAdapter();
+        mListView.setAdapter(mAdapter);
 
         dialog.findViewById(R.id.bt_search).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,14 +127,15 @@ public class LocationListPopup {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //최초에 setOnItemSelectedListener 하면 이벤트가 들어오기 때문에
-            //onResume에서 mSpinnerSelect에 현재 선택된 position을 넣고 여기서 비교
-            if(mSpinnerSelect == position)return;
-
             mSpinnerSelect = position;
 
-            String item = (String) mSpinner.getSelectedItem();
-            Utils.Toast(mActivity, item+" 선택");
+            WarehouseModel.Items item = mWarehouseList.get(position);
+            //String item = (String) mSpinner.getSelectedItem();
+
+            mLocationList = null;
+            mAdapter.notifyDataSetChanged();
+
+            requestLocation(item.getWh_code());
         }
 
         @Override
@@ -149,16 +154,16 @@ public class LocationListPopup {
 
         @Override
         public int getCount() {
-            if (mList == null) {
+            if (mLocationList == null) {
                 return 0;
             }
 
-            return mList.size();
+            return mLocationList.size();
         }
 
         @Override
-        public String getItem(int position) {
-            return mList.get(position);
+        public LocationModel.Items getItem(int position) {
+            return mLocationList.get(position);
         }
 
         @Override
@@ -181,16 +186,16 @@ public class LocationListPopup {
                 holder = (ListAdapter.ViewHolder) v.getTag();
             }
 
-            final String data = mList.get(position);
-            holder.tv_code.setText("code "+(position+1));
-            holder.tv_name.setText(data);
+            final LocationModel.Items item = mLocationList.get(position);
+            holder.tv_code.setText(item.getLocation_code());
+            holder.tv_name.setText(item.getLocation_name());
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Message msg = mHandler.obtainMessage();
                     msg.what = 1;
-                    msg.obj = data;
+                    msg.obj = item;
                     mHandler.sendMessage(msg);
                 }
             });
@@ -202,5 +207,42 @@ public class LocationListPopup {
             TextView tv_code;
             TextView tv_name;
         }
+    }
+
+    /**
+     * 로케이션 검색
+     * @param code 창고코드
+     */
+    private void requestLocation(String code) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<LocationModel> call = service.postLocation("sp_pda_mst_location_list", code);
+
+        call.enqueue(new Callback<LocationModel>() {
+            @Override
+            public void onResponse(Call<LocationModel> call, Response<LocationModel> response) {
+                if(response.isSuccessful()){
+                    LocationModel model = response.body();
+                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+                    if (model != null) {
+                        if(model.getFlag() == ResultModel.SUCCESS) {
+                            mLocationList = model.getItems();
+                            mAdapter.notifyDataSetChanged();
+                        }else{
+                            Utils.Toast(mActivity, model.getMSG());
+                        }
+                    }
+                }else{
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mActivity, response.code()+" : "+response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocationModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mActivity, mActivity.getString(R.string.error_network));
+            }
+        });
     }
 }

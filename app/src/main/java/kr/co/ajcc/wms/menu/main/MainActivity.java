@@ -11,8 +11,6 @@ import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
-import kr.co.ajcc.wms.menu.registration.RegistrationView;
-import kr.co.ajcc.wms.model.RegistrationModel;
 
 public class MainActivity extends CommonCompatActivity {
     Context mContext;

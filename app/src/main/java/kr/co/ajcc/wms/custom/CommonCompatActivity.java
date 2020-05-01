@@ -1,6 +1,7 @@
 package kr.co.ajcc.wms.custom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.GlobalApplication;
+import kr.co.ajcc.wms.common.SharedData;
+import kr.co.ajcc.wms.common.Utils;
+import kr.co.ajcc.wms.menu.main.SplashActivity;
+import kr.co.ajcc.wms.model.UserInfoModel;
 
 public class CommonCompatActivity extends AppCompatActivity {
     LoadingDialog sLoadingDialog;
@@ -16,6 +21,20 @@ public class CommonCompatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GlobalApplication application = GlobalApplication.getInstance();
+        UserInfoModel.Items model = application.getUserInfoModel();
+
+        boolean isLogin = (boolean) SharedData.getSharedData(this, SharedData.UserValue.IS_LOGIN.name(), false);
+
+        if(isLogin && model == null) {
+            //기존에 있던 activity 종료
+            finish();
+            Utils.Toast(this, "재시작합니다.");
+            Intent newIntent = new Intent(this, SplashActivity.class);
+            newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(newIntent);
+        }
 
         if(sLoadingDialog != null && !sLoadingDialog.isShowing() || sLoadingDialog == null) {
             sLoadingDialog = LoadingDialog.create(CommonCompatActivity.this, null, null);

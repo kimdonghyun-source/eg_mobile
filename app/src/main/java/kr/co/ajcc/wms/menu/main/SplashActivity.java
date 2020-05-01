@@ -7,11 +7,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import kr.co.ajcc.wms.R;
+import kr.co.ajcc.wms.common.SharedData;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.menu.login.LoginActivity;
 
-public class SplashActivity extends CommonCompatActivity {
+public class SplashActivity extends AppCompatActivity {
     Context mContext;
 
     @Override
@@ -23,6 +26,8 @@ public class SplashActivity extends CommonCompatActivity {
         mContext = this;
 
         //ImageView iv_splash = findViewById(R.id.iv_splash);
+
+        SharedData.setSharedData(mContext, SharedData.UserValue.IS_LOGIN.name(), false);
 
         Handler delayHandler = new Handler(Looper.getMainLooper());
         delayHandler.postDelayed(new Runnable() {

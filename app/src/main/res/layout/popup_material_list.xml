@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="70dp"
+    android:paddingBottom="70dp">
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/popup_titlebar">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/color_008998">
         <ImageView
             android:id="@+id/iv_title"
             android:layout_width="wrap_content"
@@ -41,10 +46,11 @@
         android:gravity="center"
         android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/popup_text_date"/>
+            android:background="@drawable/popup_text_date" />
 
         <TextView
             android:background="@drawable/popup_inputbox1"

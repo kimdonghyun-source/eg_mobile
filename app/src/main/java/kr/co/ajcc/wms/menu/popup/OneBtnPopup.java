@@ -26,6 +26,13 @@ public class OneBtnPopup {
     Dialog dialog;
     Handler mHandler;
 
+    /**
+     * 버튼 하나짜리 팝업
+     * @param activity
+     * @param message 메세지
+     * @param title 타이틀 이미지
+     * @param handler return 핸들러
+     */
     public OneBtnPopup(Activity activity, String message, int title, Handler handler){
         mActivity = activity;
         mHandler = handler;
@@ -62,6 +69,7 @@ public class OneBtnPopup {
         wlp.gravity = Gravity.CENTER;
         window.setAttributes(wlp);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         dialog.findViewById(R.id.bt_cancel).setVisibility(View.GONE);
 

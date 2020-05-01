@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 import kr.co.ajcc.wms.R;
-import kr.co.ajcc.wms.Utils;
+import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.spinner.SpinnerPopupAdapter;
 
 public class OutMeterialListPopup {
