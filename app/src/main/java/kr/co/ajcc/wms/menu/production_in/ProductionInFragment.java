@@ -263,11 +263,12 @@ public class ProductionInFragment extends CommonFragment {
         JsonArray list = new JsonArray();
         for(PalletSnanModel.Items item : mItems){
             JsonObject obj = new JsonObject();
+            //입고창고코드
+            obj.addProperty("wh_code", mLocationModel.getWh_code());
             //스캔바코드
-            //스캔바코드 맞는지 확인해야함
-            obj.addProperty("scan_psn", item.getItm_code());
+            obj.addProperty("scan_psn", item.getSerial_no());
             //입고일자
-            //obj.addProperty("sin_date", );
+            obj.addProperty("sin_date", UtilDate.getDateToString(new Date(System.currentTimeMillis()), "yyyyMMdd"));
             //입고창고코드
             obj.addProperty("wh_code", mLocationModel.getWh_code());
             //로케이션코드

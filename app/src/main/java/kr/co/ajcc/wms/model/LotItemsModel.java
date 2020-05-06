@@ -22,6 +22,10 @@ public class LotItemsModel extends ResultModel{
         String itm_size;
         //단위
         String itm_unit;
+        //로트번호
+        String lot_no;
+        //제조사 로트번호
+        String lot_no2;
         //재고수량
         long inv_qty;
         //사용자 입력값
@@ -57,6 +61,22 @@ public class LotItemsModel extends ResultModel{
 
         public void setItm_unit(String itm_unit) {
             this.itm_unit = itm_unit;
+        }
+
+        public String getLot_no() {
+            return lot_no;
+        }
+
+        public void setLot_no(String lot_no) {
+            this.lot_no = lot_no;
+        }
+
+        public String getLot_no2() {
+            return lot_no2;
+        }
+
+        public void setLot_no2(String lot_no2) {
+            this.lot_no2 = lot_no2;
         }
 
         public long getInv_qty() {

@@ -321,14 +321,12 @@ public class LocationFragment extends CommonFragment {
         UserInfoModel.Items userModel = application.getUserInfoModel();
 
         JsonObject json = new JsonObject();
-        //사업장코드
-        //json.addProperty("p_corp_code", );
         //이동일자
         json.addProperty("p_move_date", UtilDate.getDateToString(new Date(System.currentTimeMillis()), "yyyyMMdd"));
         //사원번호
         json.addProperty("p_emp_code", userModel.getEmp_code());
-        //사용예정일
-        //json.addProperty("p_use_date", );
+        //사용예정일(사용 안하기 때문에 공란)
+        json.addProperty("p_use_date", "");
         //입고창고코드
         json.addProperty("p_wh_code_in", fromLocation.getWh_code());
         //출고창고코드
@@ -352,9 +350,9 @@ public class LocationFragment extends CommonFragment {
             //이동수량
             obj.addProperty("move_qty", String.valueOf(item.getInput_qty()));
             //로트 번호
-            //obj.addProperty("lot_no", item.get());
+            obj.addProperty("lot_no", item.getLot_no());
             //제조사 로트 번호
-            //obj.addProperty("lot_no2", item.get());
+            obj.addProperty("lot_no2", item.getLot_no2());
             list.add(obj);
 
             total =+ item.getInput_qty();
