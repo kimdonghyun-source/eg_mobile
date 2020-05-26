@@ -72,4 +72,6 @@ dependencies {
     //retrofit2 로그 확인을 위한 라이브러리
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation project(path: ':DataCollection')
+    implementation project(path: ':jelib')
 }
