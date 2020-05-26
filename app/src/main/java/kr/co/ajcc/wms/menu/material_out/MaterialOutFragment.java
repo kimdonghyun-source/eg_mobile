@@ -23,7 +23,7 @@ public class MaterialOutFragment extends CommonFragment {
     Context mContext;
 
     ListView m_listView;
-    TextView text_empty, text_input, text_out;
+    TextView text_empty, tv_warehouse, tv_input;
     EditText et_location;
     OutMeterialListPopup mLocationListPopup;
     MergeAdapter mMergeAdapter;
@@ -34,8 +34,6 @@ public class MaterialOutFragment extends CommonFragment {
         super.onCreate(savedInstanceState);
 
         mContext = getActivity();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
     }
 
     @Override
@@ -46,8 +44,8 @@ public class MaterialOutFragment extends CommonFragment {
         m_listView = v.findViewById(R.id.m_listView);
         text_empty = v.findViewById(R.id.text_empty);
         et_location = v.findViewById(R.id.et_location);
-        text_input = v.findViewById(R.id.text_input);
-        text_out = v.findViewById(R.id.text_out);
+        tv_warehouse = v.findViewById(R.id.tv_warehouse);
+        tv_input = v.findViewById(R.id.tv_input);
         mMergeAdapter = new MergeAdapter();
         v.findViewById(R.id.bt_search).setOnClickListener(onClickListener);
         return v;
@@ -93,11 +91,11 @@ public class MaterialOutFragment extends CommonFragment {
                                 m_listView.setVisibility(View.VISIBLE);
                             }else if (msg.what == 2){
                                 String result = (String)msg.obj;
-                                text_out.setText(result);
+                                tv_input.setText(result);
 
                             }else if (msg.what == 3){
                                 String result = (String) msg.obj;
-                                text_input.setText(result);
+                                tv_input.setText(result);
                                 mLocationListPopup.hideDialog();
                             }
                         }

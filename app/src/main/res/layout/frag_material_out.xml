@@ -35,8 +35,9 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/et_location"
-                style="@style/EditTextLocation" />
+                android:id="@+id/et_order"
+                style="@style/EditTextLocation"
+                android:enabled="false"/>
 
             <ImageButton
                 android:id="@+id/bt_search"
@@ -61,7 +62,7 @@
                 android:src="@drawable/menu_release_outwh" />
 
             <TextView
-                android:id="@+id/text_out"
+                android:id="@+id/tv_warehouse"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -86,7 +87,7 @@
                 android:src="@drawable/menu_release_inwh" />
 
             <TextView
-                android:id="@+id/text_input"
+                android:id="@+id/tv_input"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
