@@ -72,7 +72,6 @@ public class LocationListPopup {
     }
 
     private void showPopUpDialog(Activity activity, int title){
-
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);

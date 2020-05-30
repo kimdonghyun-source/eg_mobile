@@ -261,7 +261,6 @@ public class BaseActivity extends CommonCompatActivity {
                 holder = (ViewHolder) v.getTag();
             }
 
-            Utils.Log("mSelectMenu ==> : "+mSelectMenu);
             if(mSelectMenu == position){
                 holder.tv_menu.setSelected(true);
             }else{

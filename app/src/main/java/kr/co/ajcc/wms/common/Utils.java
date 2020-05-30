@@ -53,6 +53,26 @@ public class Utils {
         return num;
     }
 
+    public static long stringToLong(String number) {
+        long num = 0;
+        try {
+            num = Long.parseLong(number);
+        } catch (Exception e) {
+            num = 0;
+        }
+        return num;
+    }
+
+    public static float stringToFloat(String number) {
+        float num = 0;
+        try {
+            num = Float.parseFloat(number);
+        } catch (Exception e) {
+            num = 0;
+        }
+        return num;
+    }
+
     public static String appVersionName(Context context) {
         String version = "0";
         try {

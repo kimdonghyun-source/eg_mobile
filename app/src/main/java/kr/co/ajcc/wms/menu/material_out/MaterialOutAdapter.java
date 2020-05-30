@@ -1,4 +1,4 @@
-package kr.co.ajcc.wms.menu.location;
+package kr.co.ajcc.wms.menu.material_out;
 
 import android.app.Activity;
 import android.text.Editable;
@@ -17,47 +17,44 @@ import java.util.List;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Utils;
-import kr.co.ajcc.wms.model.LotItemsModel;
+import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
+public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.ViewHolder> {
 
-    List<LotItemsModel.Items> itemsList;
+    List<MaterialOutDetailModel.Items> itemsList;
     Activity mActivity;
 
-    public LocationAdapter(Activity context) {
+    public MaterialOutAdapter(Activity context) {
         mActivity = context;
-        itemsList = new ArrayList<>();
     }
 
-    public void setData(LotItemsModel.Items item){
-        itemsList.add(item);
+    public void setData(List<MaterialOutDetailModel.Items> list){
+        itemsList = list;
     }
 
-    public List<LotItemsModel.Items> getData(){
+    public List<MaterialOutDetailModel.Items> getData(){
         return itemsList;
     }
 
     @Override
-    public LocationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int position) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_lot_item, viewGroup, false);
-        LocationAdapter.ViewHolder holder = new LocationAdapter.ViewHolder(v);
+        ViewHolder holder = new ViewHolder(v);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final LocationAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final LotItemsModel.Items item = itemsList.get(position);
+        final MaterialOutDetailModel.Items item = itemsList.get(position);
 
         holder.tv_product.setText(item.getItm_name());
         holder.tv_standard.setText(item.getItm_size());
-        holder.tv_count.setText(Utils.setComma(item.getInv_qty()));
+        holder.tv_count.setText(Utils.setComma(item.getReq_qty()));
 
-        //list에 입력된 수량을 보여주는데 0일 셋팅 되어있는 경우 사용자가 값을 입력하기 번거롭기 때문에 "" 처리
-        if(item.getInput_qty() <= 0)
-            holder.et_count.setText("");
-        else
-            holder.et_count.setText(Utils.setComma(item.getInput_qty()));
+        //피킹에서 입력받기 때문에 0으로 셋팅하고 enable = false
+        holder.et_count.setText("0");
+        holder.et_count.setEnabled(false);
 
         //흐르는 text 구현을 위해 selected 처리
         holder.tv_product.setSelected(true);
@@ -76,13 +73,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = df.format(Utils.stringToLong(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
+                    result = df.format(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    long cnt = Utils.stringToInt(s.toString());
+                    float cnt = Utils.stringToFloat(s.toString());
                     //입력된 수량을 list에 넣어줌
-                    itemsList.get(holder.getAdapterPosition()).setInput_qty(cnt);
+                    itemsList.get(holder.getAdapterPosition()).setReq_qty(cnt);
                 }
             }
         });
@@ -107,6 +104,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             tv_standard = view.findViewById(R.id.tv_standard);
             et_count = view.findViewById(R.id.et_count);
             tv_count = view.findViewById(R.id.tv_count);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
+                }
+            });
         }
     }
 }

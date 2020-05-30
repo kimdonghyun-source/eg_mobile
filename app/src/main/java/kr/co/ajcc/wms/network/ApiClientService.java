@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import kr.co.ajcc.wms.BuildConfig;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
+import kr.co.ajcc.wms.model.MaterialOutDetailModel;
+import kr.co.ajcc.wms.model.MaterialOutListModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.UserInfoModel;
@@ -125,6 +127,32 @@ public interface ApiClientService {
     @POST("R2JsonProc_wms_sin_save.asp")
     Call<ResultModel> postSendProductionIn(
             @Body RequestBody body
+    );
+
+    /**
+     * 자재불출 지시조회
+     * @param proc 프로시져
+     * @param param1 불출지시 일자
+     * @param param2 불출창고 코드
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MaterialOutListModel> postOutOrderList(
+            @Query("proc") String proc,
+            @Query("param1") String param1,
+            @Query("param2") String param2
+    );
+
+    /**
+     * 자재불출 지시 상세
+     * @param proc 프로시져
+     * @param param1 자재불출번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MaterialOutDetailModel> postOutOrderDetail(
+            @Query("proc") String proc,
+            @Query("param1") String param1
     );
 
     //로그 찍기

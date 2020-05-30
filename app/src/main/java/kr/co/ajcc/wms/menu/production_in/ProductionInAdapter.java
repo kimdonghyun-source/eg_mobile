@@ -35,7 +35,7 @@ public class ProductionInAdapter extends RecyclerView.Adapter<ProductionInAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_production_in, null);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_production_in, viewGroup, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

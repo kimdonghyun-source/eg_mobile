@@ -58,6 +58,7 @@
                 android:id="@id/bt_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/popup_bt_search"
                 android:background="@color/trans"/>
