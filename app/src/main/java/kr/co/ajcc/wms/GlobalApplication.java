@@ -2,6 +2,7 @@ package kr.co.ajcc.wms;
 
 import android.app.Application;
 
+import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.model.UserInfoModel;
 
 public class GlobalApplication extends Application {
@@ -14,6 +15,8 @@ public class GlobalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        AidcReader.getInstance().init(this);
 
         instance = this;
     }

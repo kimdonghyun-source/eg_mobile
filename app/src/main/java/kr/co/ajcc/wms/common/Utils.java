@@ -90,4 +90,11 @@ public class Utils {
         if(str.isEmpty())return true;
         return false;
     }
+
+    //string null 체크
+    public static String nullString(String str,String def){
+        if(str == null)return def;
+        if(str.isEmpty())return def;
+        return str;
+    }
 }

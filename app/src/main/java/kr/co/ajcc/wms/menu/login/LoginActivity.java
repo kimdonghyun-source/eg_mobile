@@ -85,6 +85,14 @@ public class LoginActivity extends CommonCompatActivity {
         et_pass.setText("1234");
     }
 
+    @Override
+    public void onActivityResult(int request,int result,Intent data){
+        super.onActivityResult(request,result,data);
+        if(request == 1000){
+            finish();
+        }
+    }
+
     private void requestLogin() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
@@ -105,8 +113,8 @@ public class LoginActivity extends CommonCompatActivity {
                             application.setUserInfoModel(model.getItems().get(0));
 
                             Intent intent = new Intent(mContext, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                            startActivityForResult(intent,1000);
                         }else{
                             Utils.Toast(mContext, model.getMSG());
                         }

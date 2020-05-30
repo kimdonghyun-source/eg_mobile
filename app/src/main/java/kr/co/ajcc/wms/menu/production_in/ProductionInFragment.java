@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ import kr.co.ajcc.wms.common.SharedData;
 import kr.co.ajcc.wms.common.UtilDate;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
+import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.items.LotItemView;
 import kr.co.ajcc.wms.menu.popup.LocationListPopup;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
@@ -92,16 +94,45 @@ public class ProductionInFragment extends CommonFragment {
         return v;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        AidcReader.getInstance().claim(mContext);
+        AidcReader.getInstance().setListenerHandler(new Handler() {
+            @Override
+            public void handleMessage(Message msg){
+                if(msg.what == 1){
+                    BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
+                    String barcode = event.getBarcodeData();
+                    String location = et_location.getText().toString();
+                    if(mLocationModel==null){
+                        et_location.setText(barcode);
+                        requestLocation(barcode, "P");
+                    } else {
+                        requestPalletScan(barcode);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        AidcReader.getInstance().release();
+        AidcReader.getInstance().setListenerHandler(null);
+    }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             int view = v.getId();
             switch (view) {
                 case R.id.bt_search:
-                    requestWarehouse("M");
+                    requestWarehouse("P");
                     break;
                 case R.id.bt_scan_location:
-                    requestLocation("AA01-1", "M");
+                    requestLocation("AA01-1", "P");
                     break;
                 case R.id.bt_scan_pallet:
                     requestPalletScan("20200318-000001");
@@ -143,6 +174,10 @@ public class ProductionInFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
+                                        mItems.clear();
+                                        mAdapter.setData(mItems);
+                                        mAdapter.notifyDataSetChanged();
+
                                         mLocationModel = (LocationModel.Items)msg.obj;
                                         et_location.setText(mLocationModel.getLocation_code());
                                         mLocationListPopup.hideDialog();
@@ -198,8 +233,18 @@ public class ProductionInFragment extends CommonFragment {
                         }
                     }
                 }else{
-                    Utils.LogLine(response.message());
-                    Utils.Toast(mContext, response.code()+" : "+response.message());
+                    mOneBtnPopup = new OneBtnPopup(getActivity(), response.message(), R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                String result = (String)msg.obj;
+                                Utils.Toast(mContext, result);
+                                mOneBtnPopup.hideDialog();
+                            }
+                        }
+                    });
+                    //Utils.LogLine(response.message());
+                    //Utils.Toast(mContext, response.code()+" : "+response.message());
                 }
             }
 
@@ -225,7 +270,7 @@ public class ProductionInFragment extends CommonFragment {
             public void onResponse(Call<PalletSnanModel> call, Response<PalletSnanModel> response) {
                 if(response.isSuccessful()){
                     PalletSnanModel model = response.body();
-                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+                    Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             if(model.getItems().size() > 0) {

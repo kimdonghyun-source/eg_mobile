@@ -99,7 +99,7 @@ public class AidcReader {
                     properties.put(BarcodeReader.PROPERTY_CODE_39_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_DATAMATRIX_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_UPC_A_ENABLE, true);
-                    properties.put(BarcodeReader.PROPERTY_EAN_13_ENABLED, false);
+                    properties.put(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_AZTEC_ENABLED, false);
                     properties.put(BarcodeReader.PROPERTY_CODABAR_ENABLED, false);
                     properties.put(BarcodeReader.PROPERTY_INTERLEAVED_25_ENABLED, false);

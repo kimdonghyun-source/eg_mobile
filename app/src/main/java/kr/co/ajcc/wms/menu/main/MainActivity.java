@@ -10,6 +10,7 @@ import android.view.View;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
+import kr.co.ajcc.wms.menu.login.LoginActivity;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 
 public class MainActivity extends CommonCompatActivity {
@@ -37,14 +38,18 @@ public class MainActivity extends CommonCompatActivity {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
-                            finish();
+                            goLogin();
                         }
                     }
                 });
             }
         });
     }
-
+    private void goLogin(){
+        Intent i = new Intent(mContext,LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+    }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
