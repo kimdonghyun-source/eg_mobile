@@ -1,5 +1,6 @@
 package kr.co.ajcc.wms.menu.product_out;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,7 +38,9 @@ public class ProductPickingFragment extends CommonFragment {
     TextView tv_order_count = null;
     TextView tv_empty   = null;
     EditText et_count   = null;
-    DeliveryOrderModel.DeliveryOrder mOrder = null;
+    DeliveryOrderModel.DeliveryOrder mOrder =   null;
+    DeliveryOrderModel mDeliveryOrderModel  =   null;
+    int mPosition = -1;
     RecyclerView recycleview = null;
     ProductPickingAdapter mAdapter = null;
 
@@ -53,8 +56,9 @@ public class ProductPickingFragment extends CommonFragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_product_picking, container, false);
         Bundle arguments = getArguments();
-
-        mOrder = (DeliveryOrderModel.DeliveryOrder)arguments.getSerializable("item");
+        mDeliveryOrderModel= (DeliveryOrderModel)arguments.getSerializable("model");
+        mPosition = arguments.getInt("position");
+        mOrder = mDeliveryOrderModel.getItems().get(mPosition);
 
         Utils.Log("arguments::"+arguments);
         tv_name = v.findViewById(R.id.tv_name);
@@ -91,6 +95,16 @@ public class ProductPickingFragment extends CommonFragment {
                 }
             }
         });
+        List<PalletSnanModel.Items> items = (List<PalletSnanModel.Items>)mOrder.getItems();
+        if(items!=null && items.size() > 0){
+            tv_empty.setVisibility(View.GONE);
+            recycleview.setVisibility(View.VISIBLE);
+            for(int i = 0 ; i < items.size() ; i ++){
+                mAdapter.addData(items.get(i));
+            }
+            mAdapter.notifyDataSetChanged();
+            et_count.setText(Utils.setComma(mOrder.getReq_qty()));
+        }
         return v;
     }
 
@@ -139,8 +153,12 @@ public class ProductPickingFragment extends CommonFragment {
                             count+=itm.getReq_qty();
                         }
                     }
-                    mOrder.setReq_qty(count);
-                    mOrder.setItems(datas);
+
+                    mDeliveryOrderModel.getItems().get(mPosition).setReq_qty(count);
+                    mDeliveryOrderModel.getItems().get(mPosition).setItems(datas);
+                    Intent i = new Intent();
+                    i.putExtra("model",mDeliveryOrderModel);
+                    getActivity().setResult(Activity.RESULT_OK,i);
                     getActivity().finish();
                     break;
             }

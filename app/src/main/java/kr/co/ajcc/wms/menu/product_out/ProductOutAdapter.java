@@ -3,6 +3,8 @@ package kr.co.ajcc.wms.menu.product_out;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ public class ProductOutAdapter extends RecyclerView.Adapter<ProductOutAdapter.Vi
 
     List<DeliveryOrderModel.DeliveryOrder> itemsList;
     Activity mActivity;
+    Handler mHandler = null;
 
     public ProductOutAdapter(Activity context) {
         mActivity = context;
@@ -38,6 +41,11 @@ public class ProductOutAdapter extends RecyclerView.Adapter<ProductOutAdapter.Vi
     public void clearData(){
         if(itemsList!=null)itemsList.clear();
     }
+
+    public void setRetHandler(Handler h){
+        this.mHandler = h;
+    }
+
     public List<DeliveryOrderModel.DeliveryOrder> getData(){
         return itemsList;
     }
@@ -118,19 +126,13 @@ public class ProductOutAdapter extends RecyclerView.Adapter<ProductOutAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
-                    goProductPicking(itemsList.get(getAdapterPosition()));
+                    Message msg = new Message();
+                    msg.obj = itemsList.get(getAdapterPosition());
+                    msg.what= getAdapterPosition();
+                    mHandler.sendMessage(msg);
                 }
             });
 
         }
-    }
-    private void goProductPicking(DeliveryOrderModel.DeliveryOrder item){
-        Intent intent = new Intent(mActivity, BaseActivity.class);
-        intent.putExtra("menu", Define.MENU_PRODUCT_PICKING);
-
-        Bundle extras = new Bundle();
-        extras.putSerializable("item",item);
-        intent.putExtra("args",extras);
-        mActivity.startActivityForResult(intent,100);
     }
 }

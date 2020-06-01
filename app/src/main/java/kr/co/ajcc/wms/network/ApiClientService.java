@@ -181,6 +181,14 @@ public interface ApiClientService {
             @Query("proc") String proc,
             @Query("param1") String param1
     );
+
+    //제품출고 저장
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_wms_ship_save.asp")
+    Call<ResultModel> postSendProductionOut(
+            @Body RequestBody body
+    );
+
     //로그 찍기
     //태그 OkHttp 입력(adb logcat OkHttp:D *:S)
     // HttpLoggingInterceptor.Level.BODY  모든 바디 로그 온
