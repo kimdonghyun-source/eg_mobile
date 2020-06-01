@@ -38,8 +38,8 @@ public class Utils {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static String setComma(double number){
-        DecimalFormat formatter = new DecimalFormat("#,###,###");
+    public static String setComma(float number){
+        DecimalFormat formatter = new DecimalFormat("###,###.#");
         return formatter.format(number);
     }
 

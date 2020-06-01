@@ -30,6 +30,7 @@ import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.menu.config.ConfigFragment;
 import kr.co.ajcc.wms.menu.location.LocationFragment;
 import kr.co.ajcc.wms.menu.material_out.MaterialOutFragment;
+import kr.co.ajcc.wms.menu.material_out.MaterialPickingFragment;
 import kr.co.ajcc.wms.menu.pallet.PalletFragment;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.menu.product_out.ProductOutFragment;
@@ -118,12 +119,12 @@ public class BaseActivity extends CommonCompatActivity {
             }
             case Define.MENU_PRODUCTION_IN: {
                 CommonFragment fragment = new ProductionInFragment();
-                replaceContent(fragment, Define.TAG_MATERIAL_OUT, R.id.fl_content);
+                replaceContent(fragment, Define.TAG_PRODUCTION_IN, R.id.fl_content);
                 break;
             }
             case Define.MENU_PRODUCT_OUT: {
                 CommonFragment fragment = new ProductOutFragment();
-                replaceContent(fragment, Define.TAG_PRODUCTION_IN, R.id.fl_content);
+                replaceContent(fragment, Define.TAG_PRODUCT_OUT, R.id.fl_content);
                 break;
             }
             case Define.MENU_PALLET: {
@@ -140,6 +141,12 @@ public class BaseActivity extends CommonCompatActivity {
                 CommonFragment fragment = new ProductPickingFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_PRODUCT_PICKING, R.id.fl_content);
+                break;
+            }
+            case Define.MENU_MATERIAL_PICKING: {
+                CommonFragment fragment = new MaterialPickingFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_MATERIAL_PICKING, R.id.fl_content);
                 break;
             }
 
@@ -183,6 +190,11 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.prod_picking_title;
                 break;
             }
+            case Define.MENU_MATERIAL_PICKING: {
+                image = R.drawable.menu_release_title;
+                break;
+            }
+
         }
         iv_title.setBackgroundResource(image);
     }

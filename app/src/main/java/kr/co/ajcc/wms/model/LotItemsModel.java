@@ -27,9 +27,9 @@ public class LotItemsModel extends ResultModel{
         //제조사 로트번호
         String lot_no2;
         //재고수량
-        long inv_qty;
+        float inv_qty;
         //사용자 입력값
-        long input_qty;
+        float input_qty;
 
         public String getItm_code() {
             return itm_code;
@@ -79,19 +79,19 @@ public class LotItemsModel extends ResultModel{
             this.lot_no2 = lot_no2;
         }
 
-        public long getInv_qty() {
+        public float getInv_qty() {
             return inv_qty;
         }
 
-        public void setInv_qty(long inv_qty) {
+        public void setInv_qty(float inv_qty) {
             this.inv_qty = inv_qty;
         }
 
-        public long getInput_qty() {
+        public float getInput_qty() {
             return input_qty;
         }
 
-        public void setInput_qty(long input_qty) {
+        public void setInput_qty(float input_qty) {
             this.input_qty = input_qty;
         }
     }

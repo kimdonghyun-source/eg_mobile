@@ -86,7 +86,7 @@ public class ProductPickingFragment extends CommonFragment {
             public void handleMessage(Message msg){
                 if(msg.what == 1){
                     List<PalletSnanModel.Items> itms = mAdapter.getData();
-                    int count = 0;
+                    float count = 0;
                     for(int i = 0 ; i < itms.size() ; i++){
                         PalletSnanModel.Items itm = itms.get(i);
                         count += itm.getReq_qty();
@@ -95,7 +95,7 @@ public class ProductPickingFragment extends CommonFragment {
                 }
             }
         });
-        List<PalletSnanModel.Items> items = (List<PalletSnanModel.Items>)mOrder.getItems();
+        List<PalletSnanModel.Items> items = mOrder.getItems();
         if(items!=null && items.size() > 0){
             tv_empty.setVisibility(View.GONE);
             recycleview.setVisibility(View.VISIBLE);

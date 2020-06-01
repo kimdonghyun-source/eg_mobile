@@ -3,40 +3,66 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:background="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_weight="0.03"
         android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/picking_itemname" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/picking_itemsize" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
+            android:layout_marginTop="10dp">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/picking_itemqty" />
-
+                android:src="@drawable/prod_picking_itemname" />
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="20dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/prod_picking_orderqty" />
+            <TextView
+                android:id="@+id/tv_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="20dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/prod_picking_pickingqty" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,13 +70,11 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/picking_maininputbox"
                 android:orientation="horizontal">
-
                 <EditText
-                    android:id="@+id/et_location"
-                    style="@style/EditTextLocation" />
-
+                    android:id="@+id/et_cnt"
+                    style="@style/EditTextLocation"
+                    android:enabled="false"/>
             </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,88 +85,78 @@
                 android:textSize="20dp" />
 
             <TextView
+                android:id="@+id/tv_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="1,000EA"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:textStyle="bold" />
-
-
+                android:textSize="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center|left"
+                android:text="EA"
+                android:textSize="20dp"
+                android:textColor="@color/black"/>
         </LinearLayout>
-
-
     </LinearLayout>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/print_grid" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    </LinearLayout>
-
-    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:background="@drawable/menu_inhouse_grid"/>
+    <TextView
+        android:id="@+id/tv_empty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:gravity="top|left"
-            android:text="파킹할 품목의 LOC와 LOT를 스캔하세요"
-            android:textColor="@color/color_a3a3a3"
-            android:textSize="18dp" />
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
+        android:layout_margin="20dp"
+        android:gravity="top|left"
+        android:textSize="18dp"
+        android:textColor="@color/color_a3a3a3"
+        android:text="피킹할 품목의 LOC와 LOT를 스캔하세요."/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:nestedScrollingEnabled="false"/>
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/print_grid"
+        <!-- 정제영 테스트 -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/print_grid" />
-
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_picking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="피킹"/>
+        </LinearLayout>
+        <!-- 정제영 테스트 끝 -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/menu_inhouse_grid"/>
         <ImageButton
-            android:id="@+id/btn_printAdd"
-            android:layout_width="match_parent"
+            android:id="@+id/bt_next"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:src="@drawable/picking_bt_picking" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/menu_bg" />
-
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/picking_bt_picking"
+            android:background="@color/trans"/>
     </LinearLayout>
-
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/menu_bg"/>
 </LinearLayout>

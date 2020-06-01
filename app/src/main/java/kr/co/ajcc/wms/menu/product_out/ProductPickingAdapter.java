@@ -73,7 +73,6 @@ public class ProductPickingAdapter extends RecyclerView.Adapter<ProductPickingAd
         holder.et_count.setText(Utils.setComma(item.getReq_qty()));
 
         holder.et_count.addTextChangedListener(new TextWatcher() {
-            DecimalFormat df = new DecimalFormat("###,###");
             String result = "";
 
             @Override
@@ -87,12 +86,12 @@ public class ProductPickingAdapter extends RecyclerView.Adapter<ProductPickingAd
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = df.format(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
+                if (s.toString().length() > 0 && !s.toString().equals(String.valueOf(result))) {     // StackOverflow를 막기위해,
+                    result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    float cnt = Utils.stringToFloat(s.toString());
+                    float cnt = Utils.stringToFloat(result);
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setReq_qty(cnt);
                     mHandler.sendEmptyMessage(1);

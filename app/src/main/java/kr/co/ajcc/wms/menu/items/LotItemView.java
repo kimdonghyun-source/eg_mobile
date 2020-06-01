@@ -52,7 +52,6 @@ public class LotItemView extends LinearLayout {
         tv_product.setSelected(true);
 
         et_count.addTextChangedListener(new TextWatcher(){
-            DecimalFormat df = new DecimalFormat("###,###");
             String result="";
 
             @Override
@@ -65,11 +64,11 @@ public class LotItemView extends LinearLayout {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = df.format(Utils.stringToLong(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
+                    result = Utils.setComma(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
                     et_count.setText(result);    // 결과 텍스트 셋팅.
                     et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    long cnt = Utils.stringToLong(s.toString());
+                    float cnt = Utils.stringToFloat(s.toString());
                     mModel.setInput_qty(cnt);
                 }
             }

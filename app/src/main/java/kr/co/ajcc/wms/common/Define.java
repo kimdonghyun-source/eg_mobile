@@ -7,6 +7,9 @@ public class Define {
     public static final int MENU_LOCATION = 2;
     //자재불출
     public static final int MENU_MATERIAL_OUT  = 3;
+    //자재불출 피킹
+    public static final int MENU_MATERIAL_PICKING = 31;
+
     //생산입고
     public static final int MENU_PRODUCTION_IN = 4;
     //제품출고
@@ -25,6 +28,8 @@ public class Define {
     public static final String TAG_LOCATION = "location";
     //자재불출
     public static final String TAG_MATERIAL_OUT  = "material";
+    //자재불출피킹
+    public static final String TAG_MATERIAL_PICKING = "material_picking";
     //생산입고
     public static final String TAG_PRODUCTION_IN = "production";
     //제품출고

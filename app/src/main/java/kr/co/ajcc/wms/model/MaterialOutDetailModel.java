@@ -64,5 +64,15 @@ public class MaterialOutDetailModel extends ResultModel {
         public void setReq_qty(float req_qty) {
             this.req_qty = req_qty;
         }
+
+        List<MaterialLocAndLotModel.Items> items;
+
+        public List<MaterialLocAndLotModel.Items> getItems() {
+            return items;
+        }
+
+        public void setItems(List<MaterialLocAndLotModel.Items> items) {
+            this.items = items;
+        }
     }
 }

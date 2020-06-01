@@ -7,6 +7,7 @@ import kr.co.ajcc.wms.model.CustomerInfoModel;
 import kr.co.ajcc.wms.model.DeliveryOrderModel;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
+import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
@@ -155,6 +156,35 @@ public interface ApiClientService {
     Call<MaterialOutDetailModel> postOutOrderDetail(
             @Query("proc") String proc,
             @Query("param1") String param1
+    );
+
+    /**
+     * 자재불출 로케이션, 시스템로트 스캔
+     * @param proc 프로시져
+     * @param param1 불출창고코드
+     * @param param2 로케이션코드
+     * @param param3 시스템로트번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MaterialLocAndLotModel> postOutLocAndLot(
+            @Query("proc") String proc,
+            @Query("param1") String param1,
+            @Query("param2") String param2,
+            @Query("param3") String param3
+    );
+
+    /**
+     * 자재불출 지시 상세
+     * @param proc 프로시져
+     * @param param1 자재불출번호
+     * @return
+     */
+    //제품출고 저장
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_wms_out_save.asp")
+    Call<ResultModel> postMaterialSend(
+            @Body RequestBody body
     );
 
     /**

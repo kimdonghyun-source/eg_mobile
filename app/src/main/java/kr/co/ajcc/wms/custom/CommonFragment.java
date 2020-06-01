@@ -137,7 +137,7 @@ public class CommonFragment extends Fragment {
         return basecontent;
     }
 
-    public void replaceContent(CommonFragment content, String tag,   int layout_id){
+    public void replaceContent(CommonFragment content, String tag, int layout_id){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 

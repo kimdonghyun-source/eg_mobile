@@ -40,7 +40,8 @@
         android:paddingRight="3dp"
         android:layout_gravity="center|left"
         android:gravity="center|right"
-        android:inputType="number"
+        android:digits="0123456789.,"
+        android:inputType="numberDecimal"
         android:textSize="15dp"
         android:textColor="@color/black"
         android:background="@drawable/fill_rect_f5edb0"/>

@@ -1,6 +1,10 @@
 package kr.co.ajcc.wms.menu.material_out;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,13 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
+import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.Utils;
+import kr.co.ajcc.wms.custom.CommonFragment;
+import kr.co.ajcc.wms.menu.main.BaseActivity;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 
 public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.ViewHolder> {
 
     List<MaterialOutDetailModel.Items> itemsList;
     Activity mActivity;
+    Handler mHandler = null;
 
     public MaterialOutAdapter(Activity context) {
         mActivity = context;
@@ -31,9 +39,15 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
     public void setData(List<MaterialOutDetailModel.Items> list){
         itemsList = list;
     }
+
     public void clearData(){
         if(itemsList!=null)itemsList.clear();
     }
+
+    public void setRetHandler(Handler h){
+        this.mHandler = h;
+    }
+
     public List<MaterialOutDetailModel.Items> getData(){
         return itemsList;
     }
@@ -57,12 +71,12 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
         //피킹에서 입력받기 때문에 0으로 셋팅하고 enable = false
         holder.et_count.setText("0");
         holder.et_count.setEnabled(false);
+        holder.et_count.setClickable(false);
 
         //흐르는 text 구현을 위해 selected 처리
         holder.tv_product.setSelected(true);
 
         holder.et_count.addTextChangedListener(new TextWatcher(){
-            DecimalFormat df = new DecimalFormat("###,###");
             String result="";
 
             @Override
@@ -75,7 +89,7 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = df.format(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
+                    result = Utils.setComma(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
@@ -111,6 +125,10 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
                 @Override
                 public void onClick(View v) {
                     Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
+                    Message msg = new Message();
+                    msg.obj = itemsList.get(getAdapterPosition());
+                    msg.what= getAdapterPosition();
+                    mHandler.sendMessage(msg);
                 }
             });
         }

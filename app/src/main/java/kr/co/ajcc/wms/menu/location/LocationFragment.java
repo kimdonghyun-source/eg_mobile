@@ -364,7 +364,7 @@ public class LocationFragment extends CommonFragment {
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             if(model.getItems().size() > 0) {
-                                mAdapter.clearData();
+                                mAdapter.setData(model.getItems().get(0));
                                 mAdapter.notifyDataSetChanged();
 
                                 tv_empty.setVisibility(View.GONE);
@@ -411,7 +411,7 @@ public class LocationFragment extends CommonFragment {
         json.addProperty("p_user_id", userID);
 
         List<LotItemsModel.Items> items = mAdapter.getData();
-        long total = 0;
+        float total = 0;
         JsonArray list = new JsonArray();
         for(LotItemsModel.Items item : items){
 

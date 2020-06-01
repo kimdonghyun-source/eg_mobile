@@ -1,6 +1,7 @@
-package kr.co.ajcc.wms.menu.location;
+package kr.co.ajcc.wms.menu.material_out;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,54 +18,52 @@ import java.util.List;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Utils;
-import kr.co.ajcc.wms.model.LotItemsModel;
+import kr.co.ajcc.wms.menu.location.LocationAdapter;
+import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
+import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
+public class MaterialPickingAdapter extends RecyclerView.Adapter<MaterialPickingAdapter.ViewHolder> {
 
-    List<LotItemsModel.Items> itemsList;
+    List<MaterialLocAndLotModel.Items> itemsList;
     Activity mActivity;
+    Handler mHandler = null;
 
-    public LocationAdapter(Activity context) {
+    public MaterialPickingAdapter(Activity context) {
         mActivity = context;
         itemsList = new ArrayList<>();
     }
 
-    public void setData(LotItemsModel.Items item){
-        itemsList.add(item);
+    public void setData(List<MaterialLocAndLotModel.Items> item){
+        itemsList = item;
     }
 
     public void clearData(){
         itemsList.clear();
     }
 
-    public List<LotItemsModel.Items> getData(){
+    public void setSumHandler(Handler h){
+        this.mHandler = h;
+    }
+
+    public List<MaterialLocAndLotModel.Items> getData(){
         return itemsList;
     }
 
     @Override
-    public LocationAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_lot_item, viewGroup, false);
-        LocationAdapter.ViewHolder holder = new LocationAdapter.ViewHolder(v);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_material_picking, viewGroup, false);
+        ViewHolder holder = new ViewHolder(v);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final LocationAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final LotItemsModel.Items item = itemsList.get(position);
+        final MaterialLocAndLotModel.Items item = itemsList.get(position);
 
-        holder.tv_product.setText(item.getItm_name());
-        holder.tv_standard.setText(item.getItm_size());
+        holder.tv_lot.setText("LOT NO. : "+item.getLot_no());
         holder.tv_count.setText(Utils.setComma(item.getInv_qty()));
-
-        //list에 입력된 수량을 보여주는데 0일 셋팅 되어있는 경우 사용자가 값을 입력하기 번거롭기 때문에 "" 처리
-        if(item.getInput_qty() <= 0)
-            holder.et_count.setText("");
-        else
-            holder.et_count.setText(Utils.setComma(item.getInput_qty()));
-
-        //흐르는 text 구현을 위해 selected 처리
-        holder.tv_product.setSelected(true);
+        holder.tv_loc.setText("LOC : "+item.getLocation_code());
 
         holder.et_count.addTextChangedListener(new TextWatcher(){
             String result="";
@@ -79,13 +78,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = Utils.setComma(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
+                    result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    float cnt = Utils.stringToInt(s.toString());
+                    float cnt = Utils.stringToFloat(result);
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setInput_qty(cnt);
+                    mHandler.sendEmptyMessage(1);
                 }
             }
         });
@@ -98,18 +98,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_product;
-        TextView tv_standard;
-        EditText et_count;
+        TextView tv_lot;
         TextView tv_count;
+        TextView tv_loc;
+        EditText et_count;
 
         public ViewHolder(View view) {
             super(view);
 
-            tv_product = view.findViewById(R.id.tv_product);
-            tv_standard = view.findViewById(R.id.tv_standard);
-            et_count = view.findViewById(R.id.et_count);
+            tv_lot = view.findViewById(R.id.tv_lot);
             tv_count = view.findViewById(R.id.tv_count);
+            tv_loc = view.findViewById(R.id.tv_loc);
+            et_count = view.findViewById(R.id.et_count);
         }
     }
 }
