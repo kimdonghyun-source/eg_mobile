@@ -16,6 +16,9 @@ public class Define {
     //프린터설정
     public static final int MENU_CONFIG = 7;
 
+    //제품피킹
+    public static final int MENU_PRODUCT_PICKING = 51;
+
     //입고등록
     public static final String TAG_REGISTRATION = "registration";
     //로케이션 이동
@@ -26,6 +29,8 @@ public class Define {
     public static final String TAG_PRODUCTION_IN = "production";
     //제품출고
     public static final String TAG_PRODUCT_OUT = "product";
+    //제품출고피킹
+    public static final String TAG_PRODUCT_PICKING = "product_picking";
     //파렛트관리
     public static final String TAG_PALLET = "pallet";
     //프린터설정

@@ -13,9 +13,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.honeywell.aidc.BarcodeReadEvent;
+
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
+import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.popup.OutMeterialListPopup;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
@@ -44,6 +47,33 @@ public class MaterialOutFragment extends CommonFragment {
         super.onCreate(savedInstanceState);
 
         mContext = getActivity();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        AidcReader.getInstance().claim(mContext);
+        AidcReader.getInstance().setListenerHandler(new Handler() {
+            @Override
+            public void handleMessage(Message msg){
+                if(msg.what == 1){
+                    BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
+                    String barcode = event.getBarcodeData();
+
+                    mAdapter.clearData();
+                    mAdapter.notifyDataSetChanged();
+
+                    requestOrderDetail(barcode);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        AidcReader.getInstance().release();
+        AidcReader.getInstance().setListenerHandler(null);
     }
 
     @Override

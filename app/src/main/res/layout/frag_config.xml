@@ -18,9 +18,11 @@
             android:src="@drawable/menu_setting_text_print" />
 
         <EditText
+            android:id="@+id/et_printer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true">
+            android:textColor="@color/black"
+            android:enabled="false">
 
         </EditText>
 
@@ -57,6 +59,7 @@
         android:layout_weight="1">
 
         <ListView
+            android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

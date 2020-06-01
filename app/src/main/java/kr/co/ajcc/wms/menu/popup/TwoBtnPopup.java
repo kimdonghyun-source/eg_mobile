@@ -80,6 +80,10 @@ public class TwoBtnPopup {
         dialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Message msg = mHandler.obtainMessage();
+                msg.what = 2;
+                msg.obj = "취소";
+                mHandler.sendMessage(msg);
                 hideDialog();
             }
         });
@@ -87,6 +91,10 @@ public class TwoBtnPopup {
         dialog.findViewById(R.id.bt_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Message msg = mHandler.obtainMessage();
+                msg.what = 3;
+                msg.obj = "종료";
+                mHandler.sendMessage(msg);
                 hideDialog();
             }
         });

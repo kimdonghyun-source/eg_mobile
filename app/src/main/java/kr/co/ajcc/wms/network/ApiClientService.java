@@ -3,6 +3,8 @@ package kr.co.ajcc.wms.network;
 import java.util.concurrent.TimeUnit;
 
 import kr.co.ajcc.wms.BuildConfig;
+import kr.co.ajcc.wms.model.CustomerInfoModel;
+import kr.co.ajcc.wms.model.DeliveryOrderModel;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
@@ -155,6 +157,30 @@ public interface ApiClientService {
             @Query("param1") String param1
     );
 
+    /**
+     * 출고지시서 상세
+     * @param proc 프로시져
+     * @param param1 출고지시번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<CustomerInfoModel> postShipReqList(
+            @Query("proc") String proc,
+            @Query("param1") String param1,
+            @Query("param2") String param2
+    );
+
+    /**
+     * 출고지시서 상세
+     * @param proc 프로시져
+     * @param param1 출고지시번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<DeliveryOrderModel> postShipReqDetail(
+            @Query("proc") String proc,
+            @Query("param1") String param1
+    );
     //로그 찍기
     //태그 OkHttp 입력(adb logcat OkHttp:D *:S)
     // HttpLoggingInterceptor.Level.BODY  모든 바디 로그 온

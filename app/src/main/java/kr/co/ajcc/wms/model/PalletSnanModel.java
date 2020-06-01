@@ -24,7 +24,8 @@ public class PalletSnanModel extends ResultModel{
         String pallet_qty;
         //시리얼번호(스캔바코드)
         String serial_no;
-
+        //자재불출수량
+        float req_qty;
         public String getItm_code() {
             return itm_code;
         }
@@ -63,6 +64,14 @@ public class PalletSnanModel extends ResultModel{
 
         public void setSerial_no(String serial_no) {
             this.serial_no = serial_no;
+        }
+
+        public float getReq_qty() {
+            return req_qty;
+        }
+
+        public void setReq_qty(float req_qty) {
+            this.req_qty = req_qty;
         }
     }
 }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.common.SharedData;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.custom.MergeAdapter;
+import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.items.LotItemView;
 import kr.co.ajcc.wms.menu.popup.LocationListPopup;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
@@ -100,6 +102,46 @@ public class LocationFragment extends CommonFragment {
         recycleview.setAdapter(mAdapter);
 
         return v;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        AidcReader.getInstance().claim(mContext);
+        AidcReader.getInstance().setListenerHandler(new Handler() {
+            @Override
+            public void handleMessage(Message msg){
+                if(msg.what == 1){
+                    BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
+                    String barcode = event.getBarcodeData();
+                    String from_location = et_from.getText().toString();
+                    String to_location = et_to.getText().toString();
+
+                    if(Utils.nullString(from_location,"").length() <= 0){
+                        requestLocation(FROM, barcode);
+                    } else if(Utils.nullString(to_location,"").length() <= 0){
+                        requestLocation(TO, barcode);
+                    } else {
+                        if(fromLocation == null) {
+                            Utils.Toast(mContext, getString(R.string.error_location_from));
+                            return;
+                        }
+                        if(toLocation == null) {
+                            Utils.Toast(mContext, getString(R.string.error_location_to));
+                            return;
+                        }
+                        requestLotItems(fromLocation.getLocation_code(), barcode);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        AidcReader.getInstance().release();
+        AidcReader.getInstance().setListenerHandler(null);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -177,9 +219,15 @@ public class LocationFragment extends CommonFragment {
                                     if (msg.what == 1) {
                                         LocationModel.Items item = (LocationModel.Items)msg.obj;
                                         if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
+                                            mAdapter.setData(null);
+                                            mAdapter.notifyDataSetChanged();
+
                                             fromLocation = item;
                                             et_from.setText(fromLocation.getLocation_code());
                                         }else if(cmd == TO){    //to인 경우엔 from과 같은 창고인지 비교
+                                            mAdapter.setData(null);
+                                            mAdapter.notifyDataSetChanged();
+
                                             if(fromLocation.getWh_code().equals(item.getWh_code())) {
                                                 toLocation = item;
                                                 et_to.setText(toLocation.getLocation_code());
@@ -235,9 +283,15 @@ public class LocationFragment extends CommonFragment {
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
+                                mAdapter.clearData();
+                                mAdapter.notifyDataSetChanged();
+
                                 fromLocation = model.getItems().get(0);
                                 et_from.setText(fromLocation.getLocation_code());
                             }else if(cmd == TO){    //to인 경우엔 from과 같은 창고인지 비교
+                                mAdapter.clearData();
+                                mAdapter.notifyDataSetChanged();
+
                                 if(fromLocation.getWh_code().equals(model.getItems().get(0).getWh_code())) {
                                     toLocation = model.getItems().get(0);
                                     et_to.setText(toLocation.getLocation_code());
@@ -247,18 +301,32 @@ public class LocationFragment extends CommonFragment {
                                         public void handleMessage(Message msg) {
                                             if (msg.what == 1) {
                                                 mOneBtnPopup.hideDialog();
+                                                et_to.setText("");
                                             }
                                         }
                                     });
                                 }
                             }
                         }else{
-                            Utils.Toast(mContext, model.getMSG());
+                            if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
+                                et_from.setText("");
+                            }else if(cmd == TO) {
+                                et_to.setText("");
+                            }
+                            mAdapter.clearData();
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 }else{
                     Utils.LogLine(response.message());
                     Utils.Toast(mContext, response.code()+" : "+response.message());
+                    if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
+                        et_from.setText("");
+                    }else if(cmd == TO) {
+                        et_to.setText("");
+                    }
+                    mAdapter.clearData();
+                    mAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -266,6 +334,13 @@ public class LocationFragment extends CommonFragment {
             public void onFailure(Call<LocationModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mContext, getString(R.string.error_network));
+                if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
+                    et_from.setText("");
+                }else if(cmd == TO) {
+                    et_to.setText("");
+                }
+                mAdapter.clearData();
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -289,7 +364,7 @@ public class LocationFragment extends CommonFragment {
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             if(model.getItems().size() > 0) {
-                                mAdapter.setData(model.getItems().get(0));
+                                mAdapter.clearData();
                                 mAdapter.notifyDataSetChanged();
 
                                 tv_empty.setVisibility(View.GONE);

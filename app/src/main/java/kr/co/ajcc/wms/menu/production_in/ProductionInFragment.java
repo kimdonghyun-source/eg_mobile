@@ -105,8 +105,7 @@ public class ProductionInFragment extends CommonFragment {
                     BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
                     String barcode = event.getBarcodeData();
                     String location = et_location.getText().toString();
-                    if(mLocationModel==null){
-                        et_location.setText(barcode);
+                    if(Utils.isEmpty(location)){
                         requestLocation(barcode, "P");
                     } else {
                         requestPalletScan(barcode);

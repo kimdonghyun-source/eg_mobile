@@ -32,6 +32,7 @@ import kr.co.ajcc.wms.menu.material_out.MaterialOutFragment;
 import kr.co.ajcc.wms.menu.pallet.PalletFragment;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.menu.product_out.ProductOutFragment;
+import kr.co.ajcc.wms.menu.product_out.ProductPickingFragment;
 import kr.co.ajcc.wms.menu.production_in.ProductionInFragment;
 import kr.co.ajcc.wms.menu.registration.RegistrationFragment;
 import kr.co.ajcc.wms.model.UserInfoModel;
@@ -91,6 +92,8 @@ public class BaseActivity extends CommonCompatActivity {
 
         int menu = getIntent().getIntExtra("menu", 0);
 
+        Bundle args = getIntent().getBundleExtra("args");
+
         mSelectMenu = menu-2;
 
         switch (menu){
@@ -132,6 +135,13 @@ public class BaseActivity extends CommonCompatActivity {
                 replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
                 break;
             }
+            case Define.MENU_PRODUCT_PICKING: {
+                CommonFragment fragment = new ProductPickingFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_PRODUCT_PICKING, R.id.fl_content);
+                break;
+            }
+
         }
 
         setTitleImage(menu);
@@ -166,6 +176,10 @@ public class BaseActivity extends CommonCompatActivity {
             }
             case Define.MENU_CONFIG: {
                 image = R.drawable.menu_setting_title;
+                break;
+            }
+            case Define.MENU_PRODUCT_PICKING: {
+                image = R.drawable.prod_picking_title;
                 break;
             }
         }

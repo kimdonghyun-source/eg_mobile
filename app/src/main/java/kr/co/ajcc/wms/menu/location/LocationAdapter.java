@@ -33,6 +33,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         itemsList.add(item);
     }
 
+    public void clearData(){
+        itemsList.clear();
+    }
+
     public List<LotItemsModel.Items> getData(){
         return itemsList;
     }

@@ -119,14 +119,20 @@
             android:layout_weight="1"
             android:gravity="top|left"
             android:textColor="@color/color_a3a3a3"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:visibility="gone"/>
 
-        <ListView
+        <!--ListView
             android:id="@+id/o_listView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-
+            android:layout_weight="1" /-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>
 
@@ -139,7 +145,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
+        <!-- 정제영 테스트 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:id="@+id/bt_test_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="출고지시서"/>
 
+        </LinearLayout>
+        <!-- 정제영 테스트 끝 -->
         <ImageView
             android:id="@+id/print_grid"
             android:layout_width="match_parent"
