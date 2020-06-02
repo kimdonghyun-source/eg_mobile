@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.honeywell.aidc.BarcodeReadEvent;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
+import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.location.LocationAdapter;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
 import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
@@ -116,6 +119,36 @@ public class MaterialPickingFragment extends CommonFragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        AidcReader.getInstance().claim(mContext);
+        AidcReader.getInstance().setListenerHandler(new Handler() {
+            @Override
+            public void handleMessage(Message msg){
+                if(msg.what == 1){
+                    BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
+                    String barcode = event.getBarcodeData();
+
+                    mAdapter.clearData();
+                    mAdapter.notifyDataSetChanged();
+                    if(barcode.indexOf("-")>=0) {
+                        requestLocAndLot(null,barcode);
+                    } else {
+                        requestLocAndLot(barcode,null);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        AidcReader.getInstance().release();
+        AidcReader.getInstance().setListenerHandler(null);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
