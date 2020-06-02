@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +49,9 @@ public class MaterialPickingFragment extends CommonFragment {
 
     OneBtnPopup mOneBtnPopup;
 
+    String mLocation;
+    String mLotNumber;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,8 @@ public class MaterialPickingFragment extends CommonFragment {
         v.findViewById(R.id.bt_next).setOnClickListener(onClickListener);
 
         //정제영 테스트
-        v.findViewById(R.id.bt_picking).setOnClickListener(onClickListener);
+        v.findViewById(R.id.bt_loc).setOnClickListener(onClickListener);
+        v.findViewById(R.id.bt_lot).setOnClickListener(onClickListener);
 
         et_cnt = v.findViewById(R.id.et_cnt);
         tv_empty = v.findViewById(R.id.tv_empty);
@@ -144,8 +149,15 @@ public class MaterialPickingFragment extends CommonFragment {
                         getActivity().finish();
                     }
                     break;
-                case R.id.bt_picking:
-                    requestLocAndLot("160", "20200514-000002");
+                case R.id.bt_loc:
+                    mLocation = "160";
+                    if(!Utils.isEmpty(mLotNumber) && mLotNumber.length() == 15)
+                        requestLocAndLot();
+                    break;
+                case R.id.bt_lot:
+                    mLotNumber = "20200514-000002";
+                    if(!Utils.isEmpty(mLocation))
+                        requestLocAndLot();
                     break;
             }
         }
@@ -154,10 +166,22 @@ public class MaterialPickingFragment extends CommonFragment {
     /**
      * 로케이션 및 로트번호 스캔
      */
-    private void requestLocAndLot(String loc, String lot) {
+    private void requestLocAndLot() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<MaterialLocAndLotModel> call = service.postOutLocAndLot("sp_pda_out_loc_lot_scan", mWarehouseCode, loc, lot);
+        if(Utils.isEmpty(mWarehouseCode)){
+            Utils.Toast(mContext, "출고창고코드가 없습니다.");
+            return;
+        }
+        if(Utils.isEmpty(mLocation)){
+            Utils.Toast(mContext, "입력된 로케이션코드가 없습니다.");
+            return;
+        }
+        if(Utils.isEmpty(mLotNumber)){
+            Utils.Toast(mContext, "입력된 로트번호가 없습니다.");
+            return;
+        }
+        Call<MaterialLocAndLotModel> call = service.postOutLocAndLot("sp_pda_out_loc_lot_scan", mWarehouseCode, mLocation, mLotNumber);
 
         call.enqueue(new Callback<MaterialLocAndLotModel>() {
             @Override

@@ -331,8 +331,6 @@ public class MaterialOutFragment extends CommonFragment {
         }
         json.add("detail", list);
 
-        Utils.Log("new Gson().toJson(json) ==> : "+new Gson().toJson(json));
-
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
 
         Call<ResultModel> call = service.postMaterialSend(body);
