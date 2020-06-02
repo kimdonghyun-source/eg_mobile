@@ -70,7 +70,6 @@
             <EditText
                 android:id="@+id/et_location"
                 style="@style/EditTextLocation"
-                android:imeOptions="actionDone"
                 />
 
             <ImageButton

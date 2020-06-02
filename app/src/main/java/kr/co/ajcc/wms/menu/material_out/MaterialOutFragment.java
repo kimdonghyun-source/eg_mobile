@@ -113,6 +113,7 @@ public class MaterialOutFragment extends CommonFragment {
         tv_warehouse = v.findViewById(R.id.tv_warehouse);
         tv_input = v.findViewById(R.id.tv_input);
         v.findViewById(R.id.bt_search).setOnClickListener(onClickListener);
+        v.findViewById(R.id.bt_next).setOnClickListener(onClickListener);
 
         //정제영 테스트
         v.findViewById(R.id.bt_order).setOnClickListener(onClickListener);
@@ -259,6 +260,10 @@ public class MaterialOutFragment extends CommonFragment {
                     if (mMaterialOutDetailModel != null) {
                         if(mMaterialOutDetailModel.getFlag() == ResultModel.SUCCESS) {
                             if(mMaterialOutDetailModel.getItems().size() > 0) {
+                                //장고코드 입력
+                                mWarehouseCode = mMaterialOutDetailModel.getItems().get(0).getWh_code_out();
+                                tv_warehouse.setText(mMaterialOutDetailModel.getItems().get(0).getWh_name_out());
+                                tv_input.setText(mMaterialOutDetailModel.getItems().get(0).getWh_name_in());
                                 mAdapter.setData(mMaterialOutDetailModel.getItems());
                                 mAdapter.notifyDataSetChanged();
 

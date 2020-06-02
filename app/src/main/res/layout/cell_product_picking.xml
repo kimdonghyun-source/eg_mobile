@@ -39,6 +39,7 @@
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:layout_gravity="center|left"
+        android:imeOptions="actionDone"
         android:gravity="center|right"
         android:digits="0123456789.,"
         android:inputType="numberDecimal"

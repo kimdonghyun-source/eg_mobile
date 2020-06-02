@@ -93,6 +93,7 @@
                         android:layout_weight="1"
                         android:textColor="@color/black"
                         android:textSize="18sp"
+                        android:imeOptions="actionDone"
                         android:text="애터"
                         />
                     <!--Spinner

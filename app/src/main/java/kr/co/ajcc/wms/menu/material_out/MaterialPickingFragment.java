@@ -56,8 +56,8 @@ public class MaterialPickingFragment extends CommonFragment {
 
         if (getArguments() != null) {
             mMaterialOutDetailModel = (MaterialOutDetailModel) getArguments().getSerializable("model");
-            mWarehouseCode = getArguments().getString("position");
-            mPosition = getArguments().getInt("code");
+            mWarehouseCode = getArguments().getString("code");
+            mPosition = getArguments().getInt("position");
             mOrderModel = mMaterialOutDetailModel.getItems().get(mPosition);
         }
     }
@@ -100,16 +100,7 @@ public class MaterialPickingFragment extends CommonFragment {
                     }
                     et_cnt.setText(Utils.setComma(count));
                     if(count > mOrderModel.getReq_qty()){
-                        mOneBtnPopup = new OneBtnPopup(getActivity(), "재고를 초과하였습니다.", R.drawable.popup_title_alert, new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                if (msg.what == 1) {
-                                    String result = (String)msg.obj;
-                                    Utils.Toast(mContext, result);
-                                    mOneBtnPopup.hideDialog();
-                                }
-                            }
-                        });
+                        Utils.Toast(mContext, "재고를 초과하였습니다.");
                     }
                 }
             }
@@ -136,12 +127,22 @@ public class MaterialPickingFragment extends CommonFragment {
                         }
                     }
 
-                    mMaterialOutDetailModel.getItems().get(mPosition).setReq_qty(count);
-                    mMaterialOutDetailModel.getItems().get(mPosition).setItems(datas);
-                    Intent i = new Intent();
-                    i.putExtra("model", mMaterialOutDetailModel);
-                    getActivity().setResult(Activity.RESULT_OK, i);
-                    getActivity().finish();
+                    if(count > mOrderModel.getReq_qty()){
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "재고를 초과하였습니다.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
+                    }else {
+                        mMaterialOutDetailModel.getItems().get(mPosition).setItems(datas);
+                        Intent i = new Intent();
+                        i.putExtra("model", mMaterialOutDetailModel);
+                        getActivity().setResult(Activity.RESULT_OK, i);
+                        getActivity().finish();
+                    }
                     break;
                 case R.id.bt_picking:
                     requestLocAndLot("160", "20200514-000002");
@@ -174,7 +175,14 @@ public class MaterialPickingFragment extends CommonFragment {
                                 recycleview.setVisibility(View.VISIBLE);
                             }
                         }else{
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                         }
                     }
                 }else{

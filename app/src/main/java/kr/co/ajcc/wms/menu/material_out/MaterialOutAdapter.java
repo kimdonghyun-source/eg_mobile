@@ -24,6 +24,7 @@ import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.menu.main.BaseActivity;
+import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 
 public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.ViewHolder> {
@@ -41,7 +42,7 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
     }
 
     public void clearData(){
-        if(itemsList!=null)itemsList.clear();
+        if(itemsList != null)itemsList.clear();
     }
 
     public void setRetHandler(Handler h){
@@ -68,37 +69,18 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
         holder.tv_standard.setText(item.getItm_size());
         holder.tv_count.setText(Utils.setComma(item.getReq_qty()));
 
-        //피킹에서 입력받기 때문에 0으로 셋팅하고 enable = false
-        holder.et_count.setText("0");
+        //enable = false
+        float cnt = 0;
+        if(item.getItems() != null){
+            for (MaterialLocAndLotModel.Items data : item.getItems()) {
+                cnt += data.getInput_qty();
+            }
+        }
+        holder.et_count.setText(Utils.setComma(cnt));
         holder.et_count.setEnabled(false);
-        holder.et_count.setClickable(false);
 
         //흐르는 text 구현을 위해 selected 처리
         holder.tv_product.setSelected(true);
-
-        holder.et_count.addTextChangedListener(new TextWatcher(){
-            String result="";
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                    result = Utils.setComma(Utils.stringToFloat(s.toString().replaceAll(",", "")));   // 에딧텍스트의 값을 변환하여, result에 저장.
-                    holder.et_count.setText(result);    // 결과 텍스트 셋팅.
-                    holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
-
-                    float cnt = Utils.stringToFloat(s.toString());
-                    //입력된 수량을 list에 넣어줌
-                    itemsList.get(holder.getAdapterPosition()).setReq_qty(cnt);
-                }
-            }
-        });
     }
 
     @Override
@@ -124,7 +106,6 @@ public class MaterialOutAdapter extends RecyclerView.Adapter<MaterialOutAdapter.
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
                     Message msg = new Message();
                     msg.obj = itemsList.get(getAdapterPosition());
                     msg.what= getAdapterPosition();
