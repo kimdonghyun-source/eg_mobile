@@ -175,7 +175,7 @@ public class PalletFragment extends CommonFragment {
             iv_gd.setBackgroundResource(R.drawable.pallet_merge_guidetext);
             ll_pallet_merge.setVisibility(View.VISIBLE);
             ll_pallet_bunhal.setVisibility(View.GONE);
-            btn_next.setImageResource(R.drawable.pallet_bt_merge);
+            btn_next.setImageResource(R.drawable.pallet_bottom_bt_merge);
         }
     }
 
@@ -406,6 +406,7 @@ public class PalletFragment extends CommonFragment {
                 if(response.isSuccessful()){
 
                     final SerialNumberModel model = response.body();
+                    Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             String msg = String.format("%s PALLET를 분할 처리되었습니다. 확인을 누르시면 바코드 출력 화면으로 이동합니다.",bunhalItem.getSerial_no());
