@@ -33,6 +33,7 @@ import kr.co.ajcc.wms.menu.location.LocationFragment;
 import kr.co.ajcc.wms.menu.material_out.MaterialOutFragment;
 import kr.co.ajcc.wms.menu.material_out.MaterialPickingFragment;
 import kr.co.ajcc.wms.menu.pallet.PalletFragment;
+import kr.co.ajcc.wms.menu.pallet.PrinterFragment;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.menu.product_out.ProductOutFragment;
 import kr.co.ajcc.wms.menu.product_out.ProductPickingFragment;
@@ -155,6 +156,12 @@ public class BaseActivity extends CommonCompatActivity {
                 replaceContent(fragment, Define.TAG_MATERIAL_PICKING, R.id.fl_content);
                 break;
             }
+            case Define.MENU_PALLET_PRINTER: {
+                CommonFragment fragment = new PrinterFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_PALLET_PRINTER, R.id.fl_content);
+                break;
+            }
 
         }
 
@@ -212,7 +219,13 @@ public class BaseActivity extends CommonCompatActivity {
                 isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
                 break;
             }
-
+            case Define.MENU_PALLET_PRINTER: {
+                image = R.drawable.print_title;
+                gnb = R.drawable.titlebar_submenu;
+                isDrawer = View.GONE;
+                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+                break;
+            }
         }
         iv_title.setBackgroundResource(image);
         iv_gnb.setBackgroundResource(gnb);

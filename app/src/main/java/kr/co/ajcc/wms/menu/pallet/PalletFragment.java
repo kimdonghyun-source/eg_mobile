@@ -35,6 +35,7 @@ import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.model.DeliveryOrderModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
+import kr.co.ajcc.wms.model.SerialNumberModel;
 import kr.co.ajcc.wms.network.ApiClientService;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -274,8 +275,14 @@ public class PalletFragment extends CommonFragment {
         mContext.startActivity(intent);
     }
 
-    private void goBarcode(){
+    private void goBarcode(String sn){
         Utils.Log("goBarcode");
+        Intent intent = new Intent(mContext, BaseActivity.class);
+        intent.putExtra("menu", Define.MENU_PALLET_PRINTER);
+        Bundle args=new Bundle();
+        args.putString("SN",sn);
+        intent.putExtra("args",args);
+        startActivity(intent);
     }
 
     private void initMerge(){
@@ -392,13 +399,13 @@ public class PalletFragment extends CommonFragment {
         String param6 = bunhalCount;
         String param7 = userID;
 
-        Call<ResultModel> call = service.postMakeBunhalJunphyo("sp_pda_plt_div_make", param1,param2,param3,param4,param5,param6,param7);
-        call.enqueue(new Callback<ResultModel>() {
+        Call<SerialNumberModel> call = service.postMakeBunhalJunphyo("sp_pda_plt_div_make", param1,param2,param3,param4,param5,param6,param7);
+        call.enqueue(new Callback<SerialNumberModel>() {
             @Override
-            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+            public void onResponse(Call<SerialNumberModel> call, Response<SerialNumberModel> response) {
                 if(response.isSuccessful()){
 
-                    ResultModel model = response.body();
+                    final SerialNumberModel model = response.body();
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             String msg = String.format("%s PALLET를 분할 처리되었습니다. 확인을 누르시면 바코드 출력 화면으로 이동합니다.",bunhalItem.getSerial_no());
@@ -406,7 +413,7 @@ public class PalletFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
-                                        goBarcode();
+                                        goBarcode(model.getSerial_no());
                                         initBunhal();
                                         mOneBtnPopup.hideDialog();
                                     }
@@ -423,7 +430,7 @@ public class PalletFragment extends CommonFragment {
             }
 
             @Override
-            public void onFailure(Call<ResultModel> call, Throwable t) {
+            public void onFailure(Call<SerialNumberModel> call, Throwable t) {
                 Utils.Log(t.getMessage());
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mContext, getString(R.string.error_network));
@@ -487,13 +494,13 @@ public class PalletFragment extends CommonFragment {
         json.add("detail", list);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
 
-        Call<ResultModel> call = service.postMakeMergeJunphyo(body);
-        call.enqueue(new Callback<ResultModel>() {
+        Call<SerialNumberModel> call = service.postMakeMergeJunphyo(body);
+        call.enqueue(new Callback<SerialNumberModel>() {
             @Override
-            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+            public void onResponse(Call<SerialNumberModel> call, Response<SerialNumberModel> response) {
                 if(response.isSuccessful()){
 
-                    ResultModel model = response.body();
+                    final SerialNumberModel model = response.body();
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             String str1 = et_merge_1.getText().toString();
@@ -504,7 +511,7 @@ public class PalletFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
-                                        goBarcode();
+                                        goBarcode(model.getSerial_no());
                                         initMerge();
                                         mOneBtnPopup.hideDialog();
                                     }
@@ -521,7 +528,7 @@ public class PalletFragment extends CommonFragment {
             }
 
             @Override
-            public void onFailure(Call<ResultModel> call, Throwable t) {
+            public void onFailure(Call<SerialNumberModel> call, Throwable t) {
                 Utils.Log(t.getMessage());
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mContext, getString(R.string.error_network));

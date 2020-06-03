@@ -14,13 +14,14 @@ public class Define {
     public static final int MENU_PRODUCTION_IN = 4;
     //제품출고
     public static final int MENU_PRODUCT_OUT = 5;
-    //파렛트관리
-    public static final int MENU_PALLET = 6;
-    //프린터설정
-    public static final int MENU_CONFIG = 7;
-
     //제품피킹
     public static final int MENU_PRODUCT_PICKING = 51;
+    //파렛트관리
+    public static final int MENU_PALLET = 6;
+    //파렛트프린터출력
+    public static final int MENU_PALLET_PRINTER = 61;
+    //프린터설정
+    public static final int MENU_CONFIG = 7;
 
     //입고등록
     public static final String TAG_REGISTRATION = "registration";
@@ -38,6 +39,8 @@ public class Define {
     public static final String TAG_PRODUCT_PICKING = "product_picking";
     //파렛트관리
     public static final String TAG_PALLET = "pallet";
+    //파렛트프린터출력
+    public static final String TAG_PALLET_PRINTER = "pallet_printer";
     //프린터설정
     public static final String TAG_CONFIG = "config";
 }

@@ -12,6 +12,7 @@ import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
+import kr.co.ajcc.wms.model.SerialNumberModel;
 import kr.co.ajcc.wms.model.UserInfoModel;
 import kr.co.ajcc.wms.model.WarehouseModel;
 import okhttp3.OkHttpClient;
@@ -232,7 +233,7 @@ public interface ApiClientService {
      * @return
      */
     @POST("R2JsonProc.asp")
-    Call<ResultModel> postMakeBunhalJunphyo(
+    Call<SerialNumberModel> postMakeBunhalJunphyo(
             @Query("proc") String proc,
             @Query("param1") String param1,
             @Query("param2") String param2,
@@ -246,7 +247,7 @@ public interface ApiClientService {
     //파레트관리 병합 전표 생성
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_plt_mrg_save.asp")
-    Call<ResultModel> postMakeMergeJunphyo(
+    Call<SerialNumberModel> postMakeMergeJunphyo(
             @Body RequestBody body
     );
 
