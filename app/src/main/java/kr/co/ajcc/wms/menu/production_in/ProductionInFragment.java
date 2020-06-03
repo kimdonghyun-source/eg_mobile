@@ -32,6 +32,7 @@ import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.items.LotItemView;
 import kr.co.ajcc.wms.menu.popup.LocationListPopup;
 import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
+import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
@@ -57,6 +58,7 @@ public class ProductionInFragment extends CommonFragment {
 
     LocationListPopup mLocationListPopup;
     OneBtnPopup mOneBtnPopup;
+    TwoBtnPopup mTwoBtnPopup;
 
     ProductionInAdapter mAdapter;
     List<PalletSnanModel.Items> mItems;
@@ -146,7 +148,15 @@ public class ProductionInFragment extends CommonFragment {
                         return;
                     }
 
-                    requestSendProductionIn();
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), et_location.getText().toString()+" 로케이션에 완제품 적치등록을 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                requestSendProductionIn();
+                                mTwoBtnPopup.hideDialog();
+                            }
+                        }
+                    });
                     break;
             }
         }
@@ -321,8 +331,6 @@ public class ProductionInFragment extends CommonFragment {
         }
         json.add("detail", list);
 
-        Utils.Log("new Gson().toJson(json) ==> : "+new Gson().toJson(json));
-
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
 
         Call<ResultModel> call = service.postSendProductionIn(body);
@@ -335,22 +343,53 @@ public class ProductionInFragment extends CommonFragment {
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
-                            Utils.Toast(mContext, "저장에 성공했습니다.");
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), et_location.getText().toString()+" 로케이션에 완제품 입고 및 적치가 등록되었습니다.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        getActivity().finish();
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                             getActivity().finish();
                         }else{
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                         }
                     }
                 }else{
                     Utils.LogLine(response.message());
-                    Utils.Toast(mContext, response.code()+" : "+response.message());
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), "완제품 입고 및 적치등록 전송이 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                requestSendProductionIn();
+                                mTwoBtnPopup.hideDialog();
+                            }
+                        }
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
-                Utils.Toast(mContext, getString(R.string.error_network));
+                mTwoBtnPopup = new TwoBtnPopup(getActivity(), "완제품 입고 및 적치등록 전송이 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == 1) {
+                            requestSendProductionIn();
+                            mTwoBtnPopup.hideDialog();
+                        }
+                    }
+                });
             }
         });
     }

@@ -85,8 +85,11 @@ public class MaterialPickingAdapter extends RecyclerView.Adapter<MaterialPicking
                     float cnt = Utils.stringToFloat(result);
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setInput_qty(cnt);
-                    mHandler.sendEmptyMessage(1);
                 }
+                if(Utils.isEmpty(s.toString())){
+                    itemsList.get(holder.getAdapterPosition()).setInput_qty(0);
+                }
+                mHandler.sendEmptyMessage(1);
             }
         });
     }

@@ -94,8 +94,11 @@ public class ProductPickingAdapter extends RecyclerView.Adapter<ProductPickingAd
                     float cnt = Utils.stringToFloat(result);
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setReq_qty(cnt);
-                    mHandler.sendEmptyMessage(1);
                 }
+                if(Utils.isEmpty(s.toString())){
+                    itemsList.get(holder.getAdapterPosition()).setReq_qty(0);
+                }
+                mHandler.sendEmptyMessage(1);
             }
         });
     }

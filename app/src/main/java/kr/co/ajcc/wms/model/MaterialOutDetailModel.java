@@ -25,6 +25,15 @@ public class MaterialOutDetailModel extends ResultModel {
         //자재불출수량
         float req_qty;
 
+        //공정코드
+        String wh_code_in;
+        //공정명
+        String wh_name_in;
+        //창고코드
+        String wh_code_out;
+        //창고명
+        String wh_name_out;
+
         public int getOut_no2() {
             return out_no2;
         }
@@ -73,6 +82,38 @@ public class MaterialOutDetailModel extends ResultModel {
 
         public void setItems(List<MaterialLocAndLotModel.Items> items) {
             this.items = items;
+        }
+
+        public String getWh_code_in() {
+            return wh_code_in;
+        }
+
+        public void setWh_code_in(String wh_code_in) {
+            this.wh_code_in = wh_code_in;
+        }
+
+        public String getWh_name_in() {
+            return wh_name_in;
+        }
+
+        public void setWh_name_in(String wh_name_in) {
+            this.wh_name_in = wh_name_in;
+        }
+
+        public String getWh_code_out() {
+            return wh_code_out;
+        }
+
+        public void setWh_code_out(String wh_code_out) {
+            this.wh_code_out = wh_code_out;
+        }
+
+        public String getWh_name_out() {
+            return wh_name_out;
+        }
+
+        public void setWh_name_out(String wh_name_out) {
+            this.wh_name_out = wh_name_out;
         }
     }
 }

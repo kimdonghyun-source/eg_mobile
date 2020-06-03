@@ -17,7 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/prod_picking_itemname" />
+                android:src="@drawable/picking_itemname" />
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/prod_picking_orderqty" />
+                android:src="@drawable/picking_itemsize" />
             <TextView
                 android:id="@+id/tv_size"
                 android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/prod_picking_pickingqty" />
+                android:src="@drawable/picking_itemqty" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -134,11 +134,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/bt_picking"
+                android:id="@+id/bt_loc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="피킹"/>
+                android:text="로케이션"/>
+            <Button
+                android:id="@+id/bt_lot"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="로트번호"/>
         </LinearLayout>
         <!-- 정제영 테스트 끝 -->
         <ImageView

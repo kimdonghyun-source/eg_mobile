@@ -60,7 +60,9 @@
             android:gravity="center|right"
             android:digits="0123456789.,"
             android:inputType="numberDecimal"
+            android:imeOptions="actionDone"
             android:textSize="15dp"
+            android:maxLines="1"
             android:textColor="@color/black"
             android:background="@drawable/fill_rect_f5edb0"/>
         <TextView

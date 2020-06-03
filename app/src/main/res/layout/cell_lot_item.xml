@@ -50,6 +50,7 @@
                 android:digits="0123456789.,"
                 android:inputType="numberDecimal"
                 android:textSize="15dp"
+                android:imeOptions="actionDone"
                 android:textColor="@color/black"
                 android:background="@drawable/fill_rect_f5edb0"/>
             <TextView
