@@ -127,7 +127,7 @@ public class MaterialPickingFragment extends CommonFragment {
                 if(msg.what == 1){
                     BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
                     String barcode = event.getBarcodeData();
-
+                    /*
                     mAdapter.clearData();
                     mAdapter.notifyDataSetChanged();
                     if(barcode.indexOf("-")>=0) {
@@ -135,6 +135,7 @@ public class MaterialPickingFragment extends CommonFragment {
                     } else {
                         requestLocAndLot(barcode,null);
                     }
+                     */
                 }
             }
         });
