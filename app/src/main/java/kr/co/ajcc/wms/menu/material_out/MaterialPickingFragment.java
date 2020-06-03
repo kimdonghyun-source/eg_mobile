@@ -127,15 +127,19 @@ public class MaterialPickingFragment extends CommonFragment {
                 if(msg.what == 1){
                     BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
                     String barcode = event.getBarcodeData();
-                    /*
+
                     mAdapter.clearData();
                     mAdapter.notifyDataSetChanged();
                     if(barcode.indexOf("-")>=0) {
-                        requestLocAndLot(null,barcode);
+                        mLotNumber = barcode;
+                        if(!Utils.isEmpty(mLocation)) {
+                            requestLocAndLot();
+                        }
                     } else {
-                        requestLocAndLot(barcode,null);
+                        mLocation = barcode;
+                        if(!Utils.isEmpty(mLotNumber) && mLotNumber.length() == 15)
+                            requestLocAndLot();
                     }
-                     */
                 }
             }
         });
