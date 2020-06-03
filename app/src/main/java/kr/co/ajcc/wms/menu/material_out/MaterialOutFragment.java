@@ -353,20 +353,42 @@ public class MaterialOutFragment extends CommonFragment {
                                 }
                             });
                         }else{
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                         }
                     }
                 }else{
                     Utils.LogLine(response.message());
-                    Utils.Toast(mContext, response.code()+" : "+response.message());
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), et_order.getText().toString()+"의 자재불출 전송이 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                requestMaterialSend();
+                                mTwoBtnPopup.hideDialog();
+                            }
+                        }
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
-                Utils.Log(t.getMessage());
                 Utils.LogLine(t.getMessage());
-                Utils.Toast(mContext, getString(R.string.error_network));
+                mTwoBtnPopup = new TwoBtnPopup(getActivity(), et_order.getText().toString()+"의 자재불출 전송이 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == 1) {
+                            requestMaterialSend();
+                            mTwoBtnPopup.hideDialog();
+                        }
+                    }
+                });
             }
         });
     }
