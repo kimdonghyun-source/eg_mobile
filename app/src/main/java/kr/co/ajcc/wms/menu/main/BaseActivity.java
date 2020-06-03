@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,6 +54,9 @@ public class BaseActivity extends CommonCompatActivity {
     TwoBtnPopup mTwoBtnPopup;
     //메뉴 타이틀
     ImageView iv_title;
+    //GNB 배경 이미지(피킹은 햄버거버튼 사용 안하기 때문)
+    ImageView iv_gnb;
+    ImageButton bt_drawer;
     //선택된 메뉴 postion
     int mSelectMenu;
 
@@ -67,7 +71,8 @@ public class BaseActivity extends CommonCompatActivity {
 
         drawer = findViewById(R.id.drawer);
         drawer_layout = findViewById(R.id.drawer_layout);
-        findViewById(R.id.bt_drawer).setOnClickListener(onClickListener);
+        bt_drawer = findViewById(R.id.bt_drawer);
+        bt_drawer.setOnClickListener(onClickListener);
         findViewById(R.id.bt_close).setOnClickListener(onClickListener);
 
         ArrayList<String> list = new ArrayList<>();
@@ -91,6 +96,7 @@ public class BaseActivity extends CommonCompatActivity {
         tv_name.setText(model.getDpt_name()+" "+model.getEmp_name());
 
         iv_title = findViewById(R.id.iv_title);
+        iv_gnb = findViewById(R.id.iv_gnb);
 
         int menu = getIntent().getIntExtra("menu", 0);
 
@@ -156,7 +162,13 @@ public class BaseActivity extends CommonCompatActivity {
     }
 
     private void setTitleImage(int menu){
+        //메뉴별 타이틀 이미지
         int image = 0;
+        //자재불출과 제품출고에 있는 피킹 상단엔 좌측메뉴가 노출되지 않기 때문에 분기해야함
+        int gnb = R.drawable.titilbar;
+        int isDrawer = View.VISIBLE;
+        int isLock = DrawerLayout.LOCK_MODE_UNLOCKED;
+
         switch (menu){
             case Define.MENU_REGISTRATION: {
                 image = R.drawable.menu_inhouse_title;
@@ -188,15 +200,24 @@ public class BaseActivity extends CommonCompatActivity {
             }
             case Define.MENU_PRODUCT_PICKING: {
                 image = R.drawable.prod_picking_title;
+                gnb = R.drawable.titlebar_submenu;
+                isDrawer = View.GONE;
+                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
                 break;
             }
             case Define.MENU_MATERIAL_PICKING: {
                 image = R.drawable.menu_release_title;
+                gnb = R.drawable.titlebar_submenu;
+                isDrawer = View.GONE;
+                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
                 break;
             }
 
         }
         iv_title.setBackgroundResource(image);
+        iv_gnb.setBackgroundResource(gnb);
+        bt_drawer.setVisibility(isDrawer);
+        drawer.setDrawerLockMode(isLock);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

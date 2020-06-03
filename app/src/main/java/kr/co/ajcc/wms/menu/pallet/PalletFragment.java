@@ -174,7 +174,7 @@ public class PalletFragment extends CommonFragment {
             iv_gd.setBackgroundResource(R.drawable.pallet_merge_guidetext);
             ll_pallet_merge.setVisibility(View.VISIBLE);
             ll_pallet_bunhal.setVisibility(View.GONE);
-            btn_next.setImageResource(R.drawable.pallet_bottom_bt_merge);
+            btn_next.setImageResource(R.drawable.pallet_bt_merge);
         }
     }
 
