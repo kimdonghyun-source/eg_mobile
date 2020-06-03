@@ -78,6 +78,7 @@ public class MainActivity extends CommonCompatActivity {
                     intent.putExtra("menu", Define.MENU_CONFIG);
                     break;
             }
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
     };

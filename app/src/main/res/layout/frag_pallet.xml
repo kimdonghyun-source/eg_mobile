@@ -318,6 +318,7 @@
 
                         <EditText
                             android:id="@+id/et_bunhal_count"
+                            android:inputType="numberDecimal"
                             style="@style/EditTextLocation" />
 
 
@@ -451,6 +452,7 @@
 
                                     <EditText
                                         android:id="@+id/et_merge_count_1"
+                                        android:inputType="numberDecimal"
                                         style="@style/EditTextLocation" />
 
 
@@ -575,6 +577,7 @@
 
                                     <EditText
                                         android:id="@+id/et_merge_count_2"
+                                        android:inputType="numberDecimal"
                                         style="@style/EditTextLocation" />
 
 

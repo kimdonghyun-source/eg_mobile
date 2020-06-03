@@ -41,9 +41,7 @@ public class OneBtnPopup {
     }
 
     public void hideDialog() {
-        Utils.Log("===33333====");
         if (dialog != null && dialog.isShowing()) {
-            Utils.Log("===44444====");
             dialog.dismiss();
         }
     }

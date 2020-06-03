@@ -219,6 +219,39 @@ public interface ApiClientService {
             @Body RequestBody body
     );
 
+    /**
+     * 파레트관리 분할 전표생성
+     * @param proc 프로시져
+     * @param param1 시리얼번호
+     * @param param2 품목코드
+     * @param param3 창고코드
+     * @param param4 로케이션코드
+     * @param param5 원수량(재고수량)
+     * @param param6 분할수량
+     * @param param7 로그인ID
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<ResultModel> postMakeBunhalJunphyo(
+            @Query("proc") String proc,
+            @Query("param1") String param1,
+            @Query("param2") String param2,
+            @Query("param3") String param3,
+            @Query("param4") String param4,
+            @Query("param5") String param5,
+            @Query("param6") String param6,
+            @Query("param7") String param7
+    );
+
+    //파레트관리 병합 전표 생성
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_plt_mrg_save.asp")
+    Call<ResultModel> postMakeMergeJunphyo(
+            @Body RequestBody body
+    );
+
+    //R2JsonProc_plt_mrg_save.asp
+
     //로그 찍기
     //태그 OkHttp 입력(adb logcat OkHttp:D *:S)
     // HttpLoggingInterceptor.Level.BODY  모든 바디 로그 온

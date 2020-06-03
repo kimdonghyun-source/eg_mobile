@@ -15,20 +15,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.honeywell.aidc.BarcodeReadEvent;
+
+import java.util.Date;
 
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.SharedData;
+import kr.co.ajcc.wms.common.UtilDate;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.honeywell.AidcReader;
 import kr.co.ajcc.wms.menu.main.BaseActivity;
+import kr.co.ajcc.wms.menu.popup.OneBtnPopup;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
 import kr.co.ajcc.wms.model.DeliveryOrderModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.network.ApiClientService;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +48,8 @@ public class PalletFragment extends CommonFragment {
     ImageButton ib_merge;
     ImageView iv_gd;
     TwoBtnPopup mPopup = null;
+    OneBtnPopup mOneBtnPopup;
+
     LinearLayout ll_pallet_bunhal = null;
     LinearLayout ll_pallet_merge = null;
     TextView tv_bunhal_product = null;
@@ -213,11 +224,16 @@ public class PalletFragment extends CommonFragment {
     private void makeBarcode(){
         if(ib_bunhal.isSelected()){
             if(bunhalItem!=null) {
+                String bunhalCount = et_bunhal_count.getText().toString();
+                if(bunhalCount==null || Float.parseFloat(bunhalCount) <= 0){
+                    Toast.makeText(mContext,"분할수량을 입력하세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mPopup = new TwoBtnPopup(getActivity(), et_bunhal.getText().toString()+" PALLET를 분할 처리 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
-
+                            requestBunhalMake();
                             mPopup.hideDialog();
                         }
                     }
@@ -227,13 +243,20 @@ public class PalletFragment extends CommonFragment {
             }
         } else if(ib_merge.isSelected()){
             if(mergeItem1!=null && mergeItem2!=null) {
+                String mergeCount1 = et_merge_count_1.getText().toString();
+                String mergeCount2 = et_merge_count_2.getText().toString();
+                if(mergeCount1==null || mergeCount2==null || Float.parseFloat(mergeCount1)<=0 || Float.parseFloat(mergeCount2)<=0){
+                    Toast.makeText(mContext,"병합수량을 입력하세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String str1 = et_merge_1.getText().toString();
                 String str2 = et_merge_2.getText().toString();
                 mPopup = new TwoBtnPopup(getActivity(), str1+"과 "+str2 +" PALLET를 병합 처리하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
-
+                            requestMergeMake();
                             mPopup.hideDialog();
                         }
                     }
@@ -251,8 +274,35 @@ public class PalletFragment extends CommonFragment {
         mContext.startActivity(intent);
     }
 
+    private void goBarcode(){
+        Utils.Log("goBarcode");
+    }
+
+    private void initMerge(){
+        mergeItem1 = null;
+        tv_merge_product_1.setText("");
+        tv_merge_product_1.setSelected(false);
+        tv_merge_count_1.setText("");
+        et_merge_count_1.setText("");
+        et_merge_1.setText("");
+        mergeItem2 = null;
+        tv_merge_product_2.setText("");
+        tv_merge_product_2.setSelected(false);
+        tv_merge_count_2.setText("");
+        et_merge_count_2.setText("");
+        et_merge_2.setText("");
+    }
+
+    private void initBunhal(){
+        bunhalItem = null;
+        tv_bunhal_product.setText("");
+        tv_bunhal_product.setSelected(false);
+        tv_bunhal_count.setText("");
+        et_bunhal_count.setText("");
+        et_bunhal.setText("");
+    }
     /**
-     * 출고지시서 상세
+     * 시리얼정보 상세
      */
     private void requestBunhalSnScan(final String param) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
@@ -309,6 +359,169 @@ public class PalletFragment extends CommonFragment {
 
             @Override
             public void onFailure(Call<PalletSnanModel> call, Throwable t) {
+                Utils.Log(t.getMessage());
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }
+
+    /**
+     * 전표생성
+     */
+    private void requestBunhalMake() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        //로그인ID
+        String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+        /*
+        시리얼번호
+        품목코드
+        창고코드
+        로케이션코드
+        원수량(재고수량)
+        분할수량
+        로그인ID
+        */
+        String bunhalCount = et_bunhal_count.getText().toString();
+
+        String param1 = bunhalItem.getSerial_no();
+        String param2 = bunhalItem.getItm_code();
+        String param3 = bunhalItem.getWh_code();
+        String param4 = bunhalItem.getLocation_code();
+        String param5 = Float.toString(bunhalItem.getWrk_inv_qty());
+        String param6 = bunhalCount;
+        String param7 = userID;
+
+        Call<ResultModel> call = service.postMakeBunhalJunphyo("sp_pda_plt_div_make", param1,param2,param3,param4,param5,param6,param7);
+        call.enqueue(new Callback<ResultModel>() {
+            @Override
+            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+                if(response.isSuccessful()){
+
+                    ResultModel model = response.body();
+                    if (model != null) {
+                        if(model.getFlag() == ResultModel.SUCCESS) {
+                            String msg = String.format("%s PALLET를 분할 처리되었습니다. 확인을 누르시면 바코드 출력 화면으로 이동합니다.",bunhalItem.getSerial_no());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), msg, R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        goBarcode();
+                                        initBunhal();
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                        }else{
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                }else{
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code()+" : "+response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultModel> call, Throwable t) {
+                Utils.Log(t.getMessage());
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }
+
+    /**
+     * 병합 전표생성
+     */
+    private void requestMergeMake() {
+        String mergeCount1 = et_merge_count_1.getText().toString();
+        String mergeCount2 = et_merge_count_2.getText().toString();
+
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        JsonObject json = new JsonObject();
+        //로그인ID
+        String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+        json.addProperty("p_user_id", userID);
+
+        JsonArray list = new JsonArray();
+        /*
+        시리얼번호
+        품목코드
+        창고코드
+        로케이션코드
+        원수량(재고수량)
+        병합수량
+        */
+        JsonObject merge1 = new JsonObject();
+        //시리얼번호
+        merge1.addProperty("serial_no", mergeItem1.getSerial_no());
+        //품목코드
+        merge1.addProperty("itm_code", mergeItem1.getItm_code());
+        //창고코드
+        merge1.addProperty("wh_code", mergeItem1.getWh_code());
+        //로케이션코드
+        merge1.addProperty("location_code",mergeItem1.getLocation_code());
+        //원수량(재고수량)
+        merge1.addProperty("ori_qty",Float.toString(mergeItem1.getWrk_inv_qty()));
+        //병합수량
+        merge1.addProperty("mrg_qty", mergeCount1);
+        list.add(merge1);
+
+        JsonObject merge2 = new JsonObject();
+        //시리얼번호
+        merge2.addProperty("serial_no", mergeItem1.getSerial_no());
+        //품목코드
+        merge2.addProperty("itm_code", mergeItem1.getItm_code());
+        //창고코드
+        merge2.addProperty("wh_code", mergeItem1.getWh_code());
+        //로케이션코드
+        merge2.addProperty("location_code", mergeItem1.getLocation_code());
+        //원수량(재고수량)
+        merge2.addProperty("ori_qty",Float.toString(mergeItem2.getWrk_inv_qty()));
+        //병합수량
+        merge2.addProperty("mrg_qty", mergeCount2);
+        list.add(merge2);
+
+        json.add("detail", list);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
+
+        Call<ResultModel> call = service.postMakeMergeJunphyo(body);
+        call.enqueue(new Callback<ResultModel>() {
+            @Override
+            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+                if(response.isSuccessful()){
+
+                    ResultModel model = response.body();
+                    if (model != null) {
+                        if(model.getFlag() == ResultModel.SUCCESS) {
+                            String str1 = et_merge_1.getText().toString();
+                            String str2 = et_merge_2.getText().toString();
+
+                            String msg = String.format("%s과 %s PALLET를 병합 처리 하였습니다. 확인을 누르시면 바코드 출력화면으로 이동합니다.",str1,str2);
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), msg, R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        goBarcode();
+                                        initMerge();
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                        }else{
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                }else{
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code()+" : "+response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.Log(t.getMessage());
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mContext, getString(R.string.error_network));
