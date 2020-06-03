@@ -26,6 +26,18 @@ public class PalletSnanModel extends ResultModel{
         String serial_no;
         //자재불출수량
         float req_qty;
+
+        //창고코드
+        String wh_code;
+        //창고명
+        String wh_name;
+        //로케이션코드
+        String location_code;
+        //로케이션명
+        String location_name;
+        //재고수량
+        float wrk_inv_qty;
+
         public String getItm_code() {
             return itm_code;
         }
@@ -72,6 +84,46 @@ public class PalletSnanModel extends ResultModel{
 
         public void setReq_qty(float req_qty) {
             this.req_qty = req_qty;
+        }
+
+        public String getWh_code() {
+            return wh_code;
+        }
+
+        public void setWh_code(String wh_code) {
+            this.wh_code = wh_code;
+        }
+
+        public String getWh_name() {
+            return wh_name;
+        }
+
+        public void setWh_name(String wh_name) {
+            this.wh_name = wh_name;
+        }
+
+        public String getLocation_code() {
+            return location_code;
+        }
+
+        public void setLocation_code(String location_code) {
+            this.location_code = location_code;
+        }
+
+        public String getLocation_name() {
+            return location_name;
+        }
+
+        public void setLocation_name(String location_name) {
+            this.location_name = location_name;
+        }
+
+        public float getWrk_inv_qty() {
+            return wrk_inv_qty;
+        }
+
+        public void setWrk_inv_qty(float wrk_inv_qty) {
+            this.wrk_inv_qty = wrk_inv_qty;
         }
     }
 }
