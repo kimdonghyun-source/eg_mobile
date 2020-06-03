@@ -23,6 +23,8 @@ import java.util.Set;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.SharedData;
 import kr.co.ajcc.wms.custom.CommonFragment;
+import kr.co.jesoft.jelib.listener.OnJEReaderResponseListener;
+import kr.co.jesoft.jelib.tsc.printer.TSCPrinter;
 
 public class ConfigFragment extends CommonFragment {
     Context mContext;
@@ -57,8 +59,21 @@ public class ConfigFragment extends CommonFragment {
                 if(mDevice!=null) {
                     String str = mDevice.getName() + " " + mDevice.getAddress();
                     SharedData.setSharedData(mContext, "printer_info", str);
+
                     stopDiscovery();
-                    getActivity().finish();
+
+                    //TSCPrinter.shared(mContext).saveConnectDevice(mDevice.getAddress());
+                    TSCPrinter.shared(mContext).connect(mDevice.getAddress(), new OnJEReaderResponseListener() {
+                        @Override
+                        public void jeReaderDidConnect() {
+                            getActivity().finish();
+                        }
+
+                        @Override
+                        public void jeReaderDataReceived(Object o) {
+
+                        }
+                    });
                 } else {
                     Toast.makeText(mContext,"프린터를 선택하세요.",Toast.LENGTH_SHORT).show();
                 }

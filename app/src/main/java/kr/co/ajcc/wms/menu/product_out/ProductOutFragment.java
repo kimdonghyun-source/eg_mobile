@@ -215,6 +215,8 @@ public class ProductOutFragment extends CommonFragment {
                                 et_location.setText(order.getReq_car_no());
                                 text_customer.setText(order.getCst_name());
                                 text_info.setText(order.getPo_no());
+                                text_customer.setSelected(true);
+
                                 requestDeliveryOrderDetail(order.getReq_car_no());
                             }
                         }
@@ -247,6 +249,11 @@ public class ProductOutFragment extends CommonFragment {
                         if(mDeliveryOrderModel.getFlag() == ResultModel.SUCCESS) {
                             et_location.setText(param);
                             if(mDeliveryOrderModel.getItems().size() > 0) {
+                                DeliveryOrderModel.DeliveryOrder o = mDeliveryOrderModel.getItems().get(0);
+                                text_customer.setText(o.getCst_name());
+                                text_info.setText(o.getPo_no());
+                                text_customer.setSelected(true);
+
                                 mAdapter.setData(mDeliveryOrderModel.getItems());
                                 mAdapter.notifyDataSetChanged();
                             }

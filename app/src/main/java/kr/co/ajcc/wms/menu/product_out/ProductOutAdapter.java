@@ -63,7 +63,7 @@ public class ProductOutAdapter extends RecyclerView.Adapter<ProductOutAdapter.Vi
         final DeliveryOrderModel.DeliveryOrder item = itemsList.get(position);
 
         holder.tv_product.setText(item.getItm_name());
-        holder.tv_standard.setText("BOX");
+        holder.tv_standard.setText(item.getItm_size());
         holder.tv_count.setText(Utils.setComma(item.getBox_qty()));
         holder.tv_size.setText("BOX");
 

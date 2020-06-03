@@ -24,6 +24,11 @@ public class DeliveryOrderModel extends ResultModel{
         float box_qty;
         //규격
         String itm_size;
+
+        String cst_code;
+        String cst_name;
+        String po_no;
+
         //자재불출수량
         float req_qty;
 
@@ -83,6 +88,30 @@ public class DeliveryOrderModel extends ResultModel{
 
         public void setItems(List<PalletSnanModel.Items> items) {
             this.items = items;
+        }
+
+        public String getCst_code() {
+            return cst_code;
+        }
+
+        public void setCst_code(String cst_code) {
+            this.cst_code = cst_code;
+        }
+
+        public String getCst_name() {
+            return cst_name;
+        }
+
+        public void setCst_name(String cst_name) {
+            this.cst_name = cst_name;
+        }
+
+        public String getPo_no() {
+            return po_no;
+        }
+
+        public void setPo_no(String po_no) {
+            this.po_no = po_no;
         }
     }
 }

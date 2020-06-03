@@ -17,6 +17,7 @@ import kr.co.ajcc.wms.menu.main.MainActivity;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.UserInfoModel;
 import kr.co.ajcc.wms.network.ApiClientService;
+import kr.co.jesoft.jelib.tsc.printer.TSCPrinter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,10 +90,23 @@ public class LoginActivity extends CommonCompatActivity {
     public void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);
         if(request == 1000){
+            try {
+                TSCPrinter.shared(mContext).closeSession();
+            } catch (Exception e){
+
+            }
             finish();
         }
     }
+    @Override
+    public void onDestroy(){
+        try {
+            TSCPrinter.shared(mContext).closeSession();
+        } catch (Exception e){
 
+        }
+        super.onDestroy();
+    }
     private void requestLogin() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 

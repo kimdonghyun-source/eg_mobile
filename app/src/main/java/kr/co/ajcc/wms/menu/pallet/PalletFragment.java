@@ -198,6 +198,7 @@ public class PalletFragment extends CommonFragment {
                 }
                 case R.id.btn_next: {
                     makeBarcode();
+                    //goBarcode("20200325-000001");
                     break;
                 }
                 case R.id.ib_delete_1: {
@@ -281,6 +282,16 @@ public class PalletFragment extends CommonFragment {
         intent.putExtra("menu", Define.MENU_PALLET_PRINTER);
         Bundle args=new Bundle();
         args.putString("SN",sn);
+        if(ib_bunhal.isSelected()) {
+            args.putString("ITEMNM", bunhalItem.getItm_name());
+            args.putString("ITEMCD", bunhalItem.getItm_code());
+            args.putString("CNT", et_bunhal_count.getText().toString());
+        } else if(ib_merge.isSelected()){
+            float sum = Float.parseFloat(et_merge_count_1.getText().toString()) + Float.parseFloat(et_merge_count_2.getText().toString());
+            args.putString("ITEMNM", mergeItem1.getItm_name());
+            args.putString("ITEMCD", mergeItem1.getItm_code());
+            args.putString("CNT", Float.toString(sum));
+        }
         intent.putExtra("args",args);
         startActivity(intent);
     }
@@ -414,7 +425,8 @@ public class PalletFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
-                                        goBarcode(model.getSerial_no());
+                                        SerialNumberModel.Items item = model.getItems().get(0);
+                                        goBarcode(item.getNewSerialNo());
                                         initBunhal();
                                         mOneBtnPopup.hideDialog();
                                     }
@@ -512,7 +524,7 @@ public class PalletFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
-                                        goBarcode(model.getSerial_no());
+                                        goBarcode(model.getNewSerialNo());
                                         initMerge();
                                         mOneBtnPopup.hideDialog();
                                     }

@@ -1,13 +1,37 @@
 package kr.co.ajcc.wms.model;
 
-public class SerialNumberModel extends ResultModel{
-    String serial_no;
+import java.util.List;
 
-    public String getSerial_no() {
-        return serial_no;
+public class SerialNumberModel extends ResultModel{
+    String NewSerialNo;
+
+    List<Items> items;
+
+    public List<Items> getItems() {
+        return items;
     }
 
-    public void setSerial_no(String serial_no) {
-        this.serial_no = serial_no;
+    public void setItems(List<Items> items) {
+        this.items = items;
+    }
+
+    public String getNewSerialNo() {
+        return NewSerialNo;
+    }
+
+    public void setNewSerialNo(String newSerialNo) {
+        NewSerialNo = newSerialNo;
+    }
+
+    public class Items extends ResultModel {
+        String NewSerialNo;
+
+        public String getNewSerialNo() {
+            return NewSerialNo;
+        }
+
+        public void setNewSerialNo(String newSerialNo) {
+            NewSerialNo = newSerialNo;
+        }
     }
 }
