@@ -40,20 +40,22 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_margin="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/popup_text_wh"/>
+
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                android:fadingEdge = "none"
                 android:layout_gravity="right|center"
-                android:background="@color/white"/>
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:fadingEdge="none" />
             <ImageButton
                 android:id="@id/bt_search"
                 android:layout_width="wrap_content"
