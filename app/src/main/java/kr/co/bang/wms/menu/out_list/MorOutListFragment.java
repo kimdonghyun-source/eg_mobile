@@ -71,7 +71,7 @@ public class MorOutListFragment extends CommonFragment {
 
     DatePickerDialog.OnDateSetListener callbackMethod;
     String mOrderNo;
-    String slip_type;
+    String slip_type, mor_list_date;
     Handler mHandler;
 
     ListView mlistview, store_listview;
@@ -159,9 +159,11 @@ public class MorOutListFragment extends CommonFragment {
                     }else {
                         String s_barcode = barcode.substring(0, 11);
                         String s_type = barcode.substring(12, 13);
+                        String s_date = barcode.substring(14, 22);
                         et_merge_1.setText(s_barcode);
                         mOrderNo = s_barcode;
                         slip_type = s_type;
+                        mor_list_date = s_date;
                     }
                     if (gubun.getText().toString().equals("C")) {
                         requestMorListMember();
@@ -299,7 +301,7 @@ public class MorOutListFragment extends CommonFragment {
 
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<MorListModel> call = service.morlist("sp_pda_dis_mor_list", "C", d_today, mOrderNo, slip_type);
+        Call<MorListModel> call = service.morlist("sp_pda_dis_mor_list", "C", mor_list_date, mOrderNo, slip_type);
 
         call.enqueue(new Callback<MorListModel>() {
             @Override
@@ -384,6 +386,8 @@ public class MorOutListFragment extends CommonFragment {
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            mMorList.clear();
+                            sotreAdapter.notifyDataSetChanged();
                         }
                     }
                 } else {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bang</string>
+    <string name="app_name">BANGmWMS</string>
 
     <!-- 팝업 또는 토스트 메세지 -->
     <string name="error_network">네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
@@ -11,8 +11,8 @@
     <string name="error_location_move">입고처를 선택해주세요.</string>
     <string name="error_location_scan">SerialNo 를 스캔해주세요.</string>
     <string name="error_mat_mod_scan">바코드를 스캔해주세요.</string>
-    <string name="error_h_qty">헤드요청 수량이 출고 수량과 동일하지 않습니다.</string>
-    <string name="error_s_qty">샤프트요청 수량이 출고 수량과 동일하지 않습니다.</string>
+    <string name="error_h_qty">헤드 요청 수량이 출고 수량과 동일하지 않습니다.</string>
+    <string name="error_s_qty">샤프트 요청 수량이 출고 수량과 동일하지 않습니다.</string>
 
     <!-- gyoeng -->
     <string name="error_pallet_check">동일한 팔레트를 선택하셨습니다.</string>

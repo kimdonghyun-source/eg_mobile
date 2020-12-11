@@ -27,9 +27,18 @@
                 android:orientation="vertical">
 
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:paddingLeft="95dp"
                         android:background="#87D1F3"
                         android:gravity="center_horizontal"
                         android:text="헤드"
@@ -37,14 +46,44 @@
                         android:textSize="25dp"
                         android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="카운트"
-                    android:textColor="#000000"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_hcount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:gravity="center"
+                        android:text="/"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_h_all_count"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+
+
+                </LinearLayout>
+
+
+
 
                 <LinearLayout
                     android:background="@drawable/p_round"
@@ -349,17 +388,64 @@
                 android:orientation="vertical"
                 android:background="#fbceb1">
 
-                <TextView
 
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
-                    android:background="#fbceb1"
-                    android:gravity="center_horizontal"
-                    android:text="샤프트"
-                    android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:layout_marginBottom="1dp"
+                        android:paddingLeft="90dp"
+                        android:background="#fbceb1"
+                        android:gravity="center_horizontal"
+                        android:text="샤프트"
+                        android:textColor="#000000"
+                        android:textSize="25dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_scount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:gravity="center"
+                        android:text="/"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_s_all_count"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+
+
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:background="@drawable/p_round"

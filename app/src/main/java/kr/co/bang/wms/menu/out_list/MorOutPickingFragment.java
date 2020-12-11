@@ -68,6 +68,7 @@ import retrofit2.Response;
 public class MorOutPickingFragment extends CommonFragment {
 
     TextView tv_h_model, tv_h_color, tv_h_loft, tv_h_direc, tv_h_headcode, tv_h_weight, tv_s_model, tv_s_color, tv_s_loft, tv_s_direc, tv_s_sharftcode, tv_s_weight, picking_qty;
+    TextView tv_scount, tv_s_all_count, tv_hcount, tv_h_all_count;
     ImageButton btn_next, bt_emp, bt_wh;
     EditText et_qty, et_emp, et_wh;
     ScrollView scrollView;
@@ -124,6 +125,11 @@ public class MorOutPickingFragment extends CommonFragment {
         tv_s_direc = v.findViewById(R.id.tv_s_direc);
         tv_s_sharftcode = v.findViewById(R.id.tv_s_sharftcode);
         tv_s_weight = v.findViewById(R.id.tv_s_weight);
+
+        tv_hcount = v.findViewById(R.id.tv_hcount);
+        tv_h_all_count = v.findViewById(R.id.tv_h_all_count);
+        tv_scount = v.findViewById(R.id.tv_scount);
+        tv_s_all_count = v.findViewById(R.id.tv_s_all_count);
 
         picking_qty = v.findViewById(R.id.picking_qty);
         //btn_wh_ok = v.findViewById(R.id.btn_wh_ok);
@@ -189,7 +195,10 @@ public class MorOutPickingFragment extends CommonFragment {
 
             tv_s_model.setText(SHAFTNAME);
             tv_s_color.setText(SHAFTCOLOR_NM);
-            //tv_s_loft.setText(SHAFTSTRONG_NM);
+            tv_s_loft.setText(SHAFTSTRONG_NM);
+
+            tv_h_all_count.setText(mor_h_qty);
+            tv_s_all_count.setText(mor_s_qty);
 
             mor_no = mor_no1;           //출고순번
             mordate = mor_date;         //출고일자
@@ -405,8 +414,7 @@ public class MorOutPickingFragment extends CommonFragment {
     private void requestMorPickingScan() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<MorSerialScan> call = service.morSerialScan("sp_pda_dis_mor_serial_scan", mOrderNo, wh_code, corp_code, mordate, mor_no);        //스캔 생기면 이걸로 변경
-        //Call<MorSerialScan> call = service.morSerialScan("sp_pda_dis_mor_serial_scan", mOrderNo, wh_code, corp_code, "20201029", "8");    //임시 테스트
+        Call<MorSerialScan> call = service.morSerialScan("sp_pda_dis_mor_serial_scan", mOrderNo, wh_code, corp_code, mordate, mor_no);
 
         call.enqueue(new Callback<MorSerialScan>() {
             @Override
@@ -423,15 +431,31 @@ public class MorOutPickingFragment extends CommonFragment {
                                 sAdapter.addData(item);
                                 if (item.getItm_id().equals("3")) {
                                     b_h_qty++;
+                                    if (tv_hcount.getText().equals(tv_h_all_count.getText())) {
+                                        Utils.Toast(mContext, "헤드 요청 수량을 초과하였습니다.");
+                                        mSerialList.remove(i);
+                                        b_h_qty--;
+                                    } else {
+                                        tv_hcount.setText(String.valueOf(b_h_qty));
+                                    }
                                 }
                                 if (item.getItm_id().equals("4")) {
                                     b_s_qty++;
+                                    if (tv_scount.getText().equals(tv_s_all_count.getText())) {
+                                        Utils.Toast(mContext, "샤프트 요청 수량을 초과하였습니다.");
+                                        mSerialList.remove(i);
+                                        b_s_qty--;
+                                    } else {
+                                        tv_scount.setText(String.valueOf(b_s_qty));
+                                    }
                                 }
                             }
-                            //mSerialList = model.getItems();
+
                             sAdapter.notifyDataSetChanged();
                             mBarcode.add(mOrderNo);
                             mlistView.setAdapter(sAdapter);
+
+
                         } else {
                             Utils.Toast(mContext, model.getMSG());
                         }
@@ -621,11 +645,11 @@ public class MorOutPickingFragment extends CommonFragment {
                                 }
                             });
 
-                            if (m_type.equals("C") && m_gubun.equals("O")){
+                            if (m_type.equals("C") && m_gubun.equals("O")) {
                                 requestMemberOrder();
-                            }else if (m_type.equals("C") && m_gubun.equals("A")){
+                            } else if (m_type.equals("C") && m_gubun.equals("A")) {
                                 requestMemberAS();
-                            }else{
+                            } else {
                                 requestStore();
                             }
 

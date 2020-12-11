@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -71,7 +72,7 @@ public class MorOutDetailFragment extends CommonFragment {
         mlistview.setAdapter(mAdapter);
         mHandler = handler;
 
-        bt_item_out.setOnClickListener(onClickListener);
+        //bt_item_out.setOnClickListener(onClickListener);
 
         Bundle args = getArguments();
         if (args!=null){
@@ -82,10 +83,11 @@ public class MorOutDetailFragment extends CommonFragment {
            final String QTY = args.getString("QTY");
 
             mor_qty.setText(QTY);       //주문수량
-            cst_name.setText(NAME);     //회원/거래처명
+            cst_name.setText(NAME);     //거래처명
             et_merge_1.setText(SLIPNO); //전표번호
             s_gubun = GUBUN;        //전표타입(회원) O=주문, A=AS
             m_type = TYPE;          //회원 / 대리점 구분
+            Log.d("NAME", NAME);
 
             requestMorListDetail();
           /*  if (GUBUN.equals("O") || GUBUN.equals("A")) {
@@ -96,7 +98,7 @@ public class MorOutDetailFragment extends CommonFragment {
         return v;
     }//onCreateView Close
 
-    View.OnClickListener onClickListener = new View.OnClickListener(){
+    /*View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
             switch (view.getId()){
@@ -107,7 +109,7 @@ public class MorOutDetailFragment extends CommonFragment {
                 }
             }
         }
-    };
+    };*/
 
     private void requestMorListDetail() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
@@ -127,8 +129,8 @@ public class MorOutDetailFragment extends CommonFragment {
                             mMorList = mmorlistmodel.getItems();
                             mAdapter.notifyDataSetChanged();
                             mlistview.setAdapter(mAdapter);
-                            cst_name.setText(model.getItems().get(0).getCst_name());
-                            mor_qty.setText(Integer.toString(model.getItems().get(0).getMor_qty()));
+                            //cst_name.setText(model.getItems().get(0).getCst_name());
+                            //mor_qty.setText(Integer.toString(model.getItems().get(0).getMor_qty()));
 
 
                         } else {
@@ -228,9 +230,9 @@ public class MorOutDetailFragment extends CommonFragment {
                     msg.obj = data;
                     mHandler.sendMessage(msg);
                     goMorItem();
-
                 }
             });
+
 
             return v;
         }
@@ -274,11 +276,13 @@ public class MorOutDetailFragment extends CommonFragment {
 
     private void goMorItem(){
         List<MorListModel.Items> itms = mAdapter.getData();
+        Intent intent = new Intent(mContext, BaseActivity.class);
+        intent.putExtra("menu", Define.MENU_PRODUCTION_OUT);
+        Bundle args = new Bundle();
         for (int i = 0; i < mmorlistmodel.getItems().size(); i++){
             MorListModel.Items o = mmorlistmodel.getItems().get(i);
-            Intent intent = new Intent(mContext, BaseActivity.class);
-            intent.putExtra("menu", Define.MENU_PRODUCTION_OUT);
-            Bundle args = new Bundle();
+
+
 
             args.putString("CORPCODE", o.getCorp_code());                            //사업장번호
             args.putString("PRODUCT", o.getItm_name());                              //품묵정보
@@ -314,9 +318,10 @@ public class MorOutDetailFragment extends CommonFragment {
             args.putString("SHAFTSTRONG_C", o.getS_strong_code());                   //샤프트각도코드
             args.putString("SHAFTSTRONG_NM", o.getS_strong_name());                  //샤프트각도명
 
-            intent.putExtra("args",args);
-            startActivity(intent);
+
         }
+        intent.putExtra("args",args);
+        startActivity(intent);
     }
 
 
