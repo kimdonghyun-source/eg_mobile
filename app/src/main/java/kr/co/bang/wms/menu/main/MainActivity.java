@@ -24,13 +24,9 @@ public class MainActivity extends CommonCompatActivity {
 
         setContentView(R.layout.act_main);
 
-        findViewById(R.id.bt_menu_1).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_menu_2).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_menu_3).setOnClickListener(onClickListener);
+
         findViewById(R.id.bt_menu_4).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_menu_7).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_8).setOnClickListener(onClickListener); //재고실사
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,30 +55,12 @@ public class MainActivity extends CommonCompatActivity {
             Intent intent = new Intent(mContext, BaseActivity.class);
             switch (view){
 
-                case R.id.bt_menu_3:
-                    intent.putExtra("menu", Define.MENU_MATERIAL_OUT);
-                    break;
-
-                case R.id.bt_menu_1:
-                    intent.putExtra("menu", Define.MENU_REGISTRATION);
-                    break;
-                case R.id.bt_menu_2:
-                    intent.putExtra("menu", Define.MENU_LOCATION);
-                    break;
-
                 case R.id.bt_menu_4:
                     intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
                     break;
                 case R.id.bt_menu_5:
                     intent.putExtra("menu", Define.MENU_HOUSE_MOVE);
                     break;
-                case R.id.bt_menu_6:
-                    intent.putExtra("menu", Define.MENU_PALLET);
-                    break;
-                case R.id.bt_menu_7:
-                    intent.putExtra("menu", Define.MENU_CONFIG);
-                    break;
-
                 case R.id.bt_menu_8:
                     intent.putExtra("menu", Define.MENU_INVENTORY);
                     break;

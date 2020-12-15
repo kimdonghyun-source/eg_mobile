@@ -25,21 +25,14 @@ import kr.co.bang.wms.common.Define;
 import kr.co.bang.wms.custom.BusProvider;
 import kr.co.bang.wms.custom.CommonCompatActivity;
 import kr.co.bang.wms.custom.CommonFragment;
-import kr.co.bang.wms.menu.config.ConfigFragment;
 import kr.co.bang.wms.menu.house_move.HouseMoveFragment;
 import kr.co.bang.wms.menu.inventory.InventoryFragment;
-import kr.co.bang.wms.menu.location.LocationFragment;
-import kr.co.bang.wms.menu.material_out.MaterialOutFragment;
-import kr.co.bang.wms.menu.material_out.MaterialPickingFragment;
+
 import kr.co.bang.wms.menu.out_list.MorOutListFragment;
 import kr.co.bang.wms.menu.out_list.MorOutDetailFragment;
 import kr.co.bang.wms.menu.out_list.MorOutPickingFragment;
-import kr.co.bang.wms.menu.pallet.PalletFragment;
-import kr.co.bang.wms.menu.pallet.PrinterFragment;
 import kr.co.bang.wms.menu.popup.TwoBtnPopup;
-import kr.co.bang.wms.menu.product_out.ProductOutFragment;
-import kr.co.bang.wms.menu.product_out.ProductPickingFragment;
-import kr.co.bang.wms.menu.registration.RegistrationFragment;
+
 import kr.co.bang.wms.model.UserInfoModel;
 
 public class BaseActivity extends CommonCompatActivity {
@@ -82,7 +75,7 @@ public class BaseActivity extends CommonCompatActivity {
 
         ArrayList<String> list = new ArrayList<>();
         list.add("주문자재출고");
-        list.add("제품 출고");
+        list.add("창고 이동");
         list.add("재고 실사");
 
 
@@ -138,67 +131,13 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-
-            case Define.MENU_REGISTRATION: {
-                CommonFragment fragment = new RegistrationFragment();
-//                Bundle args = new Bundle();
-//                args.putSerializable(Define.ARG_INFO, mainTabList);
-//                fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_REGISTRATION, R.id.fl_content);
-                break;
-            }
-            case Define.MENU_LOCATION: {
-                CommonFragment fragment = new LocationFragment();
-                replaceContent(fragment, Define.TAG_LOCATION, R.id.fl_content);
-                break;
-            }
-            /*case Define.MENU_MATERIAL_OUT: {
-                CommonFragment fragment = new MaterialOutFragment();
-                replaceContent(fragment, Define.TAG_MATERIAL_OUT, R.id.fl_content);
-                break;
-            }*/
-
-
-            case Define.MENU_PRODUCT_OUT: {
-                CommonFragment fragment = new ProductOutFragment();
-                replaceContent(fragment, Define.TAG_PRODUCT_OUT, R.id.fl_content);
-                break;
-            }
-            case Define.MENU_PALLET: {
-                CommonFragment fragment = new PalletFragment();
-                replaceContent(fragment, Define.TAG_PALLET, R.id.fl_content);
-                break;
-            }
-            case Define.MENU_CONFIG: {
-                CommonFragment fragment = new ConfigFragment();
-                replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
-                break;
-            }
-            case Define.MENU_PRODUCT_PICKING: {
-                CommonFragment fragment = new ProductPickingFragment();
-                fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_PRODUCT_PICKING, R.id.fl_content);
-                break;
-            }
-            case Define.MENU_MATERIAL_PICKING: {
-                CommonFragment fragment = new MaterialPickingFragment();
-                fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_MATERIAL_PICKING, R.id.fl_content);
-                break;
-            }
+            //재고실사(뱅)
             case Define.MENU_INVENTORY: {
                 CommonFragment fragment = new InventoryFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                 break;
             }
-            case Define.MENU_PALLET_PRINTER: {
-                CommonFragment fragment = new PrinterFragment();
-                fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_PALLET_PRINTER, R.id.fl_content);
-                break;
-            }
-
         }
 
         setTitleImage(menu);
@@ -222,6 +161,11 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.menu_product_in_title;
                 break;
             }
+            //주문자제출고피킹(뱅)
+            case Define.MENU_PRODUCTION_OUT: {
+                image = R.drawable.menu_production_out_title;
+                break;
+            }
             //주문자재출고 상세(뱅) MENU_PRODUCTION_OUT
             case Define.MENU_PRODUCTION_DETAIL:{
                 image = R.drawable.menu_product_in_title;
@@ -239,68 +183,9 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.menu_inventory_title;
                 break;
             }
-            //주문자제출고피킹(뱅)
-            case Define.MENU_PRODUCTION_OUT: {
-                image = R.drawable.menu_production_out_title;
-                break;
-            }
+
 //---------------------------------------------------------------------------------뱅
-            case Define.MENU_REGISTRATION: {
-                image = R.drawable.menu_inhouse_title;
-                break;
-            }
-            case Define.MENU_LOCATION: {
-                image = R.drawable.menu_moveloc_title;
-                break;
-            }
-            case Define.MENU_MATERIAL_OUT: {
-                image = R.drawable.menu_release_title;
-                break;
-            }
 
-
-            case Define.MENU_PRODUCT_OUT: {
-                image = R.drawable.menu_outproduct_title;
-                break;
-            }
-            case Define.MENU_PALLET: {
-                image = R.drawable.pallet_title;
-                break;
-            }
-            case Define.MENU_CONFIG: {
-                image = R.drawable.menu_setting_title;
-                break;
-            }
-
-            case Define.MENU_PRODUCT_PICKING: {
-                image = R.drawable.prod_picking_title;
-                gnb = R.drawable.titlebar_submenu;
-                isDrawer = View.GONE;
-                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-                break;
-            }
-            case Define.MENU_MATERIAL_PICKING: {
-                image = R.drawable.menu_release_title;
-                gnb = R.drawable.titlebar_submenu;
-                isDrawer = View.GONE;
-                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-                break;
-            }
-            case Define.MENU_PALLET_PRINTER: {
-                image = R.drawable.print_title;
-                gnb = R.drawable.titlebar_submenu;
-                isDrawer = View.GONE;
-                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-                bt_print.setVisibility(View.VISIBLE);
-                break;
-            }
-            case Define.MENU_INVENTORY_PICKING: {
-                image = R.drawable.menu_inhouse_title;
-                gnb = R.drawable.titlebar_submenu;
-                isDrawer = View.GONE;
-                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-                break;
-            }
         }
         iv_title.setBackgroundResource(image);
         iv_gnb.setBackgroundResource(gnb);
@@ -436,41 +321,14 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
-                                    //창고이동 (뱅)
+                                    //창고이동(뱅)
                                     case Define.MENU_HOUSE_MOVE: {
                                         CommonFragment fragment = new HouseMoveFragment();
                                         replaceContent(fragment, Define.TAG_HOUSE_MOVE, R.id.fl_content);
-                                    }
-
-                                    case Define.MENU_LOCATION: {
-                                        CommonFragment fragment = new LocationFragment();
-                                        replaceContent(fragment, Define.TAG_LOCATION, R.id.fl_content);
-                                        break;
-                                    }
-                                    case Define.MENU_MATERIAL_OUT: {
-                                        CommonFragment fragment = new MaterialOutFragment();
-                                        replaceContent(fragment, Define.TAG_MATERIAL_OUT, R.id.fl_content);
                                         break;
                                     }
 
-
-
-                                    case Define.MENU_PRODUCT_OUT: {
-                                        CommonFragment fragment = new ProductOutFragment();
-                                        replaceContent(fragment, Define.TAG_PRODUCTION_IN, R.id.fl_content);
-                                        break;
-                                    }
-                                    case Define.MENU_PALLET: {
-                                        CommonFragment fragment = new PalletFragment();
-                                        replaceContent(fragment, Define.TAG_PALLET, R.id.fl_content);
-                                        break;
-                                    }
-                                    case Define.MENU_CONFIG: {
-                                        CommonFragment fragment = new ConfigFragment();
-                                        replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
-                                        break;
-                                    }
-
+                                    //재고실사(뱅)
                                     case Define.MENU_INVENTORY: {
                                         CommonFragment fragment = new InventoryFragment();
                                         replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);

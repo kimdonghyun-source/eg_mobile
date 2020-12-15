@@ -48,7 +48,6 @@ import kr.co.bang.wms.common.Utils;
 import kr.co.bang.wms.custom.CommonFragment;
 import kr.co.bang.wms.honeywell.AidcReader;
 import kr.co.bang.wms.menu.main.BaseActivity;
-import kr.co.bang.wms.menu.material_out.MaterialPickingAdapter;
 import kr.co.bang.wms.menu.popup.OneBtnPopup;
 import kr.co.bang.wms.model.MaterialLocAndLotModel;
 import kr.co.bang.wms.model.MaterialOutDetailModel;

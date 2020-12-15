@@ -334,15 +334,16 @@ public class InventoryFragment extends CommonFragment {
                             invenList.get(position).setPicking_yn("Y");
 
                             if (tv_box_qty.getText().toString().equals(tv_box_check_qty.getText().toString())) {
-                                mOneBtnPopup = new OneBtnPopup(getActivity(), "제품스캔완료.", R.drawable.popup_title_alert, new Handler() {
+                                mTwoBtnPopup = new TwoBtnPopup(getActivity(), "실사처리 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                                     @Override
                                     public void handleMessage(Message msg) {
                                         if (msg.what == 1) {
-                                            getActivity().finish();
-                                            mOneBtnPopup.hideDialog();
+                                            matModSave();
+                                            mTwoBtnPopup.hideDialog();
                                         }
                                     }
                                 });
+
                             }
 
                         }

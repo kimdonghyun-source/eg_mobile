@@ -122,9 +122,6 @@ public class MorOutPickingFragment extends CommonFragment {
         tv_s_model = v.findViewById(R.id.tv_s_model);
         tv_s_color = v.findViewById(R.id.tv_s_color);
         tv_s_loft = v.findViewById(R.id.tv_s_loft);
-        tv_s_direc = v.findViewById(R.id.tv_s_direc);
-        tv_s_sharftcode = v.findViewById(R.id.tv_s_sharftcode);
-        tv_s_weight = v.findViewById(R.id.tv_s_weight);
 
         tv_hcount = v.findViewById(R.id.tv_hcount);
         tv_h_all_count = v.findViewById(R.id.tv_h_all_count);
