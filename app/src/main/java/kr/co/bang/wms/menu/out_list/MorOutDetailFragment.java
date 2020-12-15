@@ -87,29 +87,13 @@ public class MorOutDetailFragment extends CommonFragment {
             et_merge_1.setText(SLIPNO); //전표번호
             s_gubun = GUBUN;        //전표타입(회원) O=주문, A=AS
             m_type = TYPE;          //회원 / 대리점 구분
-            Log.d("NAME", NAME);
 
             requestMorListDetail();
-          /*  if (GUBUN.equals("O") || GUBUN.equals("A")) {
 
-            }*/
         }
 
         return v;
     }//onCreateView Close
-
-    /*View.OnClickListener onClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.bt_item_out: {
-                    Intent intent = new Intent(mContext, BaseActivity.class);
-                    intent.putExtra("menu", Define.MENU_PRODUCTION_OUT);
-                    startActivityForResult(intent,100);
-                }
-            }
-        }
-    };*/
 
     private void requestMorListDetail() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
@@ -129,9 +113,6 @@ public class MorOutDetailFragment extends CommonFragment {
                             mMorList = mmorlistmodel.getItems();
                             mAdapter.notifyDataSetChanged();
                             mlistview.setAdapter(mAdapter);
-                            //cst_name.setText(model.getItems().get(0).getCst_name());
-                            //mor_qty.setText(Integer.toString(model.getItems().get(0).getMor_qty()));
-
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());

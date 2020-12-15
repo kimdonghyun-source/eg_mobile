@@ -196,6 +196,7 @@ public class MorOutListFragment extends CommonFragment {
             store_listview.setVisibility(View.GONE);
             mlistview.setVisibility(View.VISIBLE);
             gubun.setText("C");
+            et_merge_1.setText("");
 
         } else if (idx == 2) {
             ib_member.setSelected(false);
@@ -204,6 +205,7 @@ public class MorOutListFragment extends CommonFragment {
             mlistview.setVisibility(View.GONE);
             store_listview.setVisibility(View.VISIBLE);
             gubun.setText("A");
+            et_merge_1.setText("");
 
 
         }
@@ -348,6 +350,9 @@ public class MorOutListFragment extends CommonFragment {
         args.putString("QTY", String.valueOf(o.getMor_qty()));  //수량
         intent.putExtra("args", args);
         startActivity(intent);
+        mMorList.clear();
+        sotreAdapter.notifyDataSetChanged();
+        et_merge_1.setText("");
     }
 
     private void goMorStore() {
@@ -386,8 +391,10 @@ public class MorOutListFragment extends CommonFragment {
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
-                            mMorList.clear();
-                            sotreAdapter.notifyDataSetChanged();
+                            if (mMorList != null) {
+                                mMorList.clear();
+                                sotreAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 } else {
