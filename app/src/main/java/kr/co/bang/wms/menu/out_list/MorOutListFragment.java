@@ -163,6 +163,7 @@ public class MorOutListFragment extends CommonFragment {
                         mOrderNo = s_barcode;
                         slip_type = s_type;
                         mor_list_date = s_date;
+                        //Log.d("값:::", "바코드: " + mOrderNo + "타입: " + slip_type + "날짜: " + mor_list_date);
                     }
                     if (gubun.getText().toString().equals("C")) {
                         requestMorListMember();

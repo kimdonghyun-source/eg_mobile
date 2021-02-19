@@ -22,6 +22,9 @@
             android:layout_gravity="center|left"
             android:textSize="15dp"
             android:text="품목명"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
             android:textColor="#000000"/>
     </LinearLayout>
     <LinearLayout
