@@ -214,7 +214,9 @@ public class MorOutPickingFragment extends CommonFragment {
             }
         });
 
-        //requestEmplist();
+        requestWhlist_setting();
+        //et_wh.setText("[" + WareLocation.getWh_code() + "] " + WareLocation.getWh_name());
+
 
         return v;
     }//onCreateView Close
@@ -236,10 +238,13 @@ public class MorOutPickingFragment extends CommonFragment {
                         return;
                     }
 
-                    if (WareLocation == null) {
+                    if (et_wh.getText().toString() == null) {
                         Utils.Toast(mContext, getString(R.string.error_location_move));
                         return;
-                    } else {
+                    }else if(mEmpList == null){
+                        Utils.Toast(mContext, getString(R.string.error_job_emp));
+                    }
+                    else {
                         requestMorPickingScan();
                     }
 
@@ -281,7 +286,7 @@ public class MorOutPickingFragment extends CommonFragment {
                         }
                     }
 
-                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), "이동처리 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출고처리 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
@@ -306,6 +311,42 @@ public class MorOutPickingFragment extends CommonFragment {
     };
 
     /**
+     * 창고검색 리스트 기본값
+     */
+    private void requestWhlist_setting() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<WarehouseModel> call = service.morWarehouse("sp_pda_mst_wh_list", "0800");
+
+        call.enqueue(new Callback<WarehouseModel>() {
+            @Override
+            public void onResponse(Call<WarehouseModel> call, Response<WarehouseModel> response) {
+                if (response.isSuccessful()) {
+                    WarehouseModel model = response.body();
+                    //Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+                            mWarehouseList = model.getItems();
+                            et_wh.setText("[" + mWarehouseList.get(0).getWh_code() + "] " + mWarehouseList.get(0).getWh_name());
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WarehouseModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }
+
+    /**
      * 작업자 리스트
      */
     private void requestEmplist() {
@@ -322,7 +363,7 @@ public class MorOutPickingFragment extends CommonFragment {
                     //Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (model != null) {
                         if (model.getFlag() == ResultModel.SUCCESS) {
-                            mLocationEmpPopup = new LocationEmpPopup(getActivity(), model.getItems(), R.drawable.popup_title_searchloc, new Handler() {
+                            mLocationEmpPopup = new LocationEmpPopup(getActivity(), model.getItems(), R.drawable.popup_title_job_emp, new Handler() {
                                 //mLocationListPopup = new LocationListPopup(getActivity(), model.getItems(), R.drawable.popup_title_searchloc, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -615,6 +656,7 @@ public class MorOutPickingFragment extends CommonFragment {
         json.addProperty("p_corp_code", corp_code);
         json.addProperty("p_mor_date", mordate);
         json.addProperty("p_mor_no1", mor_no);
+        json.addProperty("p_job_emp", mEmpList.getCode());
         json.addProperty("p_user_id", userID);
         json.add("detail", list);
 
@@ -638,6 +680,13 @@ public class MorOutPickingFragment extends CommonFragment {
                                     if (msg.what == 1) {
                                         getActivity().finish();
                                         mOneBtnPopup.hideDialog();
+                                        Intent intent = new Intent(mContext, BaseActivity.class);
+                                        intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
+                                        Bundle args=new Bundle();
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.putExtra("args",args);
+                                        startActivity(intent);
+
                                     }
                                 }
                             });

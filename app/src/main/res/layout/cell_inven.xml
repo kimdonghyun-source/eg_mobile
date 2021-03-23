@@ -5,6 +5,8 @@
     android:layout_height="140dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,6 +16,8 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="2dp"
+            android:fontFamily="@font/tmoney"
             android:gravity="center_vertical"
             android:id="@+id/tv_itm_name"
             android:layout_width="wrap_content"
@@ -33,6 +37,8 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <TextView
+            android:layout_marginLeft="2dp"
+            android:fontFamily="@font/tmoney"
             android:id="@+id/serial"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -43,12 +49,13 @@
             android:textColor="#000000"/>
 
         <TextView
+            android:fontFamily="@font/tmoney"
             android:id="@+id/wh_name"
             android:layout_width="153dp"
             android:layout_height="match_parent"
             android:layout_gravity="center|left"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="창고명"
             android:textColor="#000000"
             android:textSize="15dp" />

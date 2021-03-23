@@ -196,7 +196,6 @@ public class LocationEmpPopup {
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
-                            Log.d("돼?","ㅇㅇ");
                             mEmpList = model.getItems();
                             mAdapter.notifyDataSetChanged();
                         }else{

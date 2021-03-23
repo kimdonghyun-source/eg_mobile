@@ -9,6 +9,7 @@
     <string name="error_location">로케이션을 선택해주세요.</string>
     <string name="error_in_items">입고할 품목을 등록해주세요.</string>
     <string name="error_location_move">입고처를 선택해주세요.</string>
+    <string name="error_job_emp">담당자를 선택해주세요.</string>
     <string name="error_location_scan">SerialNo 를 스캔해주세요.</string>
     <string name="error_mat_mod_scan">바코드를 스캔해주세요.</string>
     <string name="error_h_qty">헤드 요청 수량이 출고 수량과 동일하지 않습니다.</string>
