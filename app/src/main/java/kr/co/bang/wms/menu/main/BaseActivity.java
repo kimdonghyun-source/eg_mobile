@@ -1,5 +1,6 @@
 package kr.co.bang.wms.menu.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,10 @@ import kr.co.bang.wms.common.Define;
 import kr.co.bang.wms.custom.BusProvider;
 import kr.co.bang.wms.custom.CommonCompatActivity;
 import kr.co.bang.wms.custom.CommonFragment;
-import kr.co.bang.wms.menu.house_move.HouseMoveFragment;
+import kr.co.bang.wms.menu.boxlbl.BoxlblFragment;
+import kr.co.bang.wms.menu.house_new_move.HouseNewMoveDetailFragment;
+import kr.co.bang.wms.menu.house_new_move.HouseNewMoveFragment;
+import kr.co.bang.wms.menu.house_new_move.HouseNewMoveScanDetailFragment;
 import kr.co.bang.wms.menu.inventory.InventoryFragment;
 
 import kr.co.bang.wms.menu.out_list.MorOutListFragment;
@@ -56,6 +60,7 @@ public class BaseActivity extends CommonCompatActivity {
     //선택된 메뉴 postion
     int mSelectMenu;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +81,8 @@ public class BaseActivity extends CommonCompatActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add("주문자재출고");
         list.add("창고 이동");
+        list.add("박스라벨패킹");
         list.add("재고 실사");
-
 
 
         ListView listView = findViewById(R.id.list);
@@ -123,11 +128,42 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-            //창고이동(뱅)
+            /*//창고이동(뱅) (기존꺼)
             case Define.MENU_HOUSE_MOVE: {
                 CommonFragment fragment = new HouseMoveFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_HOUSE_MOVE, R.id.fl_content);
+                break;
+            }*/
+
+            //창고이동(뱅) (새로 추가)
+            case Define.MENU_HOUSE_MOVE_NEW: {
+                CommonFragment fragment = new HouseNewMoveFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_HOUSE_MOVE_NEW, R.id.fl_content);
+                break;
+            }
+            //창고이동(뱅) 디테일
+            case Define.MENU_HOUSE_MOVE_DATAIL: {
+                CommonFragment fragment = new HouseNewMoveDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_HOUSE_MOVE_DETAIL, R.id.fl_content);
+                break;
+            }
+
+            //창고이동(뱅) 스캔디테일
+            case Define.MENU_HOUSE_MOVE_SCAN_DATAIL: {
+                CommonFragment fragment = new HouseNewMoveScanDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_HOUSE_MOVE_SCAN_DETAIL, R.id.fl_content);
+                break;
+            }
+
+            //박스라벨패킹(뱅)
+            case Define.MENU_BOXLBL: {
+                CommonFragment fragment = new BoxlblFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_BOXLBL, R.id.fl_content);
                 break;
             }
 
@@ -138,6 +174,10 @@ public class BaseActivity extends CommonCompatActivity {
                 replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                 break;
             }
+
+
+
+
         }
 
         setTitleImage(menu);
@@ -172,9 +212,27 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-            //창고이동(뱅)
+            /*//창고이동(뱅) 기존꺼
             case Define.MENU_HOUSE_MOVE: {
                 image = R.drawable.menu_waremove_title;
+                break;
+            }*/
+
+            //창고이동(뱅) 새로추가
+            case Define.MENU_HOUSE_MOVE_NEW: {
+                image = R.drawable.menu_waremove_title;
+                break;
+            }
+
+            //창고이동(뱅) 디테일
+            case Define.MENU_HOUSE_MOVE_DATAIL: {
+                image = R.drawable.menu_waremove_title;
+                break;
+            }
+
+            //박스라벨패킹(뱅)
+            case Define.MENU_BOXLBL: {
+                image = R.drawable.menu_boxlbl_title;
                 break;
             }
 
@@ -183,6 +241,8 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.menu_inventory_title;
                 break;
             }
+
+
 
 //---------------------------------------------------------------------------------뱅
 
@@ -199,7 +259,16 @@ public class BaseActivity extends CommonCompatActivity {
             int view = v.getId();
             switch (view) {
                 case R.id.bt_back:
-                    backPressed();
+                    mTwoBtnPopup = new TwoBtnPopup(BaseActivity.this, "작업 내용이 취소됩니다.\n 뒤로가시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                mTwoBtnPopup.hideDialog();
+                                finish();
+                            }
+                        }
+                    });
+                    //backPressed();
                     break;
                 case R.id.bt_drawer:
                     drawer.openDrawer(drawer_layout);
@@ -216,10 +285,18 @@ public class BaseActivity extends CommonCompatActivity {
 
     @Override
     public void onBackPressed() {
-        backPressed();
+        mTwoBtnPopup = new TwoBtnPopup(BaseActivity.this, "작업 내용이 취소됩니다.\n 뒤로가시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    mTwoBtnPopup.hideDialog();
+                    finish();
+                }
+            }
+        });
     }
 
-    private void backPressed(){
+    public void backPressed(){
         try {
             //사이드 메뉴가 열려있으면 닫아준다.
             if (drawer.isDrawerOpen(drawer_layout)) {
@@ -233,10 +310,10 @@ public class BaseActivity extends CommonCompatActivity {
             if (count >= 1) {
                 mFragmentManager.popBackStack();
             } else {
-                finish();
+                //finish();
             }
         }catch (Exception e){
-            finish();
+            //finish();
         }
     }
 
@@ -321,10 +398,24 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
-                                    //창고이동(뱅)
+                                    /*//창고이동(뱅) 기존꺼
                                     case Define.MENU_HOUSE_MOVE: {
                                         CommonFragment fragment = new HouseMoveFragment();
                                         replaceContent(fragment, Define.TAG_HOUSE_MOVE, R.id.fl_content);
+                                        break;
+                                    }*/
+
+                                    //창고이동(뱅) 새로추가
+                                    case Define.MENU_HOUSE_MOVE_NEW: {
+                                        CommonFragment fragment = new HouseNewMoveFragment();
+                                        replaceContent(fragment, Define.TAG_HOUSE_MOVE_NEW, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //박스라벨피킹(뱅)
+                                    case Define.MENU_BOXLBL: {
+                                        CommonFragment fragment = new BoxlblFragment();
+                                        replaceContent(fragment, Define.TAG_BOXLBL, R.id.fl_content);
                                         break;
                                     }
 
@@ -334,6 +425,8 @@ public class BaseActivity extends CommonCompatActivity {
                                         replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                                         break;
                                     }
+
+
                                 }
                                 setTitleImage(position+2);
                                 mAdapter.notifyDataSetChanged();

@@ -3,6 +3,7 @@ package kr.co.bang.wms.network;
 import java.util.concurrent.TimeUnit;
 
 import kr.co.bang.wms.BuildConfig;
+import kr.co.bang.wms.model.BoxlblListModel;
 import kr.co.bang.wms.model.CustomerInfoModel;
 import kr.co.bang.wms.model.DeliveryOrderModel;
 import kr.co.bang.wms.model.EmpModel;
@@ -11,6 +12,11 @@ import kr.co.bang.wms.model.InventoryModel;
 import kr.co.bang.wms.model.LocationModel;
 import kr.co.bang.wms.model.LotItemsModel;
 import kr.co.bang.wms.model.MatMoveModel;
+import kr.co.bang.wms.model.MatOutDetailDel;
+import kr.co.bang.wms.model.MatOutDetailGet;
+import kr.co.bang.wms.model.MatOutDetailModel;
+import kr.co.bang.wms.model.MatOutListModel;
+import kr.co.bang.wms.model.MatOutSerialScanModel;
 import kr.co.bang.wms.model.MaterialLocAndLotModel;
 import kr.co.bang.wms.model.MaterialOutDetailModel;
 import kr.co.bang.wms.model.MaterialOutListModel;
@@ -18,6 +24,7 @@ import kr.co.bang.wms.model.MorEmpModel;
 import kr.co.bang.wms.model.MorListModel;
 import kr.co.bang.wms.model.MorSerialScan;
 import kr.co.bang.wms.model.PalletSnanModel;
+import kr.co.bang.wms.model.ResultBoxModel;
 import kr.co.bang.wms.model.ResultModel;
 import kr.co.bang.wms.model.SerialNumberModel;
 import kr.co.bang.wms.model.UserInfoModel;
@@ -99,6 +106,20 @@ public interface ApiClientService {
     );
 
     /**
+     * 스캔내역삭제
+     * @param proc 프로시저
+     * @param mac 맥주소
+     * @param mat_cd 요청코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MatOutDetailDel> ScanDel(
+            @Query("proc") String proc,
+            @Query("param1") String mac,
+            @Query("param2") String mat_cd
+
+    );
+
+    /**
      * 재고실사(박스)
      * @param proc 프로시저
      * @param code 시리얼번호
@@ -123,6 +144,69 @@ public interface ApiClientService {
 
     );
 
+    /**
+     * 창고이동 리스트 조회
+     * @param proc 프로시저
+     * @param date 조회일자
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MatOutListModel> matlist(
+            @Query("proc") String proc,
+            @Query("param1") String date
+    );
+
+    /**
+     * 창고이동 디테일 조회
+     * @param proc 프로시저
+     * @param mac 맥주소
+     * @param no 이동요청번호
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MatOutDetailModel> matDetailList(
+            @Query("proc") String proc,
+            @Query("param1") String mac,
+            @Query("param2") String no
+    );
+
+    /**
+     * 창고이동 new 시리얼 스캔
+     * @param proc 프로시저
+     * @param serial 시리얼번호
+     * @param req_code 요청코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MatOutSerialScanModel> matSerialScan(
+            @Query("proc") String proc,
+            @Query("param1") String serial,
+            @Query("param2") String req_code
+    );
+
+    /**
+     * 박스라벨 시리얼 스캔
+     * @param proc 프로시저
+     * @param serial 시리얼번호
+     * */
+    @POST("R2JsonProc.asp")
+    Call<BoxlblListModel> boxSerialScan(
+            @Query("proc") String proc,
+            @Query("param1") String serial
+    );
+
+    /**
+     * 스캔내역 조회(작업중인 냬역)
+     * @param proc 프로시저
+     * @param mac 맥주소
+     * @param no 이동요청번호
+     * @param itm 아이템코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MatOutDetailGet> matDetailGet(
+            @Query("proc") String proc,
+            @Query("param1") String mac,
+            @Query("param2") String no,
+            @Query("param3") String itm
+
+    );
 
     /**
      * 창고이동 시리얼 스캔
@@ -172,6 +256,33 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_dis_mor_save.asp")
     Call<ResultModel> postSendWareSave(
+            @Body RequestBody body
+    );
+
+    /**
+     *스캔내역저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_mat_out_scan_save.asp")
+    Call<ResultModel> postOutSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 이동처리완료
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_mat_out_save.asp")
+    Call<ResultModel> postMatOutSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 실사처리완료
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_box_lbl_save.asp")
+    Call<ResultBoxModel> postBoxSave(
             @Body RequestBody body
     );
 

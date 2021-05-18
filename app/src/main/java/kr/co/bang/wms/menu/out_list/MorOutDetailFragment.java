@@ -263,8 +263,6 @@ public class MorOutDetailFragment extends CommonFragment {
         for (int i = 0; i < mmorlistmodel.getItems().size(); i++){
             MorListModel.Items o = mmorlistmodel.getItems().get(i);
 
-
-
             args.putString("CORPCODE", o.getCorp_code());                            //사업장번호
             args.putString("PRODUCT", o.getItm_name());                              //품묵정보
             args.putString("QTY", String.valueOf(o.getMor_qty()));                   //주문수량

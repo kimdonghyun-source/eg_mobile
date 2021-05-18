@@ -26,8 +26,10 @@ public class MainActivity extends CommonCompatActivity {
 
 
         findViewById(R.id.bt_menu_4).setOnClickListener(onClickListener);
-        findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener); //기존창고이동
+        findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener); //새로운창고이동
         findViewById(R.id.bt_menu_8).setOnClickListener(onClickListener); //재고실사
+        findViewById(R.id.bt_menu_2).setOnClickListener(onClickListener); //박스라벨패킹
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,12 +60,20 @@ public class MainActivity extends CommonCompatActivity {
                 case R.id.bt_menu_4:
                     intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
                     break;
-                case R.id.bt_menu_5:
+                 //기존 창고이동
+                /*case R.id.bt_menu_5:
                     intent.putExtra("menu", Define.MENU_HOUSE_MOVE);
+                    break;*/
+                //새로운 창고이동
+                case R.id.bt_menu_6:
+                    intent.putExtra("menu", Define.MENU_HOUSE_MOVE_NEW);
                     break;
                 case R.id.bt_menu_8:
                     intent.putExtra("menu", Define.MENU_INVENTORY);
                     break;
+
+                case R.id.bt_menu_2:
+                    intent.putExtra("menu", Define.MENU_BOXLBL);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

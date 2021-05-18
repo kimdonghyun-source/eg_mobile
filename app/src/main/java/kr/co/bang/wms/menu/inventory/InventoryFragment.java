@@ -386,7 +386,6 @@ public class InventoryFragment extends CommonFragment {
 
 
         for (InvenModel.Inven item : items) {
-            Log.d("ㅇㅇㅇ",item.getPicking_yn());
             JsonObject obj = new JsonObject();
 
             if (item.getPicking_yn().equals("N")) {

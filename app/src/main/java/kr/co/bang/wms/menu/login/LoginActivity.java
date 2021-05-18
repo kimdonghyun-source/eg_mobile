@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.List;
+
 import kr.co.bang.wms.GlobalApplication;
 import kr.co.bang.wms.R;
 import kr.co.bang.wms.common.Utils;
@@ -30,6 +32,8 @@ public class LoginActivity extends CommonCompatActivity {
     EditText et_pass;
     ImageButton bt_check;
     Button bt_login;
+    UserInfoModel mUsermodel;
+    List<UserInfoModel.Items> mUserList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +129,7 @@ public class LoginActivity extends CommonCompatActivity {
                             SharedData.setSharedData(mContext, SharedData.UserValue.USER_ID.name(), et_user_id.getText().toString());
                             SharedData.setSharedData(mContext, SharedData.UserValue.IS_LOGIN.name(), true);
                             SharedData.setSharedData(mContext, SharedData.UserValue.SAVE_ID.name(), bt_check.isSelected());
-
+                            SharedData.setSharedData(mContext, "emp_code", model.getItems().get(0).getEmp_code());
                             GlobalApplication application = (GlobalApplication)getApplicationContext();
                             application.setUserInfoModel(model.getItems().get(0));
 

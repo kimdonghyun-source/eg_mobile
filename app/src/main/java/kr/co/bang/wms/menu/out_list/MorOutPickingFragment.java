@@ -399,7 +399,7 @@ public class MorOutPickingFragment extends CommonFragment {
 
 
     /**
-     * 창고검색 리스트
+     * 입고처 리스트
      */
     private void requestWhlist() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);

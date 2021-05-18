@@ -25,7 +25,7 @@
             android:layout_gravity="center|left"
             android:background="@drawable/item_text4"
             android:paddingLeft="15dp" />
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
