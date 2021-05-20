@@ -175,8 +175,8 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     String barcode = event.getBarcodeData();
                     barcode_scan = barcode;
 
-                    if (mSerialList != null){
-                    for (int i =0; i < scanAdapter.getCount(); i ++){
+                    if (mSerialList != null) {
+                        for (int i = 0; i < scanAdapter.getCount(); i++) {
                             if (mSerialList.get(i).getLot_no().equals(barcode_scan)) {
                                 Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
                                 return;
@@ -184,62 +184,51 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                         }
                     }
 
-                    if (mDetailGetList != null){
-                        for (int j=0; j < mDetailGetList.size(); j++){
-                            if (mDetailGetList.get(j).getSerial_no().equals(barcode_scan)){
+                    if (mDetailGetList != null) {
+                        for (int j = 0; j < mDetailGetList.size(); j++) {
+                            if (mDetailGetList.get(j).getSerial_no().equals(barcode_scan)) {
                                 Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
                                 return;
                             }
                         }
                     }
 
-                    MatSerialScan();
+                    if (barcode_scan.length() == 17) {
+                        MatSerialScan();
+                    } else {
+                        MatSerialScanItem();
+                    }
+
                 }
             }
         });
     }
 
- /*   @Override
-    public void onPause() {
-        super.onPause();
-        Utils.Log("생명주기 : " + "onPause");
-        if (mDetailGetList != null) {
-            mTwoBtnPopup = new TwoBtnPopup(getActivity(), "스캔내역이 있습니다.\n 삭제 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == 1) {
-                        mat_out_scan_del();
-                        mTwoBtnPopup.hideDialog();
-                    }
-                }
-            });
-        }
-    }
-*/
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         mat_out_scan_del();
     }
 
-    View.OnClickListener onClickListener  = new View.OnClickListener() {
+    View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.bt_wh :
+                case R.id.bt_wh:
                     requestWhlist();
                     break;
 
                 case R.id.bt_next:
-                    if (!et_wh.getText().toString().equals("")){
+                    if (!et_wh.getText().toString().equals("")) {
 
-                        if (mDetailGetList != null){
+                        if (mDetailGetList != null) {
                             request_mat_out_save();
-                        }else{
+                        } else {
                             Utils.Toast(mContext, "이동처리 할 스캔을 진행해주세요.");
                             return;
                         }
-                    }else{
+                    } else {
                         Utils.Toast(mContext, "입고처를 선택해주세요.");
                         return;
                     }
@@ -301,9 +290,98 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
     }
 
     /**
-     * 시리얼스캔
+     * 시리얼스캔 (박스 17자리)
      */
     private void MatSerialScan() {
+
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<MatOutSerialScanModel> call = service.matSerialScan("sp_pda_mat_out_scan", barcode_scan, mOrder.getReq_mat_code());
+
+        call.enqueue(new Callback<MatOutSerialScanModel>() {
+            @Override
+            public void onResponse(Call<MatOutSerialScanModel> call, Response<MatOutSerialScanModel> response) {
+                if (response.isSuccessful()) {
+                    mSerialModel = response.body();
+
+                    final MatOutSerialScanModel model = response.body();
+                    Utils.Log("model scan ==> :" + new Gson().toJson(model));
+                    if (mSerialModel != null) {
+                        if (mSerialModel.getFlag() == ResultModel.SUCCESS) {
+                            //moveList = model.getItems();
+                            if (model.getItems().size() > 0) {
+                                if (scanAdapter.getItemCount() != 0) {
+                                    scanAdapter.clearData();
+                                }
+                                for (int a = 0; a < model.getItems().size(); a++) {
+
+                                    MatOutSerialScanModel.Item item = (MatOutSerialScanModel.Item) model.getItems().get(a);
+                                    scanAdapter.addData(item);
+
+                                    s_itm_code = item.getItm_code();
+                                    s_inv_qty = Integer.toString(item.getInv_qty());
+
+                                    for (int i = 0; i < mAdapter.getCount(); i++) {
+                                        int count = 0;
+                                        if (mDetailList.get(i).getItm_code() == null) {
+                                        } else {
+                                            if (mDetailList.get(i).getItm_code().equals(item.getItm_code())) {
+
+                                                if (mDetailList.get(i).getScan_qty() >= 0) {
+
+                                                    count += mDetailList.get(i).getScan_qty();
+                                                    count++;
+
+
+                                                } else {
+                                                    try {
+                                                        count += mSerialList.get(i).getInv_qty();
+                                                    } catch (IndexOutOfBoundsException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+
+                                                mDetailList.get(i).setScan_qty(count);
+
+
+                                            }
+                                        }
+                                    }
+
+                                }
+
+
+                                mListAdapter.notifyDataSetChanged();
+                                mAdapter.notifyDataSetChanged();
+                                scanAdapter.notifyDataSetChanged();
+
+                                requestScan();
+                            }
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<MatOutSerialScanModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }
+
+    /**
+     * 시리얼스캔 (품목13자리)
+     */
+    private void MatSerialScanItem() {
 
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
@@ -336,7 +414,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                                         } else {
                                             if (mDetailList.get(i).getItm_code().equals(item.getItm_code())) {
 
-                                                if (mDetailList.get(i).getScan_qty() >= 1) {
+                                                if (mDetailList.get(i).getScan_qty() >= 0) {
 
                                                     count += mDetailList.get(i).getScan_qty();
                                                     count++;
@@ -344,14 +422,13 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
 
                                                 } else {
                                                     count += mSerialList.get(i).getInv_qty();
-
-                                                    //count += mDetailList.get(i).getScan_qty();
+                                                   /* try {
+                                                        count += mSerialList.get(i).getInv_qty();
+                                                    } catch (IndexOutOfBoundsException e) {
+                                                        e.printStackTrace();
+                                                    }*/
                                                 }
-
-
                                                 mDetailList.get(i).setScan_qty(count);
-
-
                                             }
                                         }
                                     }
@@ -360,11 +437,10 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
 
 
                                 mListAdapter.notifyDataSetChanged();
-
                                 mAdapter.notifyDataSetChanged();
                                 scanAdapter.notifyDataSetChanged();
 
-                                requestScan();
+                                requestScanItem();
                             }
 
                         } else {
@@ -406,13 +482,13 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                         if (moveModel.getFlag() == ResultModel.SUCCESS) {
                             mDetailGetList = model.getItems();
                             //if (model.getItems().size() > 0) {
-                            if (mDetailGetList != null){
+                            if (mDetailGetList != null) {
                                 for (int i = 0; i < model.getItems().size(); i++) {
 
-                            MatOutDetailGet.Item item = (MatOutDetailGet.Item) model.getItems().get(i);
-                                //mListAdapter.addData(item);
-                                mDetailGetList = model.getItems();
-                                mListAdapter.notifyDataSetChanged();
+                                    MatOutDetailGet.Item item = (MatOutDetailGet.Item) model.getItems().get(i);
+                                    //mListAdapter.addData(item);
+                                    mDetailGetList = model.getItems();
+                                    mListAdapter.notifyDataSetChanged();
                                 }
 
 
@@ -511,6 +587,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     Utils.Toast(mContext, response.code() + " : " + response.message());
                 }
             }
+
             @Override
             public void onFailure(Call<MatOutDetailDel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
@@ -687,7 +764,6 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
             //holder.req_mat_qty.setText(Float.toString(data.getReq_mat_qty()));
 
 
-
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -824,9 +900,9 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
         //mListAdapter.notifyDataSetChanged();
         mat_out_detail_get();
         mListAdapter.notifyDataSetChanged();*/
-       ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
         JsonObject json = new JsonObject();
-        String emp_code = (String) SharedData.getSharedData(mContext, "emp_code","");
+        String emp_code = (String) SharedData.getSharedData(mContext, "emp_code", "");
         String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
 
         JsonArray list = new JsonArray();
@@ -930,9 +1006,8 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
     }
 
 
-
     /**
-     * 스캔데이터 저장
+     * 스캔데이터 저장(박스17자리)
      */
     private void requestScan() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
@@ -942,11 +1017,8 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
         List<MatOutSerialScanModel.Item> items = scanAdapter.getData();
         for (MatOutSerialScanModel.Item item : items) {
             JsonObject obj = new JsonObject();
-            //obj.addProperty("itm_code", item.getItm_code());
             obj.addProperty("itm_code", item.getItm_code());
-            //obj.addProperty("serial_no", item.getLot_no());
             obj.addProperty("serial_no", item.getLot_no());
-            //obj.addProperty("serial_qty", item.getInv_qty());
             obj.addProperty("serial_qty", item.getInv_qty());
             list.add(obj);
         }
@@ -982,9 +1054,9 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                                     }
                                 }
                             });*/
-                           if (mDetailGetList != null) {
-                               mDetailGetList.clear();
-                           }
+                            if (mDetailGetList != null) {
+                                mDetailGetList.clear();
+                            }
                             mListAdapter.notifyDataSetChanged();
                             mat_out_detail_get();
 
@@ -1031,6 +1103,105 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
 
     }
 
+    /**
+     * 스캔데이터 저장(품목13자리)
+     */
+    private void requestScanItem() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        JsonObject json = new JsonObject();
+        String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+        JsonArray list = new JsonArray();
+        List<MatOutSerialScanModel.Item> items = scanAdapter.getData();
+        //for (MatOutSerialScanModel.Item item : items) {
+        JsonObject obj = new JsonObject();
+        //obj.addProperty("itm_code", item.getItm_code());
+        obj.addProperty("itm_code", mSerialModel.getItems().get(0).getItm_code());
+        //obj.addProperty("serial_no", item.getLot_no());
+        obj.addProperty("serial_no", barcode_scan);
+        //obj.addProperty("serial_qty", item.getInv_qty());
+        obj.addProperty("serial_qty", mSerialModel.getItems().get(0).getInv_qty());
+        list.add(obj);
+        //}
+
+        json.addProperty("p_mac_ad", address);
+        json.addProperty("p_corp_code", detailModel.getItems().get(0).getCorp_code());
+        json.addProperty("p_req_mat_code", mOrder.getReq_mat_code());
+        json.addProperty("p_user_id", userID);
+        json.add("detail", list);
+
+        Utils.Log("new Gson().toJson(json)scan ==> : " + new Gson().toJson(json));
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
+
+        Call<ResultModel> call = service.postOutSave(body);
+
+        call.enqueue(new Callback<ResultModel>() {
+            @Override
+            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+                if (response.isSuccessful()) {
+                    ResultModel model = response.body();
+                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+
+                           /* mOneBtnPopup = new OneBtnPopup(getActivity(), "출고처리 되었습니다.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        getActivity().finish();
+                                        mOneBtnPopup.hideDialog();
+
+                                    }
+                                }
+                            });*/
+                            if (mDetailGetList != null) {
+                                mDetailGetList.clear();
+                            }
+                            mListAdapter.notifyDataSetChanged();
+                            mat_out_detail_get();
+
+                        } else {
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    /*mTwoBtnPopup = new TwoBtnPopup(getActivity(), "이동 전송을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                requestScan();
+                                mTwoBtnPopup.hideDialog();
+                            }
+                        }
+                    });*/
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                /*mTwoBtnPopup = new TwoBtnPopup(getActivity(), "이동 전송을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == 1) {
+                            requestScan();
+                            mTwoBtnPopup.hideDialog();
+                        }
+                    }
+                });*/
+            }
+        });
+
+    }
 
 
 }//Colsoe Activity
