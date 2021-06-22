@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 주문자재출고 조회 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:orientation="horizontal">
+
+        <TextView
+            android:paddingLeft="2dp"
+            android:id="@+id/tv_itm_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:fontFamily="@font/tmoney"
+            android:textSize="13dp"
+            android:text="품목명"
+            android:textColor="#000000"/>
+        <TextView
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:id="@+id/tv_lot_no"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="center|left"
+            android:textSize="13dp"
+            android:text="lot_no"
+            android:textColor="#000000"/>
+
+      <!--  <TextView
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:id="@+id/tv_wh_code"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:layout_gravity="center|left"
+            android:textSize="13dp"
+            android:text="wh_code"
+            android:textColor="#000000"/>-->
+
+        <TextView
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:id="@+id/tv_inv_qty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:layout_gravity="center|left"
+            android:textSize="13dp"
+            android:text="inv_qty"
+            android:textColor="#000000"/>
+
+
+    </LinearLayout>
+

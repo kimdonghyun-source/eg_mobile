@@ -37,6 +37,8 @@ import kr.co.bang.wms.menu.out_list.MorOutDetailFragment;
 import kr.co.bang.wms.menu.out_list.MorOutPickingFragment;
 import kr.co.bang.wms.menu.popup.TwoBtnPopup;
 
+import kr.co.bang.wms.menu.stock.StockFragment;
+import kr.co.bang.wms.menu.stock.StockFragmentDetail;
 import kr.co.bang.wms.model.UserInfoModel;
 
 public class BaseActivity extends CommonCompatActivity {
@@ -83,6 +85,7 @@ public class BaseActivity extends CommonCompatActivity {
         list.add("창고 이동");
         list.add("박스라벨패킹");
         list.add("재고 실사");
+        list.add("재고 조사");
 
 
         ListView listView = findViewById(R.id.list);
@@ -175,7 +178,21 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //재고조상(뱅)
+            case Define.MENU_STOCK: {
+                CommonFragment fragment = new StockFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
+                break;
+            }
 
+            //재고조사(뱅) 디테일
+            case Define.MENU_STOCK_DETAIL: {
+                CommonFragment fragment = new StockFragmentDetail();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
+                break;
+            }
 
 
         }
@@ -242,6 +259,17 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //재고조사(뱅)
+            case Define.MENU_STOCK: {
+                image = R.drawable.menu_stock_title;
+                break;
+            }
+
+            //재고조사(뱅)디테일
+            case Define.MENU_STOCK_DETAIL: {
+                image = R.drawable.menu_stock_title;
+                break;
+            }
 
 
 //---------------------------------------------------------------------------------뱅
@@ -425,6 +453,13 @@ public class BaseActivity extends CommonCompatActivity {
                                         replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                                         break;
                                     }
+
+                                    //재고조사(뱅)
+                                        case Define.MENU_STOCK: {
+                                            CommonFragment fragment = new StockFragment();
+                                            replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
+                                            break;
+                                        }
 
 
                                 }

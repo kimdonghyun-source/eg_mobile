@@ -48,7 +48,7 @@ import retrofit2.Response;
 public class BoxlblFragment extends CommonFragment {
 
     TextView tv_empty, et_from, tv_box_serial, tot_scan;
-    String barcode_scan;
+    String barcode_scan, beg_barcode = null;
     ListView inVenListView;
     Context mContext;
     BoxlblListModel mBoxModel;
@@ -103,6 +103,14 @@ public class BoxlblFragment extends CommonFragment {
                     String barcode = event.getBarcodeData();
                     barcode_scan = barcode;
                     et_from.setText(barcode);
+
+                    if (beg_barcode != null){
+                        if (beg_barcode.equals(barcode_scan)) {
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
+                    }
+
                     if (mBoxListModel != null){
                         for (int i=0; i < mBoxListModel.size(); i++){
                             if (mBoxListModel.get(i).getLot_no().equals(barcode_scan)){
@@ -151,6 +159,17 @@ public class BoxlblFragment extends CommonFragment {
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (mBoxModel != null) {
                         if (mBoxModel.getFlag() == ResultModel.SUCCESS) {
+
+                            if (mBoxListModel != null){
+                                for (int i=0; i < mBoxListModel.size(); i++){
+                                    if (!mBoxListModel.get(i).getItm_code().equals(mBoxModel.getItems().get(0).getItm_code())){
+                                        Utils.Toast(mContext, "동일한 아이템을 스캔해주세요.");
+                                        return;
+                                    }
+                                }
+
+                            }
+
                             for (int i = 0; i < model.getItems().size(); i++) {
                                 BoxlblListModel.Item item = (BoxlblListModel.Item) model.getItems().get(i);
                                 mAdapter.addData(item);

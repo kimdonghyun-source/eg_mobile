@@ -25,7 +25,12 @@ public class Define {
     //재고실사(뱅)
     public static final int MENU_INVENTORY = 5;
 
-    //--------------------------------------------------------------------------------
+    //재고조사(뱅)
+    public static final int MENU_STOCK = 6;
+    //재고조사(뱅) 스캔리스트 조회
+    public static final int MENU_STOCK_DETAIL = 61;
+
+   //--------------------------------------------------------------------------------
     //주문자재출고(뱅)
     public static final String TAG_PRODUCTION_IN = "production";
     //주문자재출고 상세(뱅)
@@ -44,6 +49,10 @@ public class Define {
     public static final String TAG_BOXLBL = "boxlbl";
     //재고실사
     public static final String TAG_INVENTORY = "invertory";
+    //재고조사
+    public static final String TAG_STOCK = "stock";
+    //재고조사(뱅) 디테일
+    public static final String TAG_STOCK_DETAIL = "stock_detail";
 
 
     //--------------------------------------------------------------------------------

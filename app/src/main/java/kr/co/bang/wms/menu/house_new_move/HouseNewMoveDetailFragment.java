@@ -90,7 +90,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
     int qty = 0;
     LocationListPopup mLocationListPopup;
     EditText et_wh;
-    String wh_code, s_itm_code, s_inv_qty;
+    String wh_code, s_itm_code, s_inv_qty, beg_barcode = null;
     WarehouseModel.Items WareLocation;
     List<WarehouseModel.Items> mWarehouseList;
     ImageButton bt_wh, bt_next;
@@ -175,6 +175,13 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     String barcode = event.getBarcodeData();
                     barcode_scan = barcode;
 
+                    if (beg_barcode != null) {
+                        if (beg_barcode.equals(barcode_scan)) {
+
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
+                    }
                     if (mSerialList != null) {
                         for (int i = 0; i < scanAdapter.getCount(); i++) {
                             if (mSerialList.get(i).getLot_no().equals(barcode_scan)) {
@@ -195,8 +202,10 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
 
                     if (barcode_scan.length() == 17) {
                         MatSerialScan();
+                        beg_barcode = barcode;
                     } else {
                         MatSerialScanItem();
+                        beg_barcode = barcode;
                     }
 
                 }
@@ -220,15 +229,19 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     break;
 
                 case R.id.bt_next:
+                    bt_next.setEnabled(false);
                     if (!et_wh.getText().toString().equals("")) {
 
                         if (mDetailGetList != null) {
+                            bt_next.setEnabled(false);
                             request_mat_out_save();
                         } else {
+                            bt_next.setEnabled(true);
                             Utils.Toast(mContext, "이동처리 할 스캔을 진행해주세요.");
                             return;
                         }
                     } else {
+                        bt_next.setEnabled(true);
                         Utils.Toast(mContext, "입고처를 선택해주세요.");
                         return;
                     }
@@ -308,6 +321,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     Utils.Log("model scan ==> :" + new Gson().toJson(model));
                     if (mSerialModel != null) {
                         if (mSerialModel.getFlag() == ResultModel.SUCCESS) {
+
                             //moveList = model.getItems();
                             if (model.getItems().size() > 0) {
                                 if (scanAdapter.getItemCount() != 0) {
@@ -397,6 +411,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     Utils.Log("model scan ==> :" + new Gson().toJson(model));
                     if (mSerialModel != null) {
                         if (mSerialModel.getFlag() == ResultModel.SUCCESS) {
+
                             //moveList = model.getItems();
                             if (model.getItems().size() > 0) {
 
@@ -968,7 +983,7 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
-
+                                        bt_next.setEnabled(true);
                                     }
                                 }
                             });
@@ -976,12 +991,14 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
                     }
                 } else {
                     Utils.LogLine(response.message());
+                    bt_next.setEnabled(true);
                     mTwoBtnPopup = new TwoBtnPopup(getActivity(), "이동 전송을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
                                 request_mat_out_save();
                                 mTwoBtnPopup.hideDialog();
+
                             }
                         }
                     });
@@ -991,12 +1008,14 @@ public class HouseNewMoveDetailFragment extends CommonFragment {
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
+                bt_next.setEnabled(true);
                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "이동 전송을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
                             request_mat_out_save();
                             mTwoBtnPopup.hideDialog();
+
                         }
                     }
                 });

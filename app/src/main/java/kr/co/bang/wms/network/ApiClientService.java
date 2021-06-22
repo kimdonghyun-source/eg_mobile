@@ -3,6 +3,7 @@ package kr.co.bang.wms.network;
 import java.util.concurrent.TimeUnit;
 
 import kr.co.bang.wms.BuildConfig;
+import kr.co.bang.wms.menu.stock.StockFragmentDetail;
 import kr.co.bang.wms.model.BoxlblListModel;
 import kr.co.bang.wms.model.CustomerInfoModel;
 import kr.co.bang.wms.model.DeliveryOrderModel;
@@ -27,6 +28,8 @@ import kr.co.bang.wms.model.PalletSnanModel;
 import kr.co.bang.wms.model.ResultBoxModel;
 import kr.co.bang.wms.model.ResultModel;
 import kr.co.bang.wms.model.SerialNumberModel;
+import kr.co.bang.wms.model.StockDetailModel;
+import kr.co.bang.wms.model.StockModel;
 import kr.co.bang.wms.model.UserInfoModel;
 import kr.co.bang.wms.model.WarehouseModel;
 import okhttp3.OkHttpClient;
@@ -145,6 +148,32 @@ public interface ApiClientService {
     );
 
     /**
+     * 재고조사 리스트 조회
+     * @param proc 프로시저
+     * @param date 조회일자
+     * */
+    @POST("R2JsonProc.asp")
+    Call<StockModel> stklist(
+            @Query("proc") String proc,
+            @Query("param1") String date
+    );
+
+    /**
+     * 재고조사 시리얼 스캔
+     * @param proc 프로시저
+     * @param serial 시리얼번호
+     * @param date 일자
+     * @param wh_code 창고
+     * */
+    @POST("R2JsonProc.asp")
+    Call<StockDetailModel> stk_serial_list(
+            @Query("proc") String proc,
+            @Query("param1") String serial,
+            @Query("param2") String date,
+            @Query("param3") String wh_code
+    );
+
+    /**
      * 창고이동 리스트 조회
      * @param proc 프로시저
      * @param date 조회일자
@@ -238,6 +267,15 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_mat_mod_save.asp")
     Call<InvenModel> matModSave(
+            @Body RequestBody body
+    );
+
+    /**
+     *재고실사저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_stk_scan_save.asp")
+    Call<StockDetailModel> stockSave(
             @Body RequestBody body
     );
 
