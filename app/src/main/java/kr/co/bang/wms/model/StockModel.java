@@ -22,6 +22,8 @@ public class StockModel extends ResultModel {
         int stk_no1;
         //창고
         String wh_code;
+        //창고명
+        String wh_name;
         //비고
         String remark;
 
@@ -63,6 +65,14 @@ public class StockModel extends ResultModel {
 
         public void setRemark(String remark) {
             this.remark = remark;
+        }
+
+        public String getWh_name() {
+            return wh_name;
+        }
+
+        public void setWh_name(String wh_name) {
+            this.wh_name = wh_name;
         }
     }
 

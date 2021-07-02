@@ -24,6 +24,8 @@ public class UserInfoModel extends ResultModel{
         String emp_name;
         //앱버전
         String app_ver;
+        //사업장코드
+        String corp_code;
 
         public String getDpt_code() {
             return dpt_code;
@@ -63,6 +65,14 @@ public class UserInfoModel extends ResultModel{
 
         public void setApp_ver(String app_ver) {
             this.app_ver = app_ver;
+        }
+
+        public String getCorp_code() {
+            return corp_code;
+        }
+
+        public void setCorp_code(String corp_code) {
+            this.corp_code = corp_code;
         }
     }
 }

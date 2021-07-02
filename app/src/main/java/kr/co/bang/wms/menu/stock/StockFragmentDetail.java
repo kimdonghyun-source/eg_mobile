@@ -49,7 +49,7 @@ import retrofit2.Response;
 public class StockFragmentDetail extends CommonFragment {
 
     Context mContext;
-    TextView tv_empty, tv_stk_remark, tv_stk_date, tv_stk_wh_code;
+    TextView tv_empty, tv_stk_remark, tv_stk_date, tv_stk_wh_code, tv_list_cnt;
     StockModel mStockmodel;
     StockDetailModel mStockDetailmodel;
     List<StockDetailModel.stockDetailModel> mStockDetailList;
@@ -83,6 +83,7 @@ public class StockFragmentDetail extends CommonFragment {
         stockDetail_listView = v.findViewById(R.id.stockDetail_listView);
         et_from = v.findViewById(R.id.et_from);
         bt_next = v.findViewById(R.id.bt_next);
+        tv_list_cnt = v.findViewById(R.id.tv_list_cnt);
         mAdapter = new ListAdapter();
         stockDetail_listView.setAdapter(mAdapter);
 
@@ -94,7 +95,7 @@ public class StockFragmentDetail extends CommonFragment {
         mPosition = arguments.getInt("position");
         mOrder = mStockmodel.getItems().get(mPosition);
         tv_stk_date.setText(mOrder.getStk_date());
-        tv_stk_wh_code.setText(mOrder.getWh_code());
+        tv_stk_wh_code.setText(mOrder.getWh_name());
         tv_stk_remark.setText(mOrder.getRemark());
 
         return v;
@@ -161,7 +162,7 @@ public class StockFragmentDetail extends CommonFragment {
     private void StockListSearch() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<StockDetailModel> call = service.stk_serial_list("sp_pda_stk_scan", barcode, mOrder.getStk_date(), mOrder.getWh_code());
+        Call<StockDetailModel> call = service.stk_serial_list("sp_pda_stk_scan", barcode, mOrder.getStk_date(), mOrder.getWh_code(), String.valueOf(mOrder.getStk_no1()));
 
         call.enqueue(new Callback<StockDetailModel>() {
             @Override
@@ -182,7 +183,10 @@ public class StockFragmentDetail extends CommonFragment {
                                 }
 
                                 mAdapter.notifyDataSetChanged();
+                            }
 
+                            if (mStockDetailmodel != null){
+                                tv_list_cnt.setText(String.valueOf(mStockDetailList.size()));
                             }
 
                         } else {
@@ -371,7 +375,7 @@ public class StockFragmentDetail extends CommonFragment {
             holder.itm_name.setText(data.getItm_name());
             holder.lot_no.setText(data.getLot_no());
             //holder.wh_code.setText(data.getWh_code());
-            holder.inv_qty.setText(Float.toString(data.getInv_qty()));
+            holder.inv_qty.setText(Integer.toString(data.getInv_qty()));
 
 
 

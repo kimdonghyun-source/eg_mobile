@@ -299,7 +299,7 @@ public class StockFragment extends CommonFragment {
             final StockModel.stockModel data = mStockList.get(position);
             holder.stk_date.setText(data.getStk_date());
             holder.stk_no1.setText(Integer.toString(data.getStk_no1()));
-            holder.stk_wh_code.setText(data.getWh_code());
+            holder.stk_wh_code.setText(data.getWh_name());
             holder.stk_date.setText(data.getRemark());
 
             v.setOnClickListener(new View.OnClickListener() {

@@ -32,11 +32,13 @@ import kr.co.bang.wms.menu.house_new_move.HouseNewMoveFragment;
 import kr.co.bang.wms.menu.house_new_move.HouseNewMoveScanDetailFragment;
 import kr.co.bang.wms.menu.inventory.InventoryFragment;
 
+import kr.co.bang.wms.menu.move_ask.MoveAskFragment;
 import kr.co.bang.wms.menu.out_list.MorOutListFragment;
 import kr.co.bang.wms.menu.out_list.MorOutDetailFragment;
 import kr.co.bang.wms.menu.out_list.MorOutPickingFragment;
 import kr.co.bang.wms.menu.popup.TwoBtnPopup;
 
+import kr.co.bang.wms.menu.serial_location.SerialLocationFragment;
 import kr.co.bang.wms.menu.stock.StockFragment;
 import kr.co.bang.wms.menu.stock.StockFragmentDetail;
 import kr.co.bang.wms.model.UserInfoModel;
@@ -82,10 +84,12 @@ public class BaseActivity extends CommonCompatActivity {
 
         ArrayList<String> list = new ArrayList<>();
         list.add("주문자재출고");
+        list.add("이동 요청");
         list.add("창고 이동");
         list.add("박스라벨패킹");
         list.add("재고 실사");
         list.add("재고 조사");
+        list.add("시리얼위치조회");
 
 
         ListView listView = findViewById(R.id.list);
@@ -94,7 +98,7 @@ public class BaseActivity extends CommonCompatActivity {
         listView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
-        GlobalApplication application = (GlobalApplication)getApplicationContext();
+        GlobalApplication application = (GlobalApplication) getApplicationContext();
         UserInfoModel.Items model = application.getUserInfoModel();
 
         TextView tv_name = findViewById(R.id.tv_name);
@@ -107,9 +111,9 @@ public class BaseActivity extends CommonCompatActivity {
 
         Bundle args = getIntent().getBundleExtra("args");
 
-        mSelectMenu = menu-2;
+        mSelectMenu = menu - 2;
 
-        switch (menu){
+        switch (menu) {
             //주문자재출고(뱅)
             case Define.MENU_PRODUCTION_IN: {
                 CommonFragment fragment = new MorOutListFragment();
@@ -128,6 +132,14 @@ public class BaseActivity extends CommonCompatActivity {
                 CommonFragment fragment = new MorOutPickingFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_PRODUCTION_OUT, R.id.fl_content);
+                break;
+            }
+
+            //이동요청(뱅)
+            case Define.MENU_MOVE_ASK: {
+                CommonFragment fragment = new MoveAskFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_MOVE_ASK, R.id.fl_content);
                 break;
             }
 
@@ -178,19 +190,25 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-            //재고조상(뱅)
+            //재고조사(뱅)
             case Define.MENU_STOCK: {
                 CommonFragment fragment = new StockFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
                 break;
             }
-
-            //재고조사(뱅) 디테일
+                //재고조사(뱅)
             case Define.MENU_STOCK_DETAIL: {
                 CommonFragment fragment = new StockFragmentDetail();
                 fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
+                replaceContent(fragment, Define.TAG_STOCK_DETAIL, R.id.fl_content);
+                break;
+            }
+            //시리얼위치조회(뱅)
+            case Define.MENU_SERIAL_LOCATION: {
+                CommonFragment fragment = new SerialLocationFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_SERIAL_LOCATION, R.id.fl_content);
                 break;
             }
 
@@ -200,7 +218,7 @@ public class BaseActivity extends CommonCompatActivity {
         setTitleImage(menu);
     }
 
-    private void setTitleImage(int menu){
+    private void setTitleImage(int menu) {
         //메뉴별 타이틀 이미지
         int image = 0;
         //자재불출과 제품출고에 있는 피킹 상단엔 좌측메뉴가 노출되지 않기 때문에 분기해야함
@@ -211,7 +229,7 @@ public class BaseActivity extends CommonCompatActivity {
         //프린터 화면에서만 노출하면 되기 때문에 gone 처리 후 프린터 화면 진입 시 visible
         bt_print.setVisibility(View.GONE);
 
-        switch (menu){
+        switch (menu) {
 //---------------------------------------------------------------------------------뱅
             //주문자재출고(뱅)
             case Define.MENU_PRODUCTION_IN: {
@@ -224,8 +242,14 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
             //주문자재출고 상세(뱅) MENU_PRODUCTION_OUT
-            case Define.MENU_PRODUCTION_DETAIL:{
+            case Define.MENU_PRODUCTION_DETAIL: {
                 image = R.drawable.menu_product_in_title;
+                break;
+            }
+
+            //주문자재출고 상세(뱅) MENU_PRODUCTION_OUT
+            case Define.MENU_MOVE_ASK: {
+                image = R.drawable.menu_moveask_title;
                 break;
             }
 
@@ -268,6 +292,12 @@ public class BaseActivity extends CommonCompatActivity {
             //재고조사(뱅)디테일
             case Define.MENU_STOCK_DETAIL: {
                 image = R.drawable.menu_stock_title;
+                break;
+            }
+
+            //시리얼 위치 조회
+            case Define.MENU_SERIAL_LOCATION: {
+                image = R.drawable.menu_serial_search_title;
                 break;
             }
 
@@ -324,7 +354,7 @@ public class BaseActivity extends CommonCompatActivity {
         });
     }
 
-    public void backPressed(){
+    public void backPressed() {
         try {
             //사이드 메뉴가 열려있으면 닫아준다.
             if (drawer.isDrawerOpen(drawer_layout)) {
@@ -340,7 +370,7 @@ public class BaseActivity extends CommonCompatActivity {
             } else {
                 //finish();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             //finish();
         }
     }
@@ -349,7 +379,7 @@ public class BaseActivity extends CommonCompatActivity {
         LayoutInflater mInflater;
         ArrayList<String> mList;
 
-        public void setData(ArrayList<String> list){
+        public void setData(ArrayList<String> list) {
             mList = list;
         }
 
@@ -390,23 +420,23 @@ public class BaseActivity extends CommonCompatActivity {
                 holder = (ViewHolder) v.getTag();
             }
 
-            if(mSelectMenu == position){
+            if (mSelectMenu == position) {
                 holder.tv_menu.setSelected(true);
-            }else{
+            } else {
                 holder.tv_menu.setSelected(false);
             }
 
             final String menu = mList.get(position);
-            holder.tv_menu.setText((position+1)+". "+menu);
+            holder.tv_menu.setText((position + 1) + ". " + menu);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mSelectMenu == position){
+                    if (mSelectMenu == position) {
                         drawer.closeDrawer(drawer_layout);
                         return;
                     }
-                    mTwoBtnPopup = new TwoBtnPopup(BaseActivity.this, menu+" 메뉴로 이동하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    mTwoBtnPopup = new TwoBtnPopup(BaseActivity.this, menu + " 메뉴로 이동하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
@@ -417,12 +447,19 @@ public class BaseActivity extends CommonCompatActivity {
                                 //선택한 메뉴 기억
                                 mSelectMenu = position;
                                 //0이 없고 입고등록이 삭제되어 +2 해줘야함
-                                switch (position+2){
+                                switch (position + 2) {
 
                                     //주문자재출고(뱅)
                                     case Define.MENU_PRODUCTION_IN: {
                                         CommonFragment fragment = new MorOutListFragment();
                                         replaceContent(fragment, Define.TAG_PRODUCTION_IN, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //주문자재출고(뱅)
+                                    case Define.MENU_MOVE_ASK: {
+                                        CommonFragment fragment = new MoveAskFragment();
+                                        replaceContent(fragment, Define.TAG_MOVE_ASK, R.id.fl_content);
                                         break;
                                     }
 
@@ -455,15 +492,22 @@ public class BaseActivity extends CommonCompatActivity {
                                     }
 
                                     //재고조사(뱅)
-                                        case Define.MENU_STOCK: {
-                                            CommonFragment fragment = new StockFragment();
-                                            replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
-                                            break;
-                                        }
+                                    case Define.MENU_STOCK: {
+                                        CommonFragment fragment = new StockFragment();
+                                        replaceContent(fragment, Define.TAG_STOCK, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //시리얼위치조회
+                                    case Define.MENU_SERIAL_LOCATION: {
+                                        CommonFragment fragment = new SerialLocationFragment();
+                                        replaceContent(fragment, Define.TAG_SERIAL_LOCATION, R.id.fl_content);
+                                        break;
+                                    }
 
 
                                 }
-                                setTitleImage(position+2);
+                                setTitleImage(position + 2);
                                 mAdapter.notifyDataSetChanged();
                             }
                         }

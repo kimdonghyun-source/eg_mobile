@@ -25,12 +25,14 @@ public class MainActivity extends CommonCompatActivity {
         setContentView(R.layout.act_main);
 
 
-        findViewById(R.id.bt_menu_4).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_menu_4).setOnClickListener(onClickListener); //주문자재출고
+        findViewById(R.id.bt_menu_11).setOnClickListener(onClickListener); //이동요청
         findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener); //기존창고이동
         findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener); //새로운창고이동
         findViewById(R.id.bt_menu_8).setOnClickListener(onClickListener); //재고실사
         findViewById(R.id.bt_menu_2).setOnClickListener(onClickListener); //박스라벨패킹
         findViewById(R.id.bt_menu_10).setOnClickListener(onClickListener); //재고조사
+        findViewById(R.id.bt_menu_13).setOnClickListener(onClickListener); //시리얼위치조회
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,8 +60,14 @@ public class MainActivity extends CommonCompatActivity {
             Intent intent = new Intent(mContext, BaseActivity.class);
             switch (view){
 
+                //주문자재출고
                 case R.id.bt_menu_4:
                     intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
+                    break;
+
+                //이동요청
+                case R.id.bt_menu_11:
+                    intent.putExtra("menu", Define.MENU_MOVE_ASK);
                     break;
                  //기존 창고이동
                 /*case R.id.bt_menu_5:
@@ -69,15 +77,22 @@ public class MainActivity extends CommonCompatActivity {
                 case R.id.bt_menu_6:
                     intent.putExtra("menu", Define.MENU_HOUSE_MOVE_NEW);
                     break;
+                //(BOX)재고실사
                 case R.id.bt_menu_8:
                     intent.putExtra("menu", Define.MENU_INVENTORY);
                     break;
-
+                //박스라벨패킹
                 case R.id.bt_menu_2:
                     intent.putExtra("menu", Define.MENU_BOXLBL);
-
+                    break;
+                //재고조사
                 case R.id.bt_menu_10:
                     intent.putExtra("menu", Define.MENU_STOCK);
+                    break;
+                //시리얼위치조회
+                case R.id.bt_menu_13:
+                    intent.putExtra("menu", Define.MENU_SERIAL_LOCATION);
+                    break;
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

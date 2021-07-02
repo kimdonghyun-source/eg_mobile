@@ -43,79 +43,6 @@
         </LinearLayout>
     </LinearLayout>
 
-
-
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/menu_inhouse_grid"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="15dp"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:background="@drawable/item_text_inventory1"
-            android:paddingLeft="15dp" />
-
-        <LinearLayout
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_box_serial"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1.8"
-                android:fontFamily="@font/tmoney"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="15dp" />
-
-            <TextView
-
-                android:textSize="12dp"
-                android:textColor="#000000"
-                android:gravity="center"
-                android:id="@+id/tv_box_check_qty"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"/>
-
-            <TextView
-                android:textSize="12dp"
-                android:textColor="#000000"
-                android:gravity="center"
-                android:text="/"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.1"/>
-
-            <TextView
-                android:textSize="12dp"
-                android:textColor="#000000"
-                android:gravity="center"
-                android:id="@+id/tv_box_qty"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"/>
-
-
-        </LinearLayout>
-    </LinearLayout>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,13 +58,14 @@
         android:gravity="top|left"
         android:textSize="18dp"
         android:textColor="@color/color_a3a3a3"
-        android:text="실사 처리할 품목의 바코드를 스캔하세요."/>
+        android:text="바코드를 스캔하세요."/>
 
-    <ListView
-        android:id="@+id/inVenListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/serialLocation_listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:nestedScrollingEnabled="false"
         />
 
     <LinearLayout
@@ -171,18 +99,7 @@
                 android:text="품목스캔"/>
         </LinearLayout>
         <!-- 정제영 테스트 끝 -->
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/menu_inhouse_grid"/>
-        <ImageButton
-            android:id="@+id/bt_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/menu_inventory_bt_inventory1"
-            android:background="@android:color/transparent"/>
+
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"

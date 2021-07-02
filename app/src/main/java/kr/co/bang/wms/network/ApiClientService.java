@@ -24,9 +24,11 @@ import kr.co.bang.wms.model.MaterialOutListModel;
 import kr.co.bang.wms.model.MorEmpModel;
 import kr.co.bang.wms.model.MorListModel;
 import kr.co.bang.wms.model.MorSerialScan;
+import kr.co.bang.wms.model.MoveAskModel;
 import kr.co.bang.wms.model.PalletSnanModel;
 import kr.co.bang.wms.model.ResultBoxModel;
 import kr.co.bang.wms.model.ResultModel;
+import kr.co.bang.wms.model.SerialLocationModel;
 import kr.co.bang.wms.model.SerialNumberModel;
 import kr.co.bang.wms.model.StockDetailModel;
 import kr.co.bang.wms.model.StockModel;
@@ -164,13 +166,32 @@ public interface ApiClientService {
      * @param serial 시리얼번호
      * @param date 일자
      * @param wh_code 창고
+     * @param no 순번
      * */
     @POST("R2JsonProc.asp")
     Call<StockDetailModel> stk_serial_list(
             @Query("proc") String proc,
             @Query("param1") String serial,
             @Query("param2") String date,
-            @Query("param3") String wh_code
+            @Query("param3") String wh_code,
+            @Query("param4") String no
+    );
+
+    /**
+     * 이동요청 시리얼 스캔
+     * @param proc 프로시저
+     * @param date 일자
+     * @param itm_code 품목코드
+     * @param wh_in_code 입고처
+     * @param wh_out_code 출고처
+     * */
+    @POST("R2JsonProc.asp")
+    Call<MoveAskModel> moveSerialScan(
+            @Query("proc") String proc,
+            @Query("param1") String date,
+            @Query("param2") String itm_code,
+            @Query("param3") String wh_in_code,
+            @Query("param4") String wh_out_code
     );
 
     /**
@@ -182,6 +203,17 @@ public interface ApiClientService {
     Call<MatOutListModel> matlist(
             @Query("proc") String proc,
             @Query("param1") String date
+    );
+
+    /**
+     * 시리얼위치조회 바코드 스캔
+     * @param proc 프로시저
+     * @param serial 시리얼번호
+     * */
+    @POST("R2JsonProc.asp")
+    Call<SerialLocationModel> serialLocatonScan(
+            @Query("proc") String proc,
+            @Query("param1") String serial
     );
 
     /**
@@ -276,6 +308,15 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_stk_scan_save.asp")
     Call<StockDetailModel> stockSave(
+            @Body RequestBody body
+    );
+
+    /**
+     *이동처리요청
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_mreq_save.asp")
+    Call<MoveAskModel> MoveSave(
             @Body RequestBody body
     );
 

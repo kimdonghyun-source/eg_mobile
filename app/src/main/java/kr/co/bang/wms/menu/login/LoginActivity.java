@@ -43,8 +43,8 @@ public class LoginActivity extends CommonCompatActivity {
 
         mContext = this;
 
-       /* Button bt_login = (Button)findViewById(R.id.bt_login);
-        bt_login.setOnClickListener(new View.OnClickListener() {
+        Button bt_login = (Button)findViewById(R.id.bt_login);
+        /*bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MainActivity.class);
@@ -130,6 +130,7 @@ public class LoginActivity extends CommonCompatActivity {
                             SharedData.setSharedData(mContext, SharedData.UserValue.IS_LOGIN.name(), true);
                             SharedData.setSharedData(mContext, SharedData.UserValue.SAVE_ID.name(), bt_check.isSelected());
                             SharedData.setSharedData(mContext, "emp_code", model.getItems().get(0).getEmp_code());
+                            SharedData.setSharedData(mContext, "corp_code", model.getItems().get(0).getCorp_code());
                             GlobalApplication application = (GlobalApplication)getApplicationContext();
                             application.setUserInfoModel(model.getItems().get(0));
 

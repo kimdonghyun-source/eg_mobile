@@ -12,23 +12,29 @@ public class Define {
     ////창고이동(뱅) 기존꺼
     //public static final int MENU_HOUSE_MOVE = 3;
 
+    //이동요청
+    public static final int MENU_MOVE_ASK = 3;
+
     //창고이동(뱅) 새로추가
-    public static final int MENU_HOUSE_MOVE_NEW = 3;
+    public static final int MENU_HOUSE_MOVE_NEW = 4;
     //창고이동(뱅) 상세조회
-    public static final int MENU_HOUSE_MOVE_DATAIL = 31;
+    public static final int MENU_HOUSE_MOVE_DATAIL = 41;
     //창고이동(뱅) 스캔리스트 조회
-    public static final int MENU_HOUSE_MOVE_SCAN_DATAIL = 32;
+    public static final int MENU_HOUSE_MOVE_SCAN_DATAIL = 42;
 
     //박스라벨패킹(뱅)
-    public static final int MENU_BOXLBL = 4;
+    public static final int MENU_BOXLBL = 5;
 
     //재고실사(뱅)
-    public static final int MENU_INVENTORY = 5;
+    public static final int MENU_INVENTORY = 6;
 
     //재고조사(뱅)
-    public static final int MENU_STOCK = 6;
+    public static final int MENU_STOCK = 7;
     //재고조사(뱅) 스캔리스트 조회
-    public static final int MENU_STOCK_DETAIL = 61;
+    public static final int MENU_STOCK_DETAIL = 71;
+
+    //시리얼위치조회
+    public static final int MENU_SERIAL_LOCATION = 8;
 
    //--------------------------------------------------------------------------------
     //주문자재출고(뱅)
@@ -37,6 +43,8 @@ public class Define {
     public static final String TAG_PRODUCTION_DETAIL = "production_detail";
     //주문자재출고 피킹(뱅)
     public static final String TAG_PRODUCTION_OUT = "production_out";
+    //이동요청
+    public static final String TAG_MOVE_ASK = "move_ask";
     //창고이동 (뱅) 기존꺼
     //public static final String TAG_HOUSE_MOVE = "house_move";
     //창고이동 (뱅) 새로추가
@@ -53,6 +61,8 @@ public class Define {
     public static final String TAG_STOCK = "stock";
     //재고조사(뱅) 디테일
     public static final String TAG_STOCK_DETAIL = "stock_detail";
+    //시리얼위치조회
+    public static final String TAG_SERIAL_LOCATION = "serial_location";
 
 
     //--------------------------------------------------------------------------------

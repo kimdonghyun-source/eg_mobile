@@ -177,16 +177,17 @@
                 android:text="/"
                 android:textSize="15dp"
                 android:textColor="@color/black"/>
+
             <TextView
                 android:id="@+id/tv_s_count"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
+                android:layout_weight="0.4"
                 android:gravity="center|right"
-                android:textSize="15dp"
                 android:text="갯수"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

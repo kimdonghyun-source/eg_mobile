@@ -55,6 +55,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
         android:orientation="vertical">
@@ -77,7 +84,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
-                android:text="20210101"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:gravity="center|left"/>
@@ -102,7 +108,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
-                android:text="1000"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:gravity="center|left"/>
@@ -126,11 +131,27 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
-                android:text="비고"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:gravity="center|left"/>
         </LinearLayout>
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1">
+
+            <TextView
+                android:id="@+id/tv_list_cnt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <ImageView
