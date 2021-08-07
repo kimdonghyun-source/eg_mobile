@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_margin="10dp"
+                    android:visibility="gone"
                     android:orientation="horizontal">
                     <ImageView
                         android:layout_width="wrap_content"
@@ -83,7 +84,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/popup_text_cust" />
+                        android:background="@drawable/text4" />
 
                     <EditText
                         android:id="@+id/et_cust"

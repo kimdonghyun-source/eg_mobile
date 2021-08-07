@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     
     defaultConfig {
-        applicationId "kr.co.bang.wms"
+        applicationId "kr.co.ssis.wms"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 20042201
@@ -33,7 +33,8 @@ android {
 
             //buildConfig 설정
             //buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/BANG_TEST/Mobile/\""       //테스트용
-            buildConfigField "String", "API_SERVER", "\"http://61.109.247.216:14283/BANG/Mobile/\""       //운영서버
+            //buildConfigField "String", "API_SERVER", "\"http://61.109.247.216:14283/BANG/Mobile/\""       //운영서버
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/SUNGSIN/Mobile/\""       //성신테스트
         }
 
         release {
@@ -42,7 +43,8 @@ android {
 
             //buildConfig 설정
             //buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/BANG_TEST/Mobile/\""       //테스트용
-            buildConfigField "String", "API_SERVER", "\"http://61.109.247.216:14283/BANG/Mobile/\""       //운영서버
+            //buildConfigField "String", "API_SERVER", "\"http://61.109.247.216:14283/BANG/Mobile/\""       //운영서버
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/SUNGSIN/Mobile/\""       //성신테스트
 
             signingConfig signingConfigs.release
         }

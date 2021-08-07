@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="20dp"
     android:orientation="vertical"
-    android:background="@drawable/bang_main_img">
+    android:background="@drawable/main_back">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -34,7 +34,7 @@
 
 
         <ImageButton
-            android:id="@+id/bt_menu_4"
+            android:id="@+id/bt_menu_1"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="left"
@@ -42,9 +42,34 @@
             android:background="@android:color/transparent"
             android:src="@drawable/main_menu1" />
 
-        <!--기존 창고이동 메뉴 -->
         <ImageButton
-            android:visibility="gone"
+            android:id="@+id/bt_menu_2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu2" />
+
+        <ImageButton
+            android:id="@+id/bt_menu_3"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="right"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu3" />
+
+        <ImageButton
+            android:id="@+id/bt_menu_4"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="left"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu4_1" />
+
+        <ImageButton
             android:id="@+id/bt_menu_5"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -54,60 +79,23 @@
             android:src="@drawable/main_menu5" />
 
         <ImageButton
-
-            android:id="@+id/bt_menu_11"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:src="@drawable/main_menu11" />
-
-        <ImageButton
             android:id="@+id/bt_menu_6"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="right"
             android:layout_weight="0.5"
             android:background="@android:color/transparent"
-            android:src="@drawable/main_menu5" />
+            android:src="@drawable/main_menu6" />
 
         <ImageButton
-            android:id="@+id/bt_menu_2"
+
+            android:id="@+id/bt_menu_7"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="left"
             android:layout_weight="0.5"
             android:background="@android:color/transparent"
-            android:src="@drawable/main_menu2" />
-
-        <ImageButton
-            android:id="@+id/bt_menu_8"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:src="@drawable/main_menu8" />
-
-        <ImageButton
-            android:id="@+id/bt_menu_10"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="right"
-            android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:src="@drawable/main_menu10" />
-
-        <ImageButton
-
-            android:id="@+id/bt_menu_13"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="left"
-            android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:src="@drawable/main_menu13" />
+            android:src="@drawable/main_menu7" />
 
     </LinearLayout>
 </LinearLayout>

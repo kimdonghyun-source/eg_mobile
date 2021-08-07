@@ -55,6 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -87,7 +88,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/popup_text_wh" />
+                        android:background="@drawable/text4" />
 
                     <Spinner
                         android:id="@+id/spinner"

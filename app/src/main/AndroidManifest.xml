@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="kr.co.bang.wms"
+    package="kr.co.siss.wms"
     tools:ignore="LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -10,30 +10,32 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name="kr.co.bang.wms.GlobalApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:name="kr.co.ssis.wms.GlobalApplication"
+        android:icon="@mipmap/ssis_icon_foreground"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/bang_icon_round"
+        android:roundIcon="@mipmap/ssis_icon_foreground"
         android:theme="@style/GrayActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name="kr.co.bang.wms.menu.main.SplashActivity">
+        <activity android:name="kr.co.ssis.wms.menu.main.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="kr.co.ssis.wms.menu.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="kr.co.ssis.wms.menu.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
 
+
+        <!--넌 왜 갑자기 안되니..-->
         <activity
-            android:name="kr.co.bang.wms.menu.login.LoginActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="kr.co.bang.wms.menu.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="kr.co.bang.wms.menu.main.BaseActivity"
+            android:name="kr.co.ssis.wms.menu.main.BaseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
     </application>

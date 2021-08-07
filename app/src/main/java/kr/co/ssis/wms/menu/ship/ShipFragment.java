@@ -1,0 +1,601 @@
+package kr.co.ssis.wms.menu.ship;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import kr.co.siss.wms.R;
+import kr.co.ssis.wms.common.Define;
+import kr.co.ssis.wms.common.SharedData;
+import kr.co.ssis.wms.common.Utils;
+import kr.co.ssis.wms.custom.CommonFragment;
+import kr.co.ssis.wms.menu.main.BaseActivity;
+import kr.co.ssis.wms.menu.out_in.OutInAdapter;
+import kr.co.ssis.wms.menu.out_in.OutInFragment;
+import kr.co.ssis.wms.menu.popup.LocationCstListPopup;
+import kr.co.ssis.wms.menu.popup.LocationListPopup;
+import kr.co.ssis.wms.menu.popup.OneBtnPopup;
+import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
+import kr.co.ssis.wms.menu.stock.StockFragment;
+import kr.co.ssis.wms.model.MatOutDetailModel;
+import kr.co.ssis.wms.model.MatOutSerialScanModel;
+import kr.co.ssis.wms.model.OutInModel;
+import kr.co.ssis.wms.model.ResultModel;
+import kr.co.ssis.wms.model.ShipCstModel;
+import kr.co.ssis.wms.model.ShipListModel;
+import kr.co.ssis.wms.model.ShipOkModel;
+import kr.co.ssis.wms.model.WarehouseModel;
+import kr.co.ssis.wms.network.ApiClientService;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ShipFragment extends CommonFragment {
+
+    Context mContext;
+    TextView item_date;
+    DatePickerDialog.OnDateSetListener callbackMethod;
+    ImageButton bt_cst, btn_next;
+    List<ShipCstModel.Item> ShipCstList;
+    ShipCstModel ShipCstModel;
+    LocationCstListPopup mLocationListPopup;
+    ShipCstModel.Item mShipCstModel;
+    EditText et_from;
+    String cst_code;
+    List<ShipListModel.ShipItem> mShipListModel;
+    ShipListModel mShipModel;
+    List<ShipOkModel.Item> mShipOkListModel;
+    //ShipAdapter mAdapter;
+    //RecyclerView ship_listview;
+    ListView ship_listview;
+    ListAdapter mAdapter;
+    OneBtnPopup mOneBtnPopup;
+    TwoBtnPopup mTwoBtnPopup;
+    List<ShipOkModel.Item> okList;
+
+    ShipOkModel mShipOkModel = null;
+    ShipOkModel.Item order = null;
+    int mPosition = -1;
+
+    Handler mHandler;
+    ShipListModel.ShipItem mOrder = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getActivity();
+
+
+    }//Close onCreate
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.frag_ship, container, false);
+
+        item_date = v.findViewById(R.id.item_date);
+        bt_cst = v.findViewById(R.id.bt_cst);
+        et_from = v.findViewById(R.id.et_from);
+        btn_next = v.findViewById(R.id.btn_next);
+        mHandler = handler;
+
+        ship_listview = v.findViewById(R.id.ship_listview);
+        mAdapter = new ListAdapter();
+        ship_listview.setAdapter(mAdapter);
+        //ship_listview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        //mAdapter = new ShipAdapter(getActivity());
+        //ship_listview.setAdapter(mAdapter);
+
+
+        item_date.setOnClickListener(onClickListener);
+        bt_cst.setOnClickListener(onClickListener);
+        btn_next.setOnClickListener(onClickListener);
+
+        int year1 = Integer.parseInt(yearFormat.format(currentTime));
+        int month1 = Integer.parseInt(monthFormat.format(currentTime));
+        int day1 = Integer.parseInt(dayFormat.format(currentTime));
+
+        String formattedMonth = "" + month1;
+        String formattedDayOfMonth = "" + day1;
+        if (month1 < 10) {
+
+            formattedMonth = "0" + month1;
+        }
+        if (day1 < 10) {
+            formattedDayOfMonth = "0" + day1;
+        }
+
+        item_date.setText(year1 + "-" + formattedMonth + "-" + formattedDayOfMonth);
+
+        this.InitializeListener();
+
+        mAdapter.setRetHandler(new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what >= 0) {
+                    //ShipScanList(msg.what);
+                }
+            }
+        });
+
+        return v;
+
+    }//Close onCreateView
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    private void ShipScanList(int position) {
+        List<ShipListModel.ShipItem> datas = new ArrayList<>();
+
+        Intent intent = new Intent(getActivity(), BaseActivity.class);
+        intent.putExtra("menu", Define.MENU_SHIP_OK);
+
+        Bundle extras = new Bundle();
+        extras.putSerializable("model", mShipModel);
+        extras.putSerializable("position", position);
+        intent.putExtra("args", extras);
+        startActivityForResult(intent, 100);
+
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+                mShipModel = (ShipListModel) data.getSerializableExtra("model");
+                mAdapter.setData(mShipModel.getItems());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }//Close onActivityResult
+
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.item_date:
+                    int c_year = Integer.parseInt(item_date.getText().toString().substring(0, 4));
+                    int c_month = Integer.parseInt(item_date.getText().toString().substring(5, 7));
+                    int c_day = Integer.parseInt(item_date.getText().toString().substring(8, 10));
+
+                    DatePickerDialog dialog = new DatePickerDialog(mContext, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, callbackMethod, c_year, c_month - 1, c_day);
+                    dialog.show();
+                    break;
+
+                case R.id.bt_cst:
+                    requestCstlist();
+                    break;
+
+                case R.id.btn_next:
+                    if (mAdapter.getData() == null) {
+                        Utils.Toast(mContext, "거래처를 선택해 주세요");
+                        return;
+                    } else {
+                        request_ship_save();
+                    }
+                    break;
+            }
+
+        }
+    };
+
+    public void InitializeListener() {
+        callbackMethod = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+
+                int month = monthOfYear + 1;
+                String formattedMonth = "" + month;
+                String formattedDayOfMonth = "" + dayOfMonth;
+
+                if (month < 10) {
+
+                    formattedMonth = "0" + month;
+                }
+                if (dayOfMonth < 10) {
+
+                    formattedDayOfMonth = "0" + dayOfMonth;
+                }
+
+                item_date.setText(year + "-" + formattedMonth + "-" + formattedDayOfMonth);
+
+            }
+        };
+    }
+
+    Date currentTime = Calendar.getInstance().getTime();
+    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+    SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
+
+
+    /**
+     * 거래처 리스트
+     */
+    private void requestCstlist() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        String m_date = item_date.getText().toString().replace("-", "");
+        Call<ShipCstModel> call = service.shipCstList("sp_pda_ship_cst_list", m_date);
+
+        call.enqueue(new Callback<ShipCstModel>() {
+            @Override
+            public void onResponse(Call<ShipCstModel> call, Response<ShipCstModel> response) {
+                if (response.isSuccessful()) {
+                    ShipCstModel model = response.body();
+                    //Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+                            mLocationListPopup = new LocationCstListPopup(getActivity(), model.getItems(), R.drawable.popup_title_searchloc, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    ShipCstModel.Item item = (ShipCstModel.Item) msg.obj;
+                                    mShipCstModel = item;
+                                    et_from.setText("[" + mShipCstModel.getCst_code() + "] " + mShipCstModel.getCst_name());
+                                    //mAdapter.notifyDataSetChanged();
+                                    cst_code = mShipCstModel.getCst_code();
+                                    mLocationListPopup.hideDialog();
+                                 /*   if (mAdapter.getCount() > 0) {
+                                        mAdapter.clearData();
+                                        mShipModel = null;
+                                    }*/
+                                    ShipList();
+                                }
+                            });
+                            ShipCstList = model.getItems();
+
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShipCstModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }//Close
+
+
+    /**
+     * 리스트조회
+     */
+    private void ShipList() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        String m_date = item_date.getText().toString().replace("-", "");
+        Call<ShipListModel> call = service.shipListSearch("sp_pda_ship_list", m_date, cst_code);
+
+        call.enqueue(new Callback<ShipListModel>() {
+            @Override
+            public void onResponse(Call<ShipListModel> call, Response<ShipListModel> response) {
+                if (response.isSuccessful()) {
+                    mShipModel = response.body();
+                    final ShipListModel model = response.body();
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+
+                            if (model.getItems().size() > 0) {
+                                for (int i = 0; i < model.getItems().size(); i++) {
+                                    ShipListModel.ShipItem item = (ShipListModel.ShipItem) model.getItems().get(i);
+
+                                    mAdapter.addData(item);
+
+                                }
+                                mAdapter.notifyDataSetChanged();
+                                ship_listview.setAdapter(mAdapter);
+                            }
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ShipListModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }//Close
+
+
+    class ListAdapter extends BaseAdapter {
+        LayoutInflater mInflater;
+        //List<MaterialLocAndLotModel.Items> itemsList;
+        List<ShipListModel.ShipItem> itemsList;
+        Handler mHandler = null;
+
+        public ListAdapter() {
+            mInflater = LayoutInflater.from(mContext);
+        }
+
+        public int getItemCount() {
+            return (null == mShipListModel ? 0 : mShipListModel.size());
+        }
+
+        public void addData(ShipListModel.ShipItem item) {
+            if (mShipListModel == null) mShipListModel = new ArrayList<>();
+            mShipListModel.add(item);
+        }
+
+        public void clearData() {
+            mShipListModel.clear();
+        }
+
+        public void setRetHandler(Handler h) {
+            this.mHandler = h;
+        }
+
+        public List<ShipListModel.ShipItem> getData() {
+            return mShipListModel;
+        }
+
+        @Override
+        public int getCount() {
+            if (mShipListModel == null) {
+                return 0;
+            }
+
+            return mShipListModel.size();
+        }
+
+        public void setData(List<ShipListModel.ShipItem> item) {
+            itemsList = item;
+        }
+
+
+        @Override
+        public ShipListModel.ShipItem getItem(int position) {
+            return mShipListModel.get(position);
+            //return itemsList.get(position);
+        }
+
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            ViewHolder holder;
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (v == null) {
+                holder = new ViewHolder();
+                v = inflater.inflate(R.layout.cell_ship_list, null);
+
+                //final ShipListModel.ShipItem item = itemsList.get(position);
+
+                holder.itm_code = v.findViewById(R.id.tv_itm_code);
+                holder.itm_name = v.findViewById(R.id.tv_itm_name);
+                holder.itm_size = v.findViewById(R.id.tv_itm_size);
+                holder.c_name = v.findViewById(R.id.tv_c_name);
+                holder.ship_qty = v.findViewById(R.id.tv_ship_qty);
+                holder.scan_qty = v.findViewById(R.id.tv_scan_qty);
+
+                v.setTag(holder);
+
+            } else {
+                holder = (ViewHolder) v.getTag();
+            }
+
+
+            final ShipListModel.ShipItem data = mShipListModel.get(position);
+            holder.itm_code.setText(data.getItm_code());
+            holder.itm_name.setText(data.getItm_name());
+            holder.itm_size.setText(data.getItm_size());
+            holder.c_name.setText(data.getC_name());
+            holder.ship_qty.setText(Integer.toString(data.getShip_qty()));
+            if (mShipModel.getItems().get(position).getSet_scan_qty() > 0 && mAdapter.getCount() > 0 && mShipModel != null) {
+                holder.scan_qty.setText(Integer.toString(mShipModel.getItems().get(position).getSet_scan_qty()));
+            }
+
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 1;
+                    msg.obj = data;
+                    mHandler.sendMessage(msg);
+                    ShipScanList(position);
+                }
+            });
+
+            return v;
+        }
+
+
+        public class ViewHolder {
+            TextView itm_code;
+            TextView itm_name;
+            TextView itm_size;
+            TextView c_name;
+            TextView ship_qty;
+            TextView scan_qty;
+
+
+        }
+
+
+    }//Close Adapter
+
+
+    /**
+     * 출하등록
+     */
+    private void request_ship_save() {
+
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        JsonObject json = new JsonObject();
+        //로그인 ID
+        String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+
+        List<ShipListModel.ShipItem> items = (List<ShipListModel.ShipItem>) mShipModel.getItems();
+        JsonArray list = new JsonArray();
+        if (items != null && items.size() > 0) {
+            for (ShipListModel.ShipItem item : items) {
+
+                List<ShipOkModel.Item> snList = item.getItems();
+
+                if (snList != null && snList.size() > 0) {
+
+                    for (ShipOkModel.Item sn : snList) {
+                        if (sn.getWrk_qty() > 0) {
+                            JsonObject obj = new JsonObject();
+                            //출하순번2
+                            obj.addProperty("ship_no2", item.getShip_no2());
+                            //아이템코드
+                            obj.addProperty("itm_code", item.getItm_code());
+                            //스캔바코드
+                            obj.addProperty("serial_no", sn.getLot_no());
+                            //창고코드
+                            obj.addProperty("wh_code", sn.getWh_code());
+                            //스캔수량
+                            obj.addProperty("serial_qty", sn.getWrk_qty());
+                            list.add(obj);
+                        }
+                    }
+
+                }
+            }
+        }
+        json.addProperty("p_corp_code", mShipModel.getItems().get(0).getCorp_code());   //사업장코드
+        json.addProperty("p_sal_id", mShipModel.getItems().get(0).getSal_id());         //내수구분
+        json.addProperty("p_ship_date", mShipModel.getItems().get(0).getShip_date());    //출하일자
+        json.addProperty("p_ship_no1", mShipModel.getItems().get(0).getShip_no1());     //출하순번1
+        json.addProperty("p_user_id", userID);    //로그인ID
+
+        json.add("detail", list);
+
+        Utils.Log("new Gson().toJson(json) ==> : " + new Gson().toJson(json));
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(json));
+
+        Call<ResultModel> call = service.postShipSave(body);
+
+        call.enqueue(new Callback<ResultModel>() {
+            @Override
+            public void onResponse(Call<ResultModel> call, Response<ResultModel> response) {
+                if (response.isSuccessful()) {
+                    ResultModel model = response.body();
+                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록 되었습니다.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        getActivity().finish();
+                                        //ShipList();
+                                        mOneBtnPopup.hideDialog();
+
+                                    }
+                                }
+                            });
+
+
+                        } else {
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출하등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                request_ship_save();
+                                mTwoBtnPopup.hideDialog();
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출하등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == 1) {
+                            request_ship_save();
+                            mTwoBtnPopup.hideDialog();
+
+                        }
+                    }
+                });
+            }
+        });
+
+    }//Close
+
+
+}//Close Class
