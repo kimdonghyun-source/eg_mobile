@@ -2,8 +2,8 @@ package kr.co.ssis.wms.model;
 
 import java.util.List;
 
-public class ShipOkModel extends ResultModel {
-    List<ShipOkModel.Item> items;
+public class WhMoveListModel extends ResultModel {
+    List<WhMoveListModel.Item> items;
 
     public List<Item> getItems() {
         return items;
@@ -18,17 +18,16 @@ public class ShipOkModel extends ResultModel {
         String itm_code;
         //품목명
         String itm_name;
-        //시리얼번호
-        String lot_no;
+        //단위
+        String c_name;
         //창고코드
         String wh_code;
+        //창고명
+        String wh_name;
         //재고수량
-        int wrk_qty;
-        //순번(내가만든순번)
-        int no;
-
-
-        List<ShipOkModel.Item> items;
+        int inv_qty;
+        //시리얼번호
+        String lot_no;
 
         public String getItm_code() {
             return itm_code;
@@ -46,12 +45,12 @@ public class ShipOkModel extends ResultModel {
             this.itm_name = itm_name;
         }
 
-        public String getLot_no() {
-            return lot_no;
+        public String getC_name() {
+            return c_name;
         }
 
-        public void setLot_no(String lot_no) {
-            this.lot_no = lot_no;
+        public void setC_name(String c_name) {
+            this.c_name = c_name;
         }
 
         public String getWh_code() {
@@ -62,28 +61,28 @@ public class ShipOkModel extends ResultModel {
             this.wh_code = wh_code;
         }
 
-        public int getWrk_qty() {
-            return wrk_qty;
+        public String getWh_name() {
+            return wh_name;
         }
 
-        public void setWrk_qty(int wrk_qty) {
-            this.wrk_qty = wrk_qty;
+        public void setWh_name(String wh_name) {
+            this.wh_name = wh_name;
         }
 
-        public List<Item> getItems() {
-            return items;
+        public int getInv_qty() {
+            return inv_qty;
         }
 
-        public void setItems(List<Item> items) {
-            this.items = items;
+        public void setInv_qty(int inv_qty) {
+            this.inv_qty = inv_qty;
         }
 
-        public int getNo() {
-            return no;
+        public String getLot_no() {
+            return lot_no;
         }
 
-        public void setNo(int no) {
-            this.no = no;
+        public void setLot_no(String lot_no) {
+            this.lot_no = lot_no;
         }
     }
 }

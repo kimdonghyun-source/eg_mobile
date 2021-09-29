@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/menu_release_releaseno" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/menu_inhouse_search"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <EditText
+                android:id="@+id/et_order"
+                style="@style/EditTextLocation"
+                android:enabled="false"/>
+            <ImageButton
+                android:id="@+id/bt_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/menu_inhouse_bt_search" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/menu_release_outwh" />
+            <TextView
+                android:id="@+id/tv_warehouse"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/menu_release_inwh" />
+            <TextView
+                android:id="@+id/tv_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text29"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/menu_moveloc_searchloc_f"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_from"
+                style="@style/EditTextLocation"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                android:enabled="false" />
+
+            <!--<ImageButton
+                android:id="@+id/bt_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingRight="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/menu_inhouse_bt_search"
+                tools:ignore="RtlHardcoded" />-->
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text30" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/menu_moveloc_searchloc_f"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_from2"
+                style="@style/EditTextLocation"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:enabled="false" />
+
+            <ImageButton
+                android:id="@+id/bt_from2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:paddingRight="5dp"
+                android:src="@drawable/menu_inhouse_bt_search"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/menu_inhouse_grid"/>
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="20dp"
+        android:gravity="top|left"
+        android:textSize="18dp"
+        android:textColor="@color/color_a3a3a3"
+        android:text="창고이동 할 품목의 바코드를 스캔하세요."/>
+
+    <ListView
+        android:id="@+id/wh_move_listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- 정제영 테스트 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <Button
+                android:id="@+id/bt_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="불출지시"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/menu_inhouse_grid"/>
+
+        <ImageButton
+            android:id="@+id/bt_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/trans"
+            android:src="@drawable/menu_bottom_bt_whmove" />
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/menu_bg"/>
+</LinearLayout>

@@ -16,7 +16,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
         android:orientation="horizontal">
 
@@ -50,13 +49,12 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/menu_inhouse_grid"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
         android:orientation="horizontal">
 
@@ -66,17 +64,6 @@
             android:layout_gravity="center|left"
             android:background="@drawable/text1"
             android:paddingLeft="15dp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp">
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,54 +77,31 @@
                 android:id="@+id/et_from"
                 style="@style/EditTextLocation"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
                 android:enabled="false" />
 
-            <ImageButton
-                android:id="@+id/bt_from"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:background="@android:color/transparent"
-                android:padding="5dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/menu_inhouse_bt_search"
-                tools:ignore="RtlHardcoded" />
         </LinearLayout>
 
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="15dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="5dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:background="@drawable/text11"
-            android:paddingLeft="15dp" />
 
-        <TextView
-            android:id="@+id/tv_in_cst"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+
+
 
     </LinearLayout>
-
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="@drawable/menu_inhouse_grid"/>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -153,16 +117,16 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/text5" />
+                android:layout_gravity="center"
+                android:background="@drawable/text2" />
 
             <TextView
-                android:id="@+id/tv_itm_name"
+                android:id="@+id/tv_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:singleLine="true"
                 android:paddingLeft="10dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
@@ -180,14 +144,42 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/text6" />
+                android:layout_gravity="center"
+                android:background="@drawable/text3" />
 
             <TextView
-                android:id="@+id/tv_itm_size"
+                android:id="@+id/tv_cst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/text4" />
+
+            <TextView
+                android:id="@+id/tv_itm_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:textSize="15dp"
@@ -206,79 +198,98 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/text5" />
+
+            <TextView
+                android:id="@+id/tv_itm_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textAlignment="center"
                 android:layout_weight="1"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/text6" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_itm_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_weight="2"
+                android:textSize="15dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"/>
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@drawable/text7" />
 
             <TextView
                 android:id="@+id/tv_c_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:layout_weight="1"
+                android:gravity="left"
+                android:layout_gravity="center"
+
+                android:layout_weight="2"
                 android:textSize="15dp"
                 android:textColor="@color/black"
                 android:paddingLeft="10dp"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingBottom="5dp">
+
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/text12" />
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:background="@drawable/text8" />
 
             <TextView
-                android:id="@+id/tv_tin_qty"
+                android:id="@+id/tv_qty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:layout_weight="1"
+                android:gravity="left"
+                android:layout_weight="2"
+                android:layout_gravity="center"
                 android:textSize="15dp"
                 android:textColor="@color/black"
                 android:paddingLeft="10dp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingBottom="5dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/text13" />
 
-            <TextView
-                android:id="@+id/tv_bor_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:layout_weight="1"
-                android:textSize="15dp"
-                android:textColor="@color/black"
-                android:paddingLeft="10dp"/>
-        </LinearLayout>
 
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="@drawable/menu_inhouse_grid"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -287,6 +298,61 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:nestedScrollingEnabled="false"/>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/tmoney"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="입고창고"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center|left"
+                android:background="@drawable/menu_moveloc_searchloc_f"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_wh"
+                    style="@style/EditTextLocation"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:enabled="false" />
+                <ImageButton
+                    android:id="@+id/bt_wh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
+                    android:src="@drawable/menu_inhouse_bt_search"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_bottom"

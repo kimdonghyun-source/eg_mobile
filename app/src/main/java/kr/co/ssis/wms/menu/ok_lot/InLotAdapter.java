@@ -79,7 +79,6 @@ public class InLotAdapter extends RecyclerView.Adapter<InLotAdapter.ViewHolder> 
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mPopup = new TwoBtnPopup(mActivity, item.getLot_no() + " 취소하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
@@ -91,10 +90,8 @@ public class InLotAdapter extends RecyclerView.Adapter<InLotAdapter.ViewHolder> 
                     }
 
                 });
-
             }
         });
-
 
         holder.et_qty.addTextChangedListener(new TextWatcher(){
             String result="";

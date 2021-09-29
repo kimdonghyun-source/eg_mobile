@@ -13,8 +13,11 @@ public class Define {
     //출하피킹
     public static final int MENU_SHIP_OK = 31;
 
-    //자재입고확인(LOT)
-    public static final int MENU_IN_LOT = 4;
+    //창고이동
+    public static final int MENU_WH_MOVE = 4;
+
+    /*//자재입고확인(LOT)
+    public static final int MENU_IN_LOT = 4;*/
 
     //자재입고확인(GROUP)
     public static final int MENU_IN_GROUP = 5;
@@ -29,10 +32,13 @@ public class Define {
     public static final int MENU_WH_INOUT_SEARCH = 8;
 
 
+
+    //---------------------------------------------------------
+
     //외주품가입고
     public static final String TAG_OUT_IN = "outin";
 
-   //출하등록
+    //출하등록
     public static final String TAG_SHIP = "ship";
     //출하피킹
     public static final String TAG_SHIP_OK = "ship_ok";
@@ -51,6 +57,9 @@ public class Define {
 
     //완제품창고입출력조회
     public static final String TAG_WH_INOUT_SEARCH = "whsearch";
+
+    //창고이동
+    public static final String TAG_WH_MOVE = "whmove";
 
 
 

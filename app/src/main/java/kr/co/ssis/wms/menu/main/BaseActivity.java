@@ -37,6 +37,7 @@ import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
 
 import kr.co.ssis.wms.menu.ship.ShipFragment;
 import kr.co.ssis.wms.menu.ship.ShipOkFragment;
+import kr.co.ssis.wms.menu.wh_move.WhMoveFragment;
 import kr.co.ssis.wms.model.UserInfoModel;
 import kr.co.siss.wms.R;
 
@@ -82,7 +83,8 @@ public class BaseActivity extends CommonCompatActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add("외주품가입고");
         list.add("출하 등록");
-        list.add("자재입고확인(LOT)");
+        list.add("창고 이동");
+        //list.add("자재입고확인(LOT)");
         list.add("자재입고확인(GROUP)");
         list.add("외주품출고확인");
         list.add("재고실사등록");
@@ -136,10 +138,17 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-            //자재입고확인(LOT)
+            /*//자재입고확인(LOT)
             case Define.MENU_IN_LOT: {
                 CommonFragment fragment = new InLotFragment();
                 replaceContent(fragment, Define.TAG_IN_LOT, R.id.fl_content);
+                break;
+            }*/
+
+            //창고이동
+            case Define.MENU_WH_MOVE: {
+                CommonFragment fragment = new WhMoveFragment();
+                replaceContent(fragment, Define.TAG_WH_MOVE, R.id.fl_content);
                 break;
             }
 
@@ -210,9 +219,15 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
-            //자재입고확인(LOT)
+            /*//자재입고확인(LOT)
             case Define.MENU_IN_LOT: {
                 image = R.drawable.ssis_title2;
+                break;
+            }*/
+
+            //창고이동
+            case Define.MENU_WH_MOVE: {
+                image = R.drawable.ssis_title9;
                 break;
             }
 
@@ -239,6 +254,8 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.ssis_title6;
                 break;
             }
+
+
 
 
         }
@@ -401,10 +418,17 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
-                                    //자재입고확인(LOT)
+                                    /*//자재입고확인(LOT)
                                     case Define.MENU_IN_LOT: {
                                         CommonFragment fragment = new InLotFragment();
                                         replaceContent(fragment, Define.TAG_IN_LOT, R.id.fl_content);
+                                        break;
+                                    }*/
+
+                                    //창고이동
+                                    case Define.MENU_WH_MOVE: {
+                                        CommonFragment fragment = new WhMoveFragment();
+                                        replaceContent(fragment, Define.TAG_WH_MOVE, R.id.fl_content);
                                         break;
                                     }
 
@@ -425,7 +449,7 @@ public class BaseActivity extends CommonCompatActivity {
                                     //재고실사등록
                                     case Define.MENU_INVENTORYS: {
                                         CommonFragment fragment = new InventorysFragment();
-                                        replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
+                                        replaceContent(fragment, Define.TAG_INVENTORYS, R.id.fl_content);
                                         break;
                                     }
 
@@ -435,6 +459,7 @@ public class BaseActivity extends CommonCompatActivity {
                                         replaceContent(fragment, Define.TAG_WH_INOUT_SEARCH, R.id.fl_content);
                                         break;
                                     }
+
                                 }
                                 setTitleImage(position + 2);
                                 mAdapter.notifyDataSetChanged();

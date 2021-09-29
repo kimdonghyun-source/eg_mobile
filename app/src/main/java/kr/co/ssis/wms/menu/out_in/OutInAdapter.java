@@ -76,6 +76,7 @@ public class OutInAdapter extends RecyclerView.Adapter<OutInAdapter.ViewHolder> 
         final OutInModel.Item item = itemsList.get(position);
 
         holder.lot_no.setText(item.getLot_no());
+        holder.tv_ea.setText(item.getC_name());
         holder.et_qty.setText(Integer.toString(item.getTin_dtl_qty()));
 
         holder.bt_delete.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +149,7 @@ public class OutInAdapter extends RecyclerView.Adapter<OutInAdapter.ViewHolder> 
 
         TextView lot_no;
         ImageButton bt_delete;
+        TextView tv_ea;
         EditText et_qty;
 
         public ViewHolder(View view) {
@@ -156,6 +158,7 @@ public class OutInAdapter extends RecyclerView.Adapter<OutInAdapter.ViewHolder> 
             lot_no = view.findViewById(R.id.tv_lot_no);
             bt_delete = view.findViewById(R.id.bt_delete);
             et_qty = view.findViewById(R.id.et_qty);
+            tv_ea = view.findViewById(R.id.tv_ea);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

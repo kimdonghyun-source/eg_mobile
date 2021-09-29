@@ -1,7 +1,6 @@
 package kr.co.ssis.wms.menu.popup;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,36 +12,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import kr.co.siss.wms.R;
-import kr.co.ssis.wms.common.UtilDate;
 import kr.co.ssis.wms.common.Utils;
-import kr.co.ssis.wms.model.CustomerInfoModel;
 import kr.co.ssis.wms.model.ItmListModel;
-import kr.co.ssis.wms.model.MaterialOutListModel;
 import kr.co.ssis.wms.model.ResultModel;
-import kr.co.ssis.wms.model.WarehouseModel;
 import kr.co.ssis.wms.network.ApiClientService;
-import kr.co.ssis.wms.spinner.SpinnerPopupAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LocationItmSearchPopup {
+public class ShipItmSearchPopup {
 
     Activity mActivity;
     Dialog dialog;
@@ -54,10 +42,10 @@ public class LocationItmSearchPopup {
     EditText et_cust = null;
     ListAdapter mAdapter = null;
 
-    public LocationItmSearchPopup(Activity activity, int title, Handler handler) {
+    public ShipItmSearchPopup(Activity activity, int title, String date, String cst_code, Handler handler) {
         mActivity = activity;
         mHandler = handler;
-        showPopUpDialog(activity, title);
+        showPopUpDialog(activity, title, date, cst_code);
 
     }
 
@@ -78,7 +66,7 @@ public class LocationItmSearchPopup {
         }
     }
 
-    private void showPopUpDialog(Activity activity, int title) {
+    private void showPopUpDialog(Activity activity, int title, final String date, final String cst_code) {
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -108,12 +96,8 @@ public class LocationItmSearchPopup {
         dialog.findViewById(R.id.bt_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String date = date_edit.getText().toString();
-               /* if(et_cust.getText().length() < 2){
-                    Toast.makeText(mActivity,"2자 이상 입력해주세요.",Toast.LENGTH_SHORT).show();
-                    return;
-                }*/
-                requestDeliveryOrderList(et_cust.getText().toString());
+
+                requestDeliveryOrderList(date, cst_code, et_cust.getText().toString());
             }
         });
 
@@ -127,43 +111,28 @@ public class LocationItmSearchPopup {
         dialog.show();
     }
 
-   /* AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            CustomerInfoModel.CustomerInfo order = (CustomerInfoModel.CustomerInfo)mAdapter.getItem(position);
 
-            Message msg = mHandler.obtainMessage();
-            msg.what = 2;
-            msg.obj = order;
-            mHandler.sendMessage(msg);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    };*/
 
     /**
-     * 품목조회
+     * 아이템리스트 상세
      */
-    private void requestDeliveryOrderList(String custNm) {
+   private void requestDeliveryOrderList(String date, String cst_code, String itm_code) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ItmListModel> call = service.ItmList("sp_pda_itm_list", custNm);
+        Call<ItmListModel> call = service.ship_itm_list("sp_pda_ship_itm_list", date, cst_code, itm_code);
 
         call.enqueue(new Callback<ItmListModel>() {
             @Override
             public void onResponse(Call<ItmListModel> call, Response<ItmListModel> response) {
                 if(response.isSuccessful()){
                     ItmListModel model = response.body();
-                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
                             if(model.getItems().size() > 0) {
                                 mList = model.getItems();
                                 mAdapter.notifyDataSetChanged();
-                                //mAdapter.setData(model.getItems());
-                                //mAdapter.notifyDataSetChanged();
+
                             }
                         }else{
                             Utils.Toast(mActivity, model.getMSG());

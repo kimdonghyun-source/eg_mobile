@@ -357,7 +357,9 @@ public class InOutSearchFragment extends CommonFragment {
                     final LogSearchModel model = response.body();
                     if (model != null) {
                         if (model.getFlag() == ResultModel.SUCCESS) {
-
+                            if (mAdapter.getCount() > 0) {
+                                mAdapter.clearData();
+                            }
                             if (model.getItems().size() > 0) {
                                 for (int i = 0; i < model.getItems().size(); i++) {
                                     LogSearchModel.Item item = (LogSearchModel.Item) model.getItems().get(i);
@@ -470,8 +472,7 @@ public class InOutSearchFragment extends CommonFragment {
             final LogSearchModel.Item data = mLogSearchListModel.get(position);
             holder.tv_date.setText(data.getItm_date());
             holder.tv_in_qty.setText(Integer.toString(data.getIn_qty()));
-            holder.tv_out_qty.setText(Integer.toString(data.getOut_qty()))
-            ;
+            holder.tv_out_qty.setText(Integer.toString(data.getOut_qty()));
 
 
 

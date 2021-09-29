@@ -108,8 +108,7 @@ public class BoxlblFragment extends CommonFragment {
                     if (mBoxListModel != null){
 
                         for (int i=0; i < mBoxListModel.size(); i++){
-                            Log.d("값", mBoxListModel.get(i).getLot_no());
-                            Log.d("값", barcode_scan);
+
                             if (mBoxListModel.get(i).getLot_no().equals(barcode_scan)){
                                 Utils.Toast(mContext, "동일한 시리얼을 스캔하셨습니다.");
                                 return;

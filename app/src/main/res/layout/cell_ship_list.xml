@@ -6,14 +6,26 @@
     android:orientation="horizontal">
 
     <LinearLayout
+        android:layout_width="30dp"
+        android:layout_height="135dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_no"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
-
-
 
         <LinearLayout
             android:layout_width="match_parent"

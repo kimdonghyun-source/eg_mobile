@@ -45,6 +45,7 @@ import kr.co.ssis.wms.model.StockModel;
 import kr.co.ssis.wms.model.UserInfoModel;
 import kr.co.ssis.wms.model.WarehouseModel;
 import kr.co.ssis.wms.model.WhModel;
+import kr.co.ssis.wms.model.WhMoveListModel;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -83,6 +84,18 @@ public interface ApiClientService {
      * */
     @POST("R2JsonProc.asp")
     Call<OutInModel> outinSerialScan(
+            @Query("proc") String proc,
+            @Query("param1") String lot_no
+
+    );
+
+    /**
+     * 창고이동 재고이동(시리얼스캔)
+     * @param proc 프로시저
+     * @param lot_no lot_no
+     * */
+    @POST("R2JsonProc.asp")
+    Call<WhMoveListModel> WhMoveList(
             @Query("proc") String proc,
             @Query("param1") String lot_no
 
@@ -133,27 +146,57 @@ public interface ApiClientService {
     );
 
     /**
+     * 창고종류 리스트
+     * @param proc 프로시저
+     * @param code 창고코드, 명
+     * */
+    @POST("R2JsonProc.asp")
+    Call<WhModel> WhList(
+            @Query("proc") String proc,
+            @Query("param1") String code
+    );
+
+    /**
+     * 출하등록 품목종류 리스트
+     * @param proc 프로시저
+     * @param date 조회일자
+     * @param cst_code 거래처코드
+     * @param code 아이템코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ItmListModel> ship_itm_list(
+            @Query("proc") String proc,
+            @Query("param1") String date,
+            @Query("param2") String cst_code,
+            @Query("param3") String code
+    );
+
+    /**
      * 리스트조회
      * @param proc 프로시저
      * @param date 조회일자
      * @param cst_code 거래처
+     * @param itm_code 아이템코드
      * */
     @POST("R2JsonProc.asp")
     Call<ShipListModel> shipListSearch(
             @Query("proc") String proc,
             @Query("param1") String date,
-            @Query("param2") String cst_code
+            @Query("param2") String cst_code,
+            @Query("param3") String itm_code
     );
 
     /**
      * 출하피킹(시리얼스캔)
      * @param proc 프로시저
      * @param lot_no lot_no
+     * @param itm_code 아이템코드
      * */
     @POST("R2JsonProc.asp")
     Call<ShipOkModel> shipOkSerialScan(
             @Query("proc") String proc,
-            @Query("param1") String lot_no
+            @Query("param1") String lot_no,
+            @Query("param2") String itm_code
     );
 
     /**
@@ -162,6 +205,15 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_tin_save.asp")
     Call<ResultModel> postOutInSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 창고이동 저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_move_save.asp")
+    Call<ResultModel> postWhMoveSave(
             @Body RequestBody body
     );
 

@@ -178,8 +178,8 @@ public class HouseMoveFragment extends CommonFragment {
                             //moveList = model.getItems();
                             if (model.getItems().size() > 0) {
                                 for (int i = 0; i < model.getItems().size(); i++) {
-
                                     MatMoveModel.Item item = (MatMoveModel.Item) model.getItems().get(i);
+
                                     mAdapter.addData(item);
                                 }
                                 mAdapter.notifyDataSetChanged();

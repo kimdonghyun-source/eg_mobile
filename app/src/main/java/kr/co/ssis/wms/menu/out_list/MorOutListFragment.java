@@ -147,7 +147,7 @@ public class MorOutListFragment extends CommonFragment {
                         mOrderNo = s_barcode;
                         slip_type = s_type;
                         mor_list_date = s_date;
-                        //Log.d("값:::", "바코드: " + mOrderNo + "타입: " + slip_type + "날짜: " + mor_list_date);
+
                     }
                     if (gubun.getText().toString().equals("C")) {
                         requestMorListMember();
@@ -550,7 +550,7 @@ public class MorOutListFragment extends CommonFragment {
             final MorListModel.Items data = mMorList.get(position);
             holder.tv_date.setText(data.getOrd_date());
             holder.tv_name.setText(data.getCst_name());
-            holder.tv_qty.setText(Integer.toString(data.getMor_qty())); //인트
+            holder.tv_qty.setText(Integer.toString(data.getMor_qty())); //
 
 
             store_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -578,7 +578,7 @@ public class MorOutListFragment extends CommonFragment {
             /*//특정 데이터시 텍스트 색 변경
             for (int i =0; i<sotreAdapter.getCount(); i++) {
                 if (mMorList.get(i).getCst_name() == null) {
-                    Log.d("돌아~~", "null");
+
 
                 } else {
                     Log.d("돌아~~", "있어");

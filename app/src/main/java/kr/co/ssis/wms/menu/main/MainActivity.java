@@ -34,6 +34,7 @@ public class MainActivity extends CommonCompatActivity {
         findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener); //외주품출고확인
         findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener); //재고실사등록
         findViewById(R.id.bt_menu_7).setOnClickListener(onClickListener); //완제품창고입출력조회
+        findViewById(R.id.bt_menu_9).setOnClickListener(onClickListener); //창고이동
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,10 +74,10 @@ public class MainActivity extends CommonCompatActivity {
                     intent.putExtra("menu", Define.MENU_SHIP);
                     break;
 
-                //자재입고확인(LOT)(성신)
+                /*//자재입고확인(LOT)(성신)
                 case R.id.bt_menu_3:
                     intent.putExtra("menu", Define.MENU_IN_LOT);
-                    break;
+                    break;*/
 
                 //자재입고확인(GROUP)(성신)
                case R.id.bt_menu_4:
@@ -98,36 +99,11 @@ public class MainActivity extends CommonCompatActivity {
                     intent.putExtra("menu", Define.MENU_WH_INOUT_SEARCH);
                     break;
 
-               /* //주문자재출고
-                case R.id.bt_menu_4:
-                    intent.putExtra("menu", Define.MENU_PRODUCTION_IN);
+                //창고이동(성신)
+                case R.id.bt_menu_9:
+                    intent.putExtra("menu", Define.MENU_WH_MOVE);
                     break;
 
-
-                 //기존 창고이동
-                *//*case R.id.bt_menu_5:
-                    intent.putExtra("menu", Define.MENU_HOUSE_MOVE);
-                    break;*//*
-                //새로운 창고이동
-                case R.id.bt_menu_6:
-                    intent.putExtra("menu", Define.MENU_HOUSE_MOVE_NEW);
-                    break;
-                //(BOX)재고실사
-                case R.id.bt_menu_8:
-                    intent.putExtra("menu", Define.MENU_INVENTORY);
-                    break;
-                //박스라벨패킹
-                case R.id.bt_menu_2:
-                    intent.putExtra("menu", Define.MENU_BOXLBL);
-                    break;
-                //재고조사
-                case R.id.bt_menu_10:
-                    intent.putExtra("menu", Define.MENU_STOCK);
-                    break;
-                //시리얼위치조회
-                case R.id.bt_menu_13:
-                    intent.putExtra("menu", Define.MENU_SERIAL_LOCATION);
-                    break;*/
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

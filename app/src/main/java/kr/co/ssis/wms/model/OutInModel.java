@@ -53,6 +53,10 @@ public class OutInModel extends ResultModel {
         int tin_no2;
         //SCM순번3
         int tin_no3;
+        //창고코드
+        String wh_code;
+        //창고명
+        String wh_name;
 
 
         public String getCst_code() {
@@ -205,6 +209,22 @@ public class OutInModel extends ResultModel {
 
         public void setTin_no3(int tin_no3) {
             this.tin_no3 = tin_no3;
+        }
+
+        public String getWh_code() {
+            return wh_code;
+        }
+
+        public void setWh_code(String wh_code) {
+            this.wh_code = wh_code;
+        }
+
+        public String getWh_name() {
+            return wh_name;
+        }
+
+        public void setWh_name(String wh_name) {
+            this.wh_name = wh_name;
         }
     }
 }

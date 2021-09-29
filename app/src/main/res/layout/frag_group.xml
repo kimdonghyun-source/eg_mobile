@@ -43,6 +43,7 @@
         <EditText
             android:id="@+id/et_from"
             style="@style/EditTextLocation"
+            android:layout_marginRight="15dp"
             android:layout_height="wrap_content"
             android:enabled="false" />
 

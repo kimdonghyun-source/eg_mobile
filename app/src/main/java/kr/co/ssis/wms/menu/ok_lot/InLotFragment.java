@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,11 +36,13 @@ import kr.co.ssis.wms.common.Utils;
 import kr.co.ssis.wms.custom.CommonFragment;
 import kr.co.ssis.wms.honeywell.AidcReader;
 import kr.co.ssis.wms.menu.out_in.OutInAdapter;
+import kr.co.ssis.wms.menu.popup.LocationListPopup;
 import kr.co.ssis.wms.menu.popup.OneBtnPopup;
 import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
 import kr.co.ssis.wms.model.InLotModel;
 import kr.co.ssis.wms.model.OutInModel;
 import kr.co.ssis.wms.model.ResultModel;
+import kr.co.ssis.wms.model.WarehouseModel;
 import kr.co.ssis.wms.network.ApiClientService;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -52,22 +55,27 @@ public class InLotFragment extends CommonFragment {
     Context mContext;
     TextView item_date, tv_itm_code, tv_itm_name, tv_itm_size, tv_c_name, tv_no, tv_cst, tv_qty;
     DatePickerDialog.OnDateSetListener callbackMethod;
-    String barcodeScan, beg_barcode;
-    EditText et_from;
+    String barcodeScan, beg_barcode, wh_code;
+    EditText et_from, et_wh;
     RecyclerView lot_listView;
     InLotAdapter mAdapter;
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
-    ImageButton btn_next;
+    ImageButton btn_next, bt_wh;
+    int sum_qty;
+    LocationListPopup mLocationListPopup;
+    WarehouseModel.Items WareLocation;
 
     List<InLotModel.Item> mInLotListModel;
     InLotModel mInLotModel;
+    List<String> mBarcode;
+    List<WarehouseModel.Items> mWarehouseList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-
+        mBarcode = new ArrayList<>();
 
     }//Close onCreate
 
@@ -88,6 +96,8 @@ public class InLotFragment extends CommonFragment {
         et_from = v.findViewById(R.id.et_from);
         lot_listView = v.findViewById(R.id.lot_listView);
         btn_next = v.findViewById(R.id.btn_next);
+        et_wh = v.findViewById(R.id.et_wh);
+        bt_wh = v.findViewById(R.id.bt_wh);
 
         lot_listView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mAdapter = new InLotAdapter(getActivity());
@@ -113,6 +123,7 @@ public class InLotFragment extends CommonFragment {
 
         btn_next.setOnClickListener(onClickListener);
         item_date.setOnClickListener(onClickListener);
+        bt_wh.setOnClickListener(onClickListener);
 
         return v;
 
@@ -132,13 +143,20 @@ public class InLotFragment extends CommonFragment {
                     barcodeScan = barcode;
                     et_from.setText(barcodeScan);
 
+
                     if (mInLotListModel != null) {
+
                         for (int i = 0; i < mAdapter.getItemCount(); i++) {
                             if (mInLotListModel.get(i).getLot_no().equals(barcodeScan)) {
                                 Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
                                 return;
                             }
                         }
+                    }
+
+                    if (mBarcode.contains(barcodeScan)) {
+                        Utils.Toast(mContext, "동일한 바코드를 스캔하셨습니다.");
+                        return;
                     }
 
                     if (beg_barcode != null) {
@@ -204,13 +222,69 @@ public class InLotFragment extends CommonFragment {
                 case R.id.btn_next:
                     if (mInLotModel == null){
                         Utils.Toast(mContext, "입고할 품목을 스캔해주세요.");
+                    }else if(wh_code == null){
+                        Utils.Toast(mContext, "입고처를 골라주세요.");
+                        return;
                     }else {
                         request_in_lot_save();
                     }
+                    break;
+                case R.id.bt_wh:
+                    requestWhlist();
+                    break;
             }
 
         }
     };
+
+    /**
+     * 입고처 리스트
+     */
+    private void requestWhlist() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<WarehouseModel> call = service.morWarehouse("sp_pda_scm_wh_list", "");
+
+        call.enqueue(new Callback<WarehouseModel>() {
+            @Override
+            public void onResponse(Call<WarehouseModel> call, Response<WarehouseModel> response) {
+                if (response.isSuccessful()) {
+                    WarehouseModel model = response.body();
+                    //Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+                            mLocationListPopup = new LocationListPopup(getActivity(), model.getItems(), R.drawable.popup_title_searchloc, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    WarehouseModel.Items item = (WarehouseModel.Items) msg.obj;
+                                    WareLocation = item;
+                                    et_wh.setText("[" + WareLocation.getWh_code() + "] " + WareLocation.getWh_name());
+                                    //mAdapter.notifyDataSetChanged();
+                                    wh_code = WareLocation.getWh_code();
+                                    mLocationListPopup.hideDialog();
+                                }
+                            });
+                            mWarehouseList = model.getItems();
+
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WarehouseModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }
+
 
     /**
      * 자재입고확인(LOT)
@@ -242,12 +316,14 @@ public class InLotFragment extends CommonFragment {
                                     tv_itm_size.setText(item.getItm_size());
                                     tv_c_name.setText(item.getC_name());
                                     tv_qty.setText(Integer.toString(item.getTin_qty()));
-
+                                    //sum_qty += item.getTin_dtl_qty();
 
                                 }
                                 mInLotListModel = model.getItems();
+                                //mAdapter.itemsList = model.getItems();
                                 mAdapter.notifyDataSetChanged();
                                 lot_listView.setAdapter(mAdapter);
+                                mBarcode.add(barcodeScan);
                             }
 
                         } else {
@@ -292,6 +368,7 @@ public class InLotFragment extends CommonFragment {
         }
 
 
+
         json.addProperty("p_corp_code", mInLotModel.getItems().get(0).getCorp_code());    //사업장코드
         json.addProperty("p_scm_id", mInLotModel.getItems().get(0).getTin_id());       //내수구분
         json.addProperty("p_scm_date", mInLotModel.getItems().get(0).getTin_date());   //출하일자
@@ -299,7 +376,9 @@ public class InLotFragment extends CommonFragment {
         json.addProperty("p_scm_no2", mInLotModel.getItems().get(0).getTin_no2());     //출하순번2
         json.addProperty("p_scm_no3", mInLotModel.getItems().get(0).getTin_no2());     //출하순번3
         json.addProperty("p_make_date", m_date);     //입고일자
+        json.addProperty("p_wh_code", wh_code);    //창고코드
         json.addProperty("p_user_id", userID);    //로그인ID
+        //json.addProperty("p_itm_qty", sum_qty);     //수량sum값
         json.add("detail", list);
 
         Utils.Log("new Gson().toJson(json) ==> : " + new Gson().toJson(json));

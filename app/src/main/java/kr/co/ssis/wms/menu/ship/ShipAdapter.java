@@ -3,6 +3,7 @@ package kr.co.ssis.wms.menu.ship;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         holder.itm_size.setText(item.getItm_size());
         holder.c_name.setText(item.getC_name());
         holder.ship_qty.setText(Integer.toString(item.getShip_qty()));
+        holder.tv_no.setText(item.getShip_no2());
 
         //enable = false
         float cnt = 0;
@@ -93,6 +95,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         TextView c_name;
         TextView ship_qty;
         TextView scan_qty;
+        TextView tv_no;
 
         public ViewHolder(View view) {
             super(view);
@@ -103,6 +106,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
             c_name = view.findViewById(R.id.tv_c_name);
             ship_qty = view.findViewById(R.id.tv_ship_qty);
             scan_qty = view.findViewById(R.id.tv_scan_qty);
+            tv_no = view.findViewById(R.id.tv_no);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

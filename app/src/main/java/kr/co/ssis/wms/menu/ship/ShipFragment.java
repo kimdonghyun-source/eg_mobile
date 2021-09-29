@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,10 +43,13 @@ import kr.co.ssis.wms.menu.main.BaseActivity;
 import kr.co.ssis.wms.menu.out_in.OutInAdapter;
 import kr.co.ssis.wms.menu.out_in.OutInFragment;
 import kr.co.ssis.wms.menu.popup.LocationCstListPopup;
+import kr.co.ssis.wms.menu.popup.LocationItmSearchPopup;
 import kr.co.ssis.wms.menu.popup.LocationListPopup;
 import kr.co.ssis.wms.menu.popup.OneBtnPopup;
+import kr.co.ssis.wms.menu.popup.ShipItmSearchPopup;
 import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
 import kr.co.ssis.wms.menu.stock.StockFragment;
+import kr.co.ssis.wms.model.ItmListModel;
 import kr.co.ssis.wms.model.MatOutDetailModel;
 import kr.co.ssis.wms.model.MatOutSerialScanModel;
 import kr.co.ssis.wms.model.OutInModel;
@@ -63,16 +67,18 @@ import retrofit2.Response;
 
 public class ShipFragment extends CommonFragment {
 
+    ShipItmSearchPopup mlocationItmListPopup;
     Context mContext;
-    TextView item_date;
+    TextView item_date, all_cnt, no_cnt, tv_slash;
     DatePickerDialog.OnDateSetListener callbackMethod;
-    ImageButton bt_cst, btn_next;
+    ImageButton bt_cst, btn_next, bt_itm;
     List<ShipCstModel.Item> ShipCstList;
     ShipCstModel ShipCstModel;
     LocationCstListPopup mLocationListPopup;
     ShipCstModel.Item mShipCstModel;
-    EditText et_from;
-    String cst_code;
+    ItmListModel.Item mItmModel;
+    EditText et_from, et_itm;
+    String cst_code, s_itm_code;
     List<ShipListModel.ShipItem> mShipListModel;
     ShipListModel mShipModel;
     List<ShipOkModel.Item> mShipOkListModel;
@@ -83,7 +89,7 @@ public class ShipFragment extends CommonFragment {
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
     List<ShipOkModel.Item> okList;
-
+    List<ItmListModel.Item> mItmListModel;
     ShipOkModel mShipOkModel = null;
     ShipOkModel.Item order = null;
     int mPosition = -1;
@@ -109,6 +115,13 @@ public class ShipFragment extends CommonFragment {
         bt_cst = v.findViewById(R.id.bt_cst);
         et_from = v.findViewById(R.id.et_from);
         btn_next = v.findViewById(R.id.btn_next);
+        bt_itm = v.findViewById(R.id.bt_itm);
+        et_itm = v.findViewById(R.id.et_itm);
+        all_cnt = v.findViewById(R.id.all_cnt);
+        no_cnt = v.findViewById(R.id.no_cnt);
+        tv_slash = v.findViewById(R.id.tv_slash);
+
+
         mHandler = handler;
 
         ship_listview = v.findViewById(R.id.ship_listview);
@@ -122,6 +135,11 @@ public class ShipFragment extends CommonFragment {
         item_date.setOnClickListener(onClickListener);
         bt_cst.setOnClickListener(onClickListener);
         btn_next.setOnClickListener(onClickListener);
+        bt_itm.setOnClickListener(onClickListener);
+        et_itm.setOnClickListener(onClickListener);
+
+        et_itm.setTextIsSelectable(false);
+        et_itm.setShowSoftInputOnFocus(false);
 
         int year1 = Integer.parseInt(yearFormat.format(currentTime));
         int month1 = Integer.parseInt(monthFormat.format(currentTime));
@@ -159,6 +177,7 @@ public class ShipFragment extends CommonFragment {
     public void onResume() {
         super.onResume();
 
+
     }
 
     private void ShipScanList(int position) {
@@ -185,6 +204,15 @@ public class ShipFragment extends CommonFragment {
                 mShipModel = (ShipListModel) data.getSerializableExtra("model");
                 mAdapter.setData(mShipModel.getItems());
                 mAdapter.notifyDataSetChanged();
+                int ok_cnt = 0;
+                for (int i = 0; i < mAdapter.getCount(); i++) {
+
+                    if (mShipModel.getItems().get(i).getShip_qty() == mShipModel.getItems().get(i).getScan_qty()) {
+                        ok_cnt++;
+
+                        no_cnt.setText(String.valueOf(mAdapter.getCount() - ok_cnt));
+                    }
+                }
             }
         }
     }//Close onActivityResult
@@ -195,6 +223,14 @@ public class ShipFragment extends CommonFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.item_date:
+                    if (mAdapter.getCount() > 0) {
+                        mAdapter.clearData();
+                        mAdapter.notifyDataSetChanged();
+                        et_itm.setText("");
+                        et_from.setText("");
+                        all_cnt.setText("");
+                        tv_slash.setVisibility(View.GONE);
+                    }
                     int c_year = Integer.parseInt(item_date.getText().toString().substring(0, 4));
                     int c_month = Integer.parseInt(item_date.getText().toString().substring(5, 7));
                     int c_day = Integer.parseInt(item_date.getText().toString().substring(8, 10));
@@ -204,21 +240,120 @@ public class ShipFragment extends CommonFragment {
                     break;
 
                 case R.id.bt_cst:
+                    if (mAdapter.getCount() > 0) {
+                        mAdapter.clearData();
+                        mAdapter.notifyDataSetChanged();
+                        et_from.setText("");
+                    }
                     requestCstlist();
                     break;
 
                 case R.id.btn_next:
-                    if (mAdapter.getData() == null) {
+                    if (mAdapter.getCount() <= 0) {
                         Utils.Toast(mContext, "거래처를 선택해 주세요");
                         return;
                     } else {
+                        btn_next.setEnabled(false);
                         request_ship_save();
+                    }
+                    break;
+
+                case R.id.bt_itm:
+                    if (et_from.getText().toString().equals("")) {
+                        Utils.Toast(mContext, "거래처를 선택해주세요");
+                        return;
+                    } else {
+                        String m_date = item_date.getText().toString().replace("-", "");
+                        mlocationItmListPopup = new ShipItmSearchPopup(getActivity(), R.drawable.popup_title_searchloc, m_date, mShipCstModel.getCst_code(), new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mlocationItmListPopup.hideDialog();
+                                    if (mAdapter.getCount() > 0) {
+                                        mAdapter.clearData();
+                                        mAdapter.notifyDataSetChanged();
+                                        et_itm.setText("");
+                                    }
+                                    ItmListModel.Item order = (ItmListModel.Item) msg.obj;
+                                    et_itm.setText("[" + order.getItm_code() + "] " + order.getItm_name());
+                                    bt_itm.setSelected(true);
+                                    ShipList(order.getItm_code());
+                                    //requesItmlist(order.getItm_code());
+                                }
+                            }
+                        });
+                    }
+                    break;
+
+                case R.id.et_itm:
+                    if (et_from.getText().toString().equals("")) {
+                        Utils.Toast(mContext, "거래처를 선택해주세요");
+                        return;
+                    } else {
+                        String m_date = item_date.getText().toString().replace("-", "");
+                        mlocationItmListPopup = new ShipItmSearchPopup(getActivity(), R.drawable.popup_title_searchloc, m_date, mShipCstModel.getCst_code(), new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mlocationItmListPopup.hideDialog();
+                                    if (mAdapter.getCount() > 0) {
+                                        mAdapter.clearData();
+                                        mAdapter.notifyDataSetChanged();
+                                        et_itm.setText("");
+                                    }
+                                    ItmListModel.Item order = (ItmListModel.Item) msg.obj;
+                                    et_itm.setText("[" + order.getItm_code() + "] " + order.getItm_name());
+                                    bt_itm.setSelected(true);
+                                    ShipList(order.getItm_code());
+                                    //requesItmlist(order.getItm_code());
+                                }
+                            }
+                        });
                     }
                     break;
             }
 
         }
     };
+
+    /**
+     * 품목종류
+     */
+    private void requesItmlist(final String itm_code) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+        String m_date = item_date.getText().toString().replace("-", "");
+        Call<ItmListModel> call = service.ship_itm_list("sp_pda_ship_itm_list", m_date, mShipCstModel.getCst_code(), itm_code);
+
+        call.enqueue(new Callback<ItmListModel>() {
+            @Override
+            public void onResponse(Call<ItmListModel> call, Response<ItmListModel> response) {
+                if (response.isSuccessful()) {
+                    ItmListModel model = response.body();
+                    //Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+
+                            mItmListModel = model.getItems();
+                            //Call<ShipListModel> call = service.shipListSearch("sp_pda_ship_list", m_date, cst_code, order.getItm_code());
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItmListModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }//Close
+
 
     public void InitializeListener() {
         callbackMethod = new DatePickerDialog.OnDateSetListener() {
@@ -281,7 +416,8 @@ public class ShipFragment extends CommonFragment {
                                         mAdapter.clearData();
                                         mShipModel = null;
                                     }*/
-                                    ShipList();
+                                    ShipList("");
+
                                 }
                             });
                             ShipCstList = model.getItems();
@@ -309,10 +445,11 @@ public class ShipFragment extends CommonFragment {
     /**
      * 리스트조회
      */
-    private void ShipList() {
+    private void ShipList(String itm_code) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
         String m_date = item_date.getText().toString().replace("-", "");
-        Call<ShipListModel> call = service.shipListSearch("sp_pda_ship_list", m_date, cst_code);
+
+        Call<ShipListModel> call = service.shipListSearch("sp_pda_ship_list", m_date, cst_code, itm_code);
 
         call.enqueue(new Callback<ShipListModel>() {
             @Override
@@ -329,15 +466,22 @@ public class ShipFragment extends CommonFragment {
 
                                     mAdapter.addData(item);
 
+
                                 }
                                 mAdapter.notifyDataSetChanged();
                                 ship_listview.setAdapter(mAdapter);
+                                tv_slash.setVisibility(View.VISIBLE);
+                                all_cnt.setText(String.valueOf(mAdapter.getCount()));
+                                no_cnt.setText(String.valueOf(mAdapter.getCount()));
                             }
                         } else {
                             Utils.Toast(mContext, model.getMSG());
                         }
                     }
                 } else {
+                    tv_slash.setVisibility(View.GONE);
+                    all_cnt.setText("");
+                    no_cnt.setText("");
                     Utils.LogLine(response.message());
                     Utils.Toast(mContext, response.code() + " : " + response.message());
                 }
@@ -427,6 +571,7 @@ public class ShipFragment extends CommonFragment {
                 holder.c_name = v.findViewById(R.id.tv_c_name);
                 holder.ship_qty = v.findViewById(R.id.tv_ship_qty);
                 holder.scan_qty = v.findViewById(R.id.tv_scan_qty);
+                holder.tv_no = v.findViewById(R.id.tv_no);
 
                 v.setTag(holder);
 
@@ -440,6 +585,7 @@ public class ShipFragment extends CommonFragment {
             holder.itm_name.setText(data.getItm_name());
             holder.itm_size.setText(data.getItm_size());
             holder.c_name.setText(data.getC_name());
+            holder.tv_no.setText(Integer.toString(data.getShip_no2()) + ".");
             holder.ship_qty.setText(Integer.toString(data.getShip_qty()));
             if (mShipModel.getItems().get(position).getSet_scan_qty() > 0 && mAdapter.getCount() > 0 && mShipModel != null) {
                 holder.scan_qty.setText(Integer.toString(mShipModel.getItems().get(position).getSet_scan_qty()));
@@ -468,6 +614,7 @@ public class ShipFragment extends CommonFragment {
             TextView c_name;
             TextView ship_qty;
             TextView scan_qty;
+            TextView tv_no;
 
 
         }
@@ -550,13 +697,13 @@ public class ShipFragment extends CommonFragment {
                                 }
                             });
 
-
                         } else {
                             mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
+                                        btn_next.setEnabled(true);
 
                                     }
                                 }
@@ -572,6 +719,7 @@ public class ShipFragment extends CommonFragment {
                             if (msg.what == 1) {
                                 request_ship_save();
                                 mTwoBtnPopup.hideDialog();
+                                btn_next.setEnabled(true);
 
                             }
                         }
@@ -588,6 +736,7 @@ public class ShipFragment extends CommonFragment {
                         if (msg.what == 1) {
                             request_ship_save();
                             mTwoBtnPopup.hideDialog();
+                            btn_next.setEnabled(true);
 
                         }
                     }
