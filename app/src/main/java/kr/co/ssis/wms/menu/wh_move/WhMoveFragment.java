@@ -3,6 +3,9 @@ package kr.co.ssis.wms.menu.wh_move;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,7 +63,7 @@ import retrofit2.Response;
 public class WhMoveFragment extends CommonFragment {
 
     EditText et_from, et_from2;
-    TextView tv_empty;
+    TextView tv_empty, tv_list_cnt, tv_cnt;
     RecyclerView recycleview;
     ImageButton bt_next, bt_from2;
     List<String> mBarcode;
@@ -74,6 +77,10 @@ public class WhMoveFragment extends CommonFragment {
     ListAdapter mAdapter;
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
+    int cnt = 0;
+    private SoundPool sound_pool;
+    int soundId;
+    MediaPlayer mediaPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +103,8 @@ public class WhMoveFragment extends CommonFragment {
         et_from = v.findViewById(R.id.et_from);
         et_from2 = v.findViewById(R.id.et_from2);
         bt_from2 = v.findViewById(R.id.bt_from2);
+        tv_list_cnt = v.findViewById(R.id.tv_list_cnt);
+        tv_cnt = v.findViewById(R.id.tv_cnt);
         wh_move_listView = v.findViewById(R.id.wh_move_listView);
 
         mAdapter = new ListAdapter();
@@ -103,6 +112,9 @@ public class WhMoveFragment extends CommonFragment {
 
         bt_from2.setOnClickListener(onClickListener);
         bt_next.setOnClickListener(onClickListener);
+
+        sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
         return v;
 
@@ -123,9 +135,9 @@ public class WhMoveFragment extends CommonFragment {
                     /*if (wh_code == null) {
                         Utils.Toast(mContext, "출하창고를 선택해주세요.");
                         return;
-                    }*/
+                    }
 
-                    /*if (wh_code2 == null) {
+                    if (wh_code2 == null) {
                         Utils.Toast(mContext, "입고창고를 선택해주세요.");
                         return;
                     }*/
@@ -183,6 +195,7 @@ public class WhMoveFragment extends CommonFragment {
                             return;
                         }
                     }
+                    bt_next.setEnabled(false);
                     request_wh_move_save();
             }
         }
@@ -206,7 +219,7 @@ public class WhMoveFragment extends CommonFragment {
                     if (moveModel != null) {
                         if (moveModel.getFlag() == ResultModel.SUCCESS) {
                             if (model.getItems().size() > 0) {
-
+                                cnt += moveModel.getItems().get(0).getInv_qty();
                                 for (int i = 0; i < model.getItems().size(); i++) {
 
                                     WhMoveListModel.Item item = (WhMoveListModel.Item) model.getItems().get(i);
@@ -217,17 +230,23 @@ public class WhMoveFragment extends CommonFragment {
                                         }
                                     }
                                     mAdapter.addData(item);
+
                                 }
                                 mAdapter.notifyDataSetChanged();
                                 wh_move_listView.setAdapter(mAdapter);
                                 mBarcode.add(mLocation);
-                                //bt_from2.setEnabled(false);
                                 et_from.setText("[" + moveModel.getItems().get(0).getWh_code() + "] " + moveModel.getItems().get(0).getWh_name());
                                 wh_code = moveModel.getItems().get(0).getWh_code();
+                                tv_cnt.setText(Integer.toString(mAdapter.getCount()));
+                                tv_list_cnt.setText(Integer.toString(cnt));
+
                             }
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                         }
                     }
                 } else {
@@ -408,6 +427,7 @@ public class WhMoveFragment extends CommonFragment {
                             if (msg.what == 1) {
                                 request_wh_move_save();
                                 mTwoBtnPopup.hideDialog();
+                                bt_next.setEnabled(true);
 
                             }
                         }
@@ -425,6 +445,7 @@ public class WhMoveFragment extends CommonFragment {
                         if (msg.what == 1) {
                             request_wh_move_save();
                             mTwoBtnPopup.hideDialog();
+                            bt_next.setEnabled(true);
 
                         }
                     }

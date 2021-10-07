@@ -170,11 +170,61 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:text="총 수량:" />
+
+        <TextView
+            android:id="@+id/tv_cnt"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:text="총 건수:"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_list_cnt"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/menu_inhouse_grid"/>
+
+
+
     <TextView
         android:id="@+id/tv_empty"
         android:layout_width="match_parent"

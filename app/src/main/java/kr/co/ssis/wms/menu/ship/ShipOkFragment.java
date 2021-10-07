@@ -3,6 +3,9 @@ package kr.co.ssis.wms.menu.ship;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.honeywell.aidc.BarcodeReadEvent;
@@ -33,7 +39,9 @@ import kr.co.ssis.wms.common.Utils;
 import kr.co.ssis.wms.custom.CommonFragment;
 import kr.co.ssis.wms.honeywell.AidcReader;
 import kr.co.ssis.wms.menu.main.BaseActivity;
+import kr.co.ssis.wms.menu.move_ask.MoveAskScanAdapter;
 import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
+import kr.co.ssis.wms.model.MoveAskModel;
 import kr.co.ssis.wms.model.ResultModel;
 import kr.co.ssis.wms.model.ShipListModel;
 import kr.co.ssis.wms.model.ShipOkModel;
@@ -55,8 +63,8 @@ public class ShipOkFragment extends CommonFragment {
     TextView tv_itm_size;
     TextView tv_c_name;
     TextView tv_ship_qty;
-    TextView tv_pickin_qty;
-    ListView ship_ok_listview;
+    TextView tv_pickin_qty, tv_cnt;
+    RecyclerView ship_ok_listview;
     List<ShipOkModel.Item> mOkListModel;
     ShipOkModel.Item mOrderModel;
     ShipOkModel mOkModel;
@@ -69,6 +77,10 @@ public class ShipOkFragment extends CommonFragment {
     TwoBtnPopup mPopup;
     Activity mActivity;
     ArrayList<ShipOkModel.Item> listViewItemList = new ArrayList<ShipOkModel.Item>();
+
+    private SoundPool sound_pool;
+    int soundId;
+    MediaPlayer mediaPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,11 +109,15 @@ public class ShipOkFragment extends CommonFragment {
         tv_pickin_qty = v.findViewById(R.id.tv_pickin_qty);
         ship_ok_listview = v.findViewById(R.id.ship_ok_listview);
         btn_next_ok = v.findViewById(R.id.btn_next_ok);
+        tv_cnt = v.findViewById(R.id.tv_cnt);
 
 
-        mAdapter = new ListAdapter();
+        /*mAdapter = new ListAdapter();
+        ship_ok_listview.setAdapter(mAdapter);*/
+
+        ship_ok_listview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mAdapter = new ListAdapter(getActivity());
         ship_ok_listview.setAdapter(mAdapter);
-
 
         tv_itm_code.setText(order.getItm_code());
         tv_itm_name.setText(order.getItm_name());
@@ -111,6 +127,8 @@ public class ShipOkFragment extends CommonFragment {
 
         btn_next_ok.setOnClickListener(onClickListener);
 
+        sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
         return v;
 
@@ -136,9 +154,9 @@ public class ShipOkFragment extends CommonFragment {
                         }
                     }
 
-                    if (mOkListModel != null) {
-                        for (int i = 0; i < mAdapter.getCount(); i++) {
-                            if (mOkListModel.get(i).getLot_no().equals(barcodeScan)) {
+                    if (mAdapter.itemsList != null) {
+                        for (int i = 0; i < mAdapter.getItemCount(); i++) {
+                            if (mAdapter.itemsList.get(i).getLot_no().equals(barcodeScan)) {
                                 Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
                                 return;
                             }
@@ -178,7 +196,6 @@ public class ShipOkFragment extends CommonFragment {
     };
 
 
-
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -186,7 +203,7 @@ public class ShipOkFragment extends CommonFragment {
 
                 case R.id.btn_next_ok:
 
-                    if (mAdapter.getCount() > 0) {
+                    if (mAdapter.getItemCount() > 0) {
                         List<ShipOkModel.Item> datas = new ArrayList<>();
                         List<ShipOkModel.Item> itms = mAdapter.getData();
                         int count = 0;
@@ -206,16 +223,17 @@ public class ShipOkFragment extends CommonFragment {
 
                         mShipModel.getItems().get(mPosition).setSet_scan_qty(count);
                         mShipModel.getItems().get(mPosition).setItems(datas);
+
                         Intent i = new Intent();
                         i.putExtra("model", mShipModel);
                         getActivity().setResult(Activity.RESULT_OK, i);
                         getActivity().finish();
                         break;
+
                     } else {
                         Utils.Toast(mContext, "스캔 내역이 없습니다.");
                     }
             }
-
         }
     };
 
@@ -263,20 +281,18 @@ public class ShipOkFragment extends CommonFragment {
                                     mAdapter.addData(item);
 
                                 }
-                                //mAdapter.notifyDataSetChanged();
+
                                 ship_ok_listview.setAdapter(mAdapter);
                                 mBarcode.add(mOrderNo);
-                                //mAdapter.notifyDataSetChanged();
-                                //Collections.sort(strList, noDesc);
-                                //Collections.sort(listViewItemList, noDesc);
 
-                                Collections.sort(mOkListModel, noDesc);
-                                Collections.reverse(mOkListModel);
+                                Collections.sort(mAdapter.itemsList, noDesc);
+                                Collections.reverse(mAdapter.itemsList);
 
                                 mAdapter.notifyDataSetChanged();
+                                tv_cnt.setText(mAdapter.getItemCount() + " 건");
 
-                                for (int j = 0; j < mAdapter.getCount(); j++) {
-                                    c_cnt += mOkListModel.get(j).getWrk_qty();
+                                for (int j = 0; j < mAdapter.getItemCount(); j++) {
+                                    c_cnt += mAdapter.itemsList.get(j).getWrk_qty();
 
                                 }
                                 tv_pickin_qty.setText(Utils.setComma(c_cnt));
@@ -285,6 +301,9 @@ public class ShipOkFragment extends CommonFragment {
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                         }
                     }
                 } else {
@@ -302,166 +321,183 @@ public class ShipOkFragment extends CommonFragment {
         });
     }//Close
 
+    public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
-    class ListAdapter extends BaseAdapter {
-        LayoutInflater mInflater;
+        List<ShipOkModel.Item> itemsList;
+        Activity mActivity;
         Handler mHandler = null;
 
-
-        public ListAdapter() {
-            mInflater = LayoutInflater.from(mContext);
-            /*if (strList == null) {
+        public ListAdapter(Activity context) {
+            mActivity = context;
+            itemsList = new ArrayList<>();
+          /*  if (itemsList == null) {
                 listViewItemList = new ArrayList<ShipOkModel.Item>() ;
             } else {
-                listViewItemList = strList ;
+                listViewItemList = listViewItemList ;
             }*/
         }
 
-        public int getItemCount() {
-            return (null == mOkListModel ? 0 : mOkListModel.size());
+
+        public void setData(List<ShipOkModel.Item> item) {
+            itemsList = item;
         }
 
         public void addData(ShipOkModel.Item item) {
-            if (mOkListModel == null) mOkListModel = new ArrayList<>();
-            mOkListModel.add(item);
+            if (itemsList == null) itemsList = new ArrayList<>();
+            itemsList.add(item);
         }
 
         public void clearData() {
-            mOkListModel.clear();
-        }
-
-        public List<ShipOkModel.Item> getData() {
-            return mOkListModel;
-        }
-
-        @Override
-        public int getCount() {
-            if (mOkListModel == null) {
-                return 0;
-            }
-
-            return mOkListModel.size();
+            itemsList.clear();
         }
 
         public void setSumHandler(Handler h) {
             this.mHandler = h;
         }
 
-
-        @Override
-        public ShipOkModel.Item getItem(int position) {
-            return mOkListModel.get(position);
+        public List<ShipOkModel.Item> getData() {
+            return itemsList;
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            final ViewHolder holder;
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (v == null) {
-                holder = new ViewHolder();
-                v = inflater.inflate(R.layout.cell_ship_ok, null);
-
-                holder.lot_no = v.findViewById(R.id.tv_lot_no);
-                holder.inv_qty = v.findViewById(R.id.tv_qty);
-                holder.tv_ea = v.findViewById(R.id.tv_ea);
-                holder.bt_delete = v.findViewById(R.id.bt_delete);
-                holder.tv_no = v.findViewById(R.id.tv_no);
-
-                holder.inv_qty.addTextChangedListener(new TextWatcher() {
-                    String result = "";
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        Log.d("JeLib", "---------------------------");
-                        if (s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
-                            result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
-
-                            int cnt = Utils.stringToInt(result);
-
-                            holder.inv_qty.setText(result);    // 결과 텍스트 셋팅.
-                            holder.inv_qty.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
-
-                            //입력된 수량을 list에 넣어줌
-                            //mOkListModel.get(position).setTin_dtl_qty(cnt);
-                            mOkListModel.get(position).setWrk_qty(cnt);
-                        }
-                   /* if(Utils.isEmpty(s.toString())){
-                        itemsList.get(holder.getAdapterPosition()).setInput_qty(0);
-                    }*/
-                        //mHandler.sendEmptyMessage(1);
-                    }
-                });
-
-                holder.bt_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        mOkListModel.remove(position);
-                        mAdapter.notifyDataSetChanged();
-
-                        if (mAdapter.getCount() > 0) {
-                            count = 0;
-                            for (int i = 0; i < mAdapter.getCount(); i++) {
-                                count += mOkListModel.get(i).getWrk_qty();
-
-                            }
-                            tv_pickin_qty.setText(Utils.setComma(count));
-                        } else {
-                            tv_pickin_qty.setText("");
-                        }
-
-                        if (beg_barcode.equals(barcodeScan)) {
-                            beg_barcode = "";
-                        }
-                    }
-                });
-
-                v.setTag(holder);
-
-            } else {
-                holder = (ViewHolder) v.getTag();
+        public int getCount() {
+            if (itemsList == null) {
+                return 0;
             }
 
-            final ShipOkModel.Item data = mOkListModel.get(position);
-            holder.lot_no.setText(data.getLot_no());
-            holder.tv_ea.setText(order.getC_name());
-            holder.inv_qty.setText(Integer.toString(data.getWrk_qty()));
-            holder.tv_no.setText(Integer.toString(position));
-            data.setNo(position);
-            listViewItemList.add(data);
-
-
-            return v;
+            return itemsList.size();
         }
 
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_ship_ok, viewGroup, false);
+            ViewHolder holder = new ViewHolder(v);
+            return holder;
+        }
 
-        public class ViewHolder {
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            final ShipOkModel.Item item = itemsList.get(position);
+
+
+            holder.lot_no.setText(item.getLot_no());
+            holder.tv_ea.setText(order.getC_name());
+            holder.inv_qty.setText(Integer.toString(item.getWrk_qty()));
+            holder.tv_no.setText(Integer.toString(position));
+            item.setNo(position);
+
+            holder.inv_qty.addTextChangedListener(new TextWatcher() {
+                String result = "";
+                int c_cnt = 0;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    Log.d("JeLib", "---------------------------");
+
+                    if (s.toString().length() == 0){
+                        itemsList.get(holder.getAdapterPosition()).setWrk_qty(0);
+
+                        tv_pickin_qty.setText("");
+
+                        int c_cnt =0;
+                        for (int j = 0; j < mAdapter.getItemCount(); j++) {
+                            c_cnt += mAdapter.itemsList.get(j).getWrk_qty();
+
+                        }
+                        tv_pickin_qty.setText(Utils.setComma(c_cnt));
+                    }
+
+                    if (s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
+                        result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
+
+                        int cnt = Utils.stringToInt(result);
+
+                        holder.inv_qty.setText(result);    // 결과 텍스트 셋팅.
+                        holder.inv_qty.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
+
+                        //입력된 수량을 list에 넣어줌
+                        itemsList.get(holder.getAdapterPosition()).setWrk_qty(cnt);
+
+                        tv_pickin_qty.setText("");
+
+                        int c_cnt =0;
+                        for (int j = 0; j < mAdapter.getItemCount(); j++) {
+                            c_cnt += mAdapter.itemsList.get(j).getWrk_qty();
+
+                        }
+                        tv_pickin_qty.setText(Utils.setComma(c_cnt));
+
+
+
+
+                    }
+                }
+            });
+
+            holder.bt_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    itemsList.remove(position);
+                    mAdapter.notifyDataSetChanged();
+                    tv_cnt.setText(mAdapter.getItemCount() + " 건");
+
+                    if (mAdapter.getItemCount() > 0) {
+                        count = 0;
+                        for (int i = 0; i < mAdapter.getItemCount(); i++) {
+                            count += itemsList.get(i).getWrk_qty();
+                        }
+                        tv_pickin_qty.setText(Utils.setComma(count));
+                    } else {
+                        tv_pickin_qty.setText("");
+                    }
+
+                    if (beg_barcode.equals(barcodeScan)) {
+                        beg_barcode = "";
+                    }
+                }
+            });
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return (null == itemsList ? 0 : itemsList.size());
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
             TextView lot_no;
+            //TextView inv_qty;
             EditText inv_qty;
             TextView tv_ea;
             ImageButton bt_delete;
             TextView tv_no;
 
+            public ViewHolder(View view) {
+                super(view);
 
+                lot_no = view.findViewById(R.id.tv_lot_no);
+                inv_qty = view.findViewById(R.id.tv_qty);
+                tv_ea = view.findViewById(R.id.tv_ea);
+                bt_delete = view.findViewById(R.id.bt_delete);
+                tv_no = view.findViewById(R.id.tv_no);
+
+            }
         }
+    }
 
-
-    }//Close Adapter
 
 
 }//Close Activity

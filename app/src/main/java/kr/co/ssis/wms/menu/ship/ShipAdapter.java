@@ -68,7 +68,10 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         holder.itm_size.setText(item.getItm_size());
         holder.c_name.setText(item.getC_name());
         holder.ship_qty.setText(Integer.toString(item.getShip_qty()));
-        holder.tv_no.setText(item.getShip_no2());
+        holder.tv_no.setText(Integer.toString(item.getShip_no2()));
+ /*       if (itemsList.getItems().get(position).getSet_scan_qty() > 0 && mAdapter.getCount() > 0 && mShipModel != null) {
+            holder.scan_qty.setText(Integer.toString(mShipModel.getItems().get(position).getSet_scan_qty()));
+        }*/
 
         //enable = false
         float cnt = 0;
@@ -115,7 +118,6 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
                     msg.obj = itemsList.get(getAdapterPosition());
                     msg.what= getAdapterPosition();
                     mHandler.sendMessage(msg);
-                    //ShipScanList(position);
                 }
             });
         }

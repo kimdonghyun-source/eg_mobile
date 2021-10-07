@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +29,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.honeywell.aidc.BarcodeReadEvent;
+import com.honeywell.aidc.BarcodeReader;
 
+import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +47,7 @@ import kr.co.ssis.wms.honeywell.AidcReader;
 import kr.co.ssis.wms.menu.popup.LocationListPopup;
 import kr.co.ssis.wms.menu.popup.OneBtnPopup;
 import kr.co.ssis.wms.menu.popup.TwoBtnPopup;
+import kr.co.ssis.wms.model.MatOutSerialScanModel;
 import kr.co.ssis.wms.model.OutInModel;
 import kr.co.ssis.wms.model.ResultModel;
 import kr.co.ssis.wms.model.WarehouseModel;
@@ -73,6 +81,10 @@ public class OutInFragment extends CommonFragment {
     List<WarehouseModel.Items> mWarehouseList;
 
     List<String> mIncode;
+
+    private SoundPool sound_pool;
+    int soundId;
+    MediaPlayer mediaPlayer;
 
 
     @Override
@@ -135,6 +147,9 @@ public class OutInFragment extends CommonFragment {
         et_wh.setText("[800] 입고대기창고");
         wh_code = "800";
 
+        sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        soundId = sound_pool.load(mContext, R.raw.beepum, 1);
+
         return v;
 
     }//Close onCreateView
@@ -176,13 +191,14 @@ public class OutInFragment extends CommonFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_next:
-                    if (outModel == null){
+                    if (outModel == null) {
                         Utils.Toast(mContext, "입고할 품목을 스캔해주세요.");
                         return;
-                    }else if(wh_code == null){
+                    } else if (wh_code == null) {
                         Utils.Toast(mContext, "입고처를 골라주세요.");
                         return;
-                    }else {
+                    } else {
+                        btn_next.setEnabled(false);
                         request_mat_out_save();
                     }
                     break;
@@ -204,6 +220,7 @@ public class OutInFragment extends CommonFragment {
     };
 
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -218,8 +235,9 @@ public class OutInFragment extends CommonFragment {
                     barcodeScan = barcode;
                     et_from.setText(barcodeScan);
 
-                    if (mIncode != null){
-                        if (mIncode.contains(barcode)){
+
+                    if (mIncode != null) {
+                        if (mIncode.contains(barcode)) {
                             Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
                             return;
                         }
@@ -241,7 +259,10 @@ public class OutInFragment extends CommonFragment {
                             return;
                         }
                     }
+                    //barcodeReader.close();
+                    //AidcReader.getInstance().release();   스캐너 죽이기
                     pdaSerialScan();
+
                     beg_barcode = barcodeScan;
                 }
             }
@@ -315,15 +336,12 @@ public class OutInFragment extends CommonFragment {
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (outModel != null) {
                         if (outModel.getFlag() == ResultModel.SUCCESS) {
-                            if (model.getItems().size() > 0) {
-                                outListModel = model.getItems();
-                                /*if (mIncode != null){
-                                    if(mIncode.contains(model.getItems().get(0).getCst_code())){
-                                        Utils.Toast(mContext, "입고처가 다릅니다.");
-                                        return;
-                                    }
-                                }*/
 
+                            //AidcReader.getInstance().claim(mContext);    스캐너 다시 활성화
+
+                            if (model.getItems().size() > 0) {
+
+                                outListModel = model.getItems();
                                 for (int i = 0; i < model.getItems().size(); i++) {
 
                                     OutInModel.Item item = (OutInModel.Item) model.getItems().get(i);
@@ -348,6 +366,9 @@ public class OutInFragment extends CommonFragment {
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                         }
                     }
                 } else {
@@ -426,14 +447,29 @@ public class OutInFragment extends CommonFragment {
 
         for (OutInModel.Item item : items) {
             JsonObject obj = new JsonObject();
-            obj.addProperty("itm_code", item.getItm_code());
-            obj.addProperty("lot_no", item.getLot_no());
-            obj.addProperty("lot_qty", item.getTin_dtl_qty());
+            obj.addProperty("corp_code", item.getCorp_code());    //사업장
+            obj.addProperty("scm_id", item.getTin_id());          //내수구분
+            obj.addProperty("scm_date", item.getTin_date());      //출하일자
+            obj.addProperty("scm_no1", item.getTin_no1());        //출하순번1
+            obj.addProperty("scm_no2", item.getTin_no2());        //출하순번2
+            obj.addProperty("scm_no3", item.getTin_no3());        //출하순번3
+            obj.addProperty("bor_code", item.getBor_code());      //발주코드
+            obj.addProperty("bor_date", item.getBor_date());      //발주일자
+            obj.addProperty("bor_no1", item.getBor_no1());        //발주순번1
+            obj.addProperty("bor_no2", item.getBor_no2());        //발주순번2
+            obj.addProperty("bor_no3", item.getBor_no3());        //발주순번3
+            obj.addProperty("wh_code", item.getWh_code());        //창고코드
+            obj.addProperty("make_date", m_date);                 //입고일자
+            obj.addProperty("itm_code", item.getItm_code());      //품목코드
+            obj.addProperty("lot_no", item.getLot_no());          //로트번호
+            obj.addProperty("lot_qty", item.getTin_dtl_qty());    //수량
+            obj.addProperty("user_id", userID);                   //로그인ID
+
             list.add(obj);
         }
 
 
-        json.addProperty("p_corp_code", outModel.getItems().get(0).getCorp_code());    //사업장코드
+        /*json.addProperty("p_corp_code", outModel.getItems().get(0).getCorp_code());    //사업장코드
         json.addProperty("p_scm_id", outModel.getItems().get(0).getTin_id());       //내수구분
         json.addProperty("p_scm_date", outModel.getItems().get(0).getTin_date());   //출하일자
         json.addProperty("p_scm_no1", outModel.getItems().get(0).getTin_no1());     //출하순번1
@@ -441,7 +477,7 @@ public class OutInFragment extends CommonFragment {
         json.addProperty("p_scm_no3", outModel.getItems().get(0).getTin_no3());     //출하순번3
         json.addProperty("p_make_date", m_date);    //입고일자
         json.addProperty("p_wh_code", wh_code);    //창고코드
-        json.addProperty("p_user_id", userID);      //로그인ID
+        json.addProperty("p_user_id", userID);      //로그인ID*/
         json.add("detail", list);
 
         Utils.Log("new Gson().toJson(json) ==> : " + new Gson().toJson(json));
@@ -465,6 +501,7 @@ public class OutInFragment extends CommonFragment {
                                     if (msg.what == 1) {
                                         getActivity().finish();
                                         mOneBtnPopup.hideDialog();
+
 
                                     }
                                 }
@@ -492,6 +529,7 @@ public class OutInFragment extends CommonFragment {
                             if (msg.what == 1) {
                                 request_mat_out_save();
                                 mTwoBtnPopup.hideDialog();
+                                btn_next.setEnabled(true);
 
                             }
                         }
@@ -509,6 +547,7 @@ public class OutInFragment extends CommonFragment {
                         if (msg.what == 1) {
                             request_mat_out_save();
                             mTwoBtnPopup.hideDialog();
+                            btn_next.setEnabled(true);
 
                         }
                     }

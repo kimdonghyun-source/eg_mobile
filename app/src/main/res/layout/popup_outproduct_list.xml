@@ -95,8 +95,8 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:imeOptions="actionDone"
-                        android:text=""
-                        />
+                        android:inputType="number"
+                        android:text=""/>
                     <!--Spinner
                         android:id="@+id/spinner"
                         android:layout_width="0dp"

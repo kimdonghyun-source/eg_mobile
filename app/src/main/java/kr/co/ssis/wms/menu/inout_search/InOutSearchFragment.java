@@ -3,6 +3,9 @@ package kr.co.ssis.wms.menu.inout_search;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -62,11 +65,16 @@ public class InOutSearchFragment extends CommonFragment {
     LogQtySearchModel mLogSearchQtyModel;
     List<LogQtySearchModel.Item> mLogSearchQtyListModel;
 
+    private SoundPool sound_pool;
+    int soundId;
+    MediaPlayer mediaPlayer;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+
 
 
     }//Close onCreate
@@ -132,7 +140,8 @@ public class InOutSearchFragment extends CommonFragment {
         bt_from.setOnClickListener(onClickListener);
         btn_next.setOnClickListener(onClickListener);
 
-
+        sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
         return v;
 
@@ -372,6 +381,9 @@ public class InOutSearchFragment extends CommonFragment {
                             }
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                         }
                     }
                 } else {

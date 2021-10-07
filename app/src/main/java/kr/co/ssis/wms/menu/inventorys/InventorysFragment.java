@@ -191,6 +191,7 @@ public class InventorysFragment extends CommonFragment {
                         return;
                     } else {
                         request_dis_save();
+                        btn_next.setEnabled(false);
                     }
                     break;
             }
@@ -415,6 +416,7 @@ public class InventorysFragment extends CommonFragment {
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
+                                        btn_next.setEnabled(true);
                                     }
                                 }
                             });
@@ -428,6 +430,7 @@ public class InventorysFragment extends CommonFragment {
                             if (msg.what == 1) {
                                 request_dis_save();
                                 mTwoBtnPopup.hideDialog();
+                                btn_next.setEnabled(true);
 
                             }
                         }
@@ -444,6 +447,7 @@ public class InventorysFragment extends CommonFragment {
                         if (msg.what == 1) {
                             request_dis_save();
                             mTwoBtnPopup.hideDialog();
+                            btn_next.setEnabled(true);
 
                         }
                     }

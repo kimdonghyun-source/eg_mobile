@@ -179,6 +179,15 @@
                 android:background="@drawable/fill_rect_f5edb0"/>
 
             <TextView
+                android:id="@+id/tv_cnt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="15dp"/>
+
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"/>
@@ -200,11 +209,12 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/menu_inhouse_grid"/>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ship_ok_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:nestedScrollingEnabled="false"/>
 
     <LinearLayout
         android:id="@+id/ll_bottom"

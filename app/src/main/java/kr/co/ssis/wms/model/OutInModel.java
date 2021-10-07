@@ -37,6 +37,8 @@ public class OutInModel extends ResultModel {
         String bor_no1;
         //발주순번2
         String bor_no2;
+        //발주순번3
+        String bor_no3;
         //LOT수량
         int tin_dtl_qty;
         //LOT번호
@@ -225,6 +227,14 @@ public class OutInModel extends ResultModel {
 
         public void setWh_name(String wh_name) {
             this.wh_name = wh_name;
+        }
+
+        public String getBor_no3() {
+            return bor_no3;
+        }
+
+        public void setBor_no3(String bor_no3) {
+            this.bor_no3 = bor_no3;
         }
     }
 }
