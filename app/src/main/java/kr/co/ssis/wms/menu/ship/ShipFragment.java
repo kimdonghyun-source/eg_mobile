@@ -540,6 +540,8 @@ public class ShipFragment extends CommonFragment {
                     for (ShipOkModel.Item sn : snList) {
                         if (sn.getWrk_qty() > 0) {
                             JsonObject obj = new JsonObject();
+                            //출하순번1
+                            obj.addProperty("ship_no1", item.getShip_no1());
                             //출하순번2
                             obj.addProperty("ship_no2", item.getShip_no2());
                             //아이템코드
@@ -560,7 +562,7 @@ public class ShipFragment extends CommonFragment {
         json.addProperty("p_corp_code", mShipModel.getItems().get(0).getCorp_code());   //사업장코드
         json.addProperty("p_sal_id", mShipModel.getItems().get(0).getSal_id());         //내수구분
         json.addProperty("p_ship_date", mShipModel.getItems().get(0).getShip_date());    //출하일자
-        json.addProperty("p_ship_no1", mShipModel.getItems().get(0).getShip_no1());     //출하순번1
+        //json.addProperty("p_ship_no1", mShipModel.getItems().get(0).getShip_no1());     //출하순번1
         json.addProperty("p_user_id", userID);    //로그인ID
 
         json.add("detail", list);

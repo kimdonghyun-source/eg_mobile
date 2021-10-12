@@ -191,12 +191,14 @@ public interface ApiClientService {
      * @param proc 프로시저
      * @param lot_no lot_no
      * @param itm_code 아이템코드
+     * @param wh_code 창고코드
      * */
     @POST("R2JsonProc.asp")
     Call<ShipOkModel> shipOkSerialScan(
             @Query("proc") String proc,
             @Query("param1") String lot_no,
-            @Query("param2") String itm_code
+            @Query("param2") String itm_code,
+            @Query("param3") String wh_code
     );
 
     /**

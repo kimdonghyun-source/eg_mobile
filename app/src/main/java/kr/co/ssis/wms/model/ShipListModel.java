@@ -40,6 +40,8 @@ public class ShipListModel extends ResultModel {
         int set_scan_qty;
         //시리얼번호
         String serial_no;
+        //창고코드
+        String wh_code;
 
         //출하피킹 스캔 수량
         List<ShipOkModel.Item> items;
@@ -155,6 +157,14 @@ public class ShipListModel extends ResultModel {
 
         public void setSerial_no(String serial_no) {
             this.serial_no = serial_no;
+        }
+
+        public String getWh_code() {
+            return wh_code;
+        }
+
+        public void setWh_code(String wh_code) {
+            this.wh_code = wh_code;
         }
     }
 }

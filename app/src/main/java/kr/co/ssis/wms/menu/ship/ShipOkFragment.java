@@ -171,7 +171,7 @@ public class ShipOkFragment extends CommonFragment {
                         mOrderNo = barcode;
 
                     }
-                    beg_barcode = barcodeScan;
+
                 }
             }
         });
@@ -260,7 +260,7 @@ public class ShipOkFragment extends CommonFragment {
     private void pdaSerialScan() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipOkModel> call = service.shipOkSerialScan("sp_pda_ship_scan", barcodeScan, order.getItm_code());
+        Call<ShipOkModel> call = service.shipOkSerialScan("sp_pda_ship_scan", barcodeScan, order.getItm_code(), order.getWh_code());
 
         call.enqueue(new Callback<ShipOkModel>() {
             @Override
@@ -298,6 +298,7 @@ public class ShipOkFragment extends CommonFragment {
                                 tv_pickin_qty.setText(Utils.setComma(c_cnt));
                             }
 
+                            beg_barcode = barcodeScan;
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
