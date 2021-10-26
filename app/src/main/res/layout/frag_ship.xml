@@ -10,17 +10,26 @@
         android:paddingTop="5dp"
         android:paddingLeft="15dp">
 
-
     </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:paddingLeft="15dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/bt_search"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center|right"
+            android:background="@android:color/transparent"
+            android:padding="5dp"
+            android:src="@drawable/menu_inhouse_bt_search" />
+
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:background="@drawable/text9"
@@ -50,17 +59,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginBottom="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/text10"
+            android:background="@drawable/text"
             android:paddingLeft="15dp" />
 
         <LinearLayout
@@ -73,7 +81,51 @@
 
             <EditText
                 android:focusable="false"
-                android:id="@+id/et_from"
+                android:id="@+id/et_wh"
+                style="@style/EditTextLocation"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/bt_wh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/menu_inhouse_bt_search"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/text1"
+            android:paddingLeft="15dp" />
+
+        <LinearLayout
+            android:layout_width="255dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/menu_moveloc_searchloc_f"
+            android:orientation="horizontal">
+
+            <EditText
+                android:focusable="false"
+                android:id="@+id/et_cst"
                 style="@style/EditTextLocation"
                 android:layout_height="wrap_content"/>
 
@@ -87,82 +139,73 @@
                 android:src="@drawable/menu_inhouse_bt_search"
                 tools:ignore="RtlHardcoded" />
         </LinearLayout>
-
-
-
     </LinearLayout>
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_inhouse_grid"
+        android:layout_marginBottom="5dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp">
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/text2"
             android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/text24"
-            android:paddingLeft="15dp" />
+            android:layout_marginLeft="12dp"/>
 
-        <LinearLayout
-            android:layout_width="255dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:layout_marginLeft="25dp"
-            android:background="@drawable/menu_moveloc_searchloc_f"
-            android:orientation="horizontal">
-
-            <EditText
-                android:focusable="false"
-                android:id="@+id/et_itm"
-                style="@style/EditTextLocation"
-                android:layout_height="wrap_content"/>
-
-            <ImageButton
-                android:id="@+id/bt_itm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:background="@android:color/transparent"
-                android:padding="5dp"
-                android:src="@drawable/menu_inhouse_bt_search"
-                tools:ignore="RtlHardcoded" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_gravity="right"
-        android:layout_width="110dp"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:gravity="center"
-            android:id="@+id/no_cnt"
-            android:textColor="@color/black"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/tv_slash"
-            android:visibility="gone"
-            android:text="/"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:layout_width="10dp"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/all_cnt"
-            android:layout_width="50dp"
+        <EditText
+            android:id="@+id/et_plt_no"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.2"
+            android:background="@drawable/fill_rect_f5edb0"
             android:gravity="center"
-            android:textColor="@color/black" />
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text3"
+            android:layout_gravity="center"
+            android:layout_marginLeft="12dp"/>
+
+        <TextView
+            android:id="@+id/et_scan_qty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.2"
+            android:digits="0123456789.,"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
     </LinearLayout>
+
 
     <ImageView
         android:layout_width="match_parent"
@@ -170,19 +213,17 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/menu_inhouse_grid"/>
 
-    <!--<androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ship_listview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:nestedScrollingEnabled="false" />-->
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ship_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:nestedScrollingEnabled="false"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ship_scan_listview"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:nestedScrollingEnabled="false"/>
 
     <LinearLayout
