@@ -17,9 +17,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -76,10 +78,10 @@ import static android.content.Context.WIFI_SERVICE;
 public class ShipFragment extends CommonFragment {
     Context mContext;
     DatePickerDialog.OnDateSetListener callbackMethod;
-    EditText et_plt_no, et_cst, et_wh;
+    EditText et_plt_no, et_cst, et_wh, et_serial;
     RecyclerView ship_listview, ship_scan_listview;
     TextView item_date, et_scan_qty;
-    ImageButton bt_cst, bt_wh, btn_next;
+    ImageButton bt_cst, bt_wh, btn_next, bt_serial;
 
     LocationShipWhList mLocationWhListPopup;
     List<ShipWhListModel.Item> mWhList;
@@ -108,6 +110,7 @@ public class ShipFragment extends CommonFragment {
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
     TwoBtnShipPopup mTwoBtnShipPopup;
+    int ss_cnt = 0;
 
     List list = new ArrayList<>();
 
@@ -121,7 +124,14 @@ public class ShipFragment extends CommonFragment {
         WifiManager mng = (WifiManager) mContext.getSystemService(WIFI_SERVICE);
         WifiInfo info = mng.getConnectionInfo();
         mac = info.getMacAddress();
-        Log.d("MAC주소", mac);
+        /*String str1 = "WR06X1R0 JTL    50000";
+        String word1 = str1.split("    ")[0];
+        String word2 = str1.split("    ")[1];
+
+        System.out.println("첫번째 단어:" + word1);
+        System.out.println("두번째 단어:" + word2);*/
+
+        Log.d("화면", "onCreate");
 
     }//Close onCreate
 
@@ -130,7 +140,7 @@ public class ShipFragment extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_ship, container, false);
-
+        Log.d("화면", "onCreateView");
         et_scan_qty = v.findViewById(R.id.et_scan_qty);
         et_plt_no = v.findViewById(R.id.et_plt_no);
         ship_listview = v.findViewById(R.id.ship_listview);
@@ -141,6 +151,8 @@ public class ShipFragment extends CommonFragment {
         et_wh = v.findViewById(R.id.et_wh);
         et_cst = v.findViewById(R.id.et_cst);
         btn_next = v.findViewById(R.id.btn_next);
+        et_serial = v.findViewById(R.id.et_serial);
+        bt_serial = v.findViewById(R.id.bt_serial);
 
         et_plt_no.setText("1");
 
@@ -159,6 +171,7 @@ public class ShipFragment extends CommonFragment {
         bt_wh.setOnClickListener(onClickListener);
         bt_cst.setOnClickListener(onClickListener);
         btn_next.setOnClickListener(onClickListener);
+        bt_serial.setOnClickListener(onClickListener);
 
         int year1 = Integer.parseInt(yearFormat.format(currentTime));
         int month1 = Integer.parseInt(monthFormat.format(currentTime));
@@ -201,13 +214,6 @@ public class ShipFragment extends CommonFragment {
 
         boolean isInserted = myDB.insertData(pos, bar, plt, qty, fg, mac, wg);
 
-        /*boolean isInserted = myDB.insertData(1, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(),
-                mShipModel.getItems().get(1).getFg_name(), "111");*/
-
-        if (isInserted == true)
-            Log.d("데이터추가여부?", "OK");
-        else
-            Log.d("데이터추가여부?", "NO");
     }
 
 
@@ -215,7 +221,6 @@ public class ShipFragment extends CommonFragment {
     public void viewAll() {
         Cursor res = myDB.getAllData();
         if (res.getCount() == 0) {
-            Log.d("실패", "데이터를 찾을 수 없습니다.");
             return;
         }
 
@@ -229,8 +234,6 @@ public class ShipFragment extends CommonFragment {
             buffer.append("s_position: " + res.getString(5) + ", ");
             buffer.append("s_wg: " + res.getString(6) + "");
         }
-        Log.d("데이터", buffer.toString());
-
     }
 
     // 데이터베이스 삭제하기
@@ -265,14 +268,29 @@ public class ShipFragment extends CommonFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) {
-                int cnt = 0;
+                int cnt = 0, c_cnt = 0;
                 mShipModel = (ShipListModel) data.getSerializableExtra("model");
                 mAdapter.setData(mShipModel.getItems());
                 mAdapter.notifyDataSetChanged();
+                ss_cnt = 0;
                 Cursor res = myDB.getAllData();
                 cnt = res.getCount();
                 et_scan_qty.setText(Integer.toString(cnt) + " 건");
 
+
+                mIncode.clear();
+
+                Cursor res3 = myDB.getbarcode();
+                StringBuffer buffer = new StringBuffer();
+                while (res3.moveToNext()) {
+                    c_cnt++;
+                    if (c_cnt == res3.getCount()) {
+                        buffer.append(res3.getString(0));
+                    } else {
+                        buffer.append(res3.getString(0) + ", ");
+                    }
+                }
+                mIncode.add(String.valueOf(buffer));
             }
         }
     }//Close onActivityResult
@@ -281,6 +299,7 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("화면", "onResume");
         AidcReader.getInstance().claim(mContext);
         AidcReader.getInstance().setListenerHandler(new Handler() {
             @Override
@@ -292,10 +311,12 @@ public class ShipFragment extends CommonFragment {
                     barcodeScan = barcode;
 
                     if (mIncode != null) {
-                        if (mIncode.contains(barcode)) {
-                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
-                            return;
-                        }
+                        Log.d("버퍼onResume", String.valueOf(mIncode));
+                    }
+
+                    if (mIncode.contains(barcode)) {
+                        Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                        return;
                     }
 
                     if (wh_code == null) {
@@ -320,7 +341,7 @@ public class ShipFragment extends CommonFragment {
 
                     pdaSerialScan();
 
-                    beg_barcode = barcodeScan;
+                    //beg_barcode = barcodeScan;
                 }
             }
         });
@@ -425,7 +446,7 @@ public class ShipFragment extends CommonFragment {
                                 }
                             }
                         });
-                    }else {
+                    } else {
 
                         if (wh_code == null) {
                             Utils.Toast(mContext, "출고처를 골라주세요");
@@ -450,15 +471,68 @@ public class ShipFragment extends CommonFragment {
                                 extras.putString("date", m_date);
                                 extras.putString("cst_code", cst_code);
                                 extras.putString("wh_code", wh_code);
+                                extras.putString("deli_code", deli_code);
                                 intent.putExtra("args", extras);
                                 startActivityForResult(intent, 100);
-
+                                //getActivity().finish();
+                                mAdapter.clearData();
+                                mScanAdapter.clearData();
+                                et_scan_qty.setText("");
+                                et_cst.setText("");
+                                et_wh.setText("");
+                                cst_code = null;
+                                cst_name = null;
+                                deli_code = null;
+                                wh_code = null;
+                                mIncode.clear();
+                                mAdapter.notifyDataSetChanged();
                             } else {
                                 request_ship_save();
                             }
                         }
                     });
                     break;
+
+                case R.id.bt_serial:
+                    if (et_serial.getText().toString().equals("")) {
+                        Utils.Toast(mContext, "SerialNo를 입력해주세요.");
+                        return;
+                    }
+
+                    barcodeScan = et_serial.getText().toString();
+
+                    if (mIncode != null) {
+                        if (mIncode.contains(et_serial.getText().toString())) {
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
+                    }
+
+                    if (wh_code == null) {
+                        Utils.Toast(mContext, "출고처를 골라주세요.");
+                        return;
+                    }
+
+                    if (cst_code == null) {
+                        Utils.Toast(mContext, "거래처를 골라주세요.");
+                        return;
+                    }
+
+                    if (mAdapter.getItemCount() < 0) {
+                        Utils.Toast(mContext, "조회된 리스트가 없습니다.");
+                        return;
+                    }
+
+                    if (et_plt_no.getText().toString().length() == 0) {
+                        Utils.Toast(mContext, "PLTNo 를 입력해주세요.");
+                        return;
+                    }
+
+                    pdaSerialScan();
+                    beg_barcode = barcodeScan;
+                    et_serial.setText("");
+
+
             }
 
         }
@@ -571,13 +645,14 @@ public class ShipFragment extends CommonFragment {
                                     mCustomModel = item;
                                     if (!mCustomModel.getDeli_place().equals("")) {
                                         et_cst.setText("[" + mCustomModel.getCst_code() + "] " + mCustomModel.getCst_name() + " / " + mCustomModel.getDeli_place());
-                                    }else{
+                                    } else {
                                         et_cst.setText("[" + mCustomModel.getCst_code() + "] " + mCustomModel.getCst_name());
                                     }
                                     //mAdapter.notifyDataSetChanged();
                                     cst_code = mCustomModel.getCst_code();
                                     cst_name = mCustomModel.getCst_name();
                                     deli_code = mCustomModel.getDeli_place();
+
                                     mLocationCustomListPopup.hideDialog();
                                     if (mAdapter != null) {
                                         mAdapter.clearData();
@@ -671,7 +746,7 @@ public class ShipFragment extends CommonFragment {
 
         String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
         String m_date = item_date.getText().toString().replace("-", "");
-        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, "", barcodeScan);
+        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, deli_code, barcodeScan);
 
         call.enqueue(new Callback<ShipScanModel>() {
             @Override
@@ -689,25 +764,27 @@ public class ShipFragment extends CommonFragment {
                                     ShipScanModel.Item item = (ShipScanModel.Item) model.getItems().get(i);
                                     mScanAdapter.addData(item);
                                 }
-                                mScanAdapter.notifyDataSetChanged();
-                                viewAll();
-
                             }
                             for (int k = 0; k < mAdapter.getItemCount(); k++) {
                                 if (mShipList.get(k).getFg_name().equals(mShipScanModel.getItems().get(0).getFg_name())) {
                                     if (mAdapter.itemsList.get(k).getScan_qty() > mAdapter.itemsList.get(k).getSp_qty()) {
                                         Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
                                         return;
+                                    } else {
+                                        //c_cnt = mShipList.get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                        //mShipList.get(1).setScan_qty(c_cnt);
                                     }
-                                    c_cnt = mShipList.get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
-                                    mShipList.get(k).setScan_qty(c_cnt);
                                 }
-
                             }
+
+                            et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
+
+
                             mScanAdapter.notifyDataSetChanged();
                             mAdapter.notifyDataSetChanged();
                             mIncode.add(barcodeScan);
-                            et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
 
 
                         } else {
@@ -731,6 +808,8 @@ public class ShipFragment extends CommonFragment {
                 Utils.Toast(mContext, getString(R.string.error_network));
             }
         });
+
+
     }//Close
 
     public class ShipScanAdapter extends RecyclerView.Adapter<ShipScanAdapter.ViewHolder> {
@@ -786,8 +865,13 @@ public class ShipFragment extends CommonFragment {
             pos++;
 
             AddData(pos, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
-            Log.d("값:", String.valueOf(mShipScanModel.getItems().get(0).getScan_qty()) + ",  " + mShipScanModel.getItems().get(0).getFg_name());
             viewAll();
+
+            if (mShipScanModel.getFlag() == ResultModel.SUCCESS) {
+                Cursor res = myDB.getAllData();
+                ss_cnt = res.getCount();
+                et_scan_qty.setText(Integer.toString(ss_cnt) + " 건");
+            }
 
         }
 
@@ -828,8 +912,27 @@ public class ShipFragment extends CommonFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("화면", "onStart");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("화면", "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("화면", "onStop");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("화면", "onDestroy");
         Integer deleteRows = myDB.deleteDatas();
         deleteDatas();
     }
@@ -852,14 +955,13 @@ public class ShipFragment extends CommonFragment {
         while (res.moveToNext()) {
             cnt++;
             if (cnt == res.getCount()) {
-                buffer.append(res.getString(0));
+                buffer.append(res.getString(0) + ";" + res.getString(1));
             } else {
-                buffer.append(res.getString(0) + ";");
+                buffer.append(res.getString(0) + ";" + res.getString(1) + ";");
             }
 
 
         }
-        Log.d("중량값마지막제외::", buffer.toString());
 
         Cursor res1 = myDB.getbarplt();
         //Cursor res1 = myDB.getplt();
@@ -876,7 +978,6 @@ public class ShipFragment extends CommonFragment {
             }
         }
 
-        Log.d("바코드plt::", buffer1.toString());
 
         JsonObject obj = new JsonObject();
         JsonArray list = new JsonArray();
@@ -886,7 +987,7 @@ public class ShipFragment extends CommonFragment {
         obj.addProperty("p_ship_no", "");                    //ship_no
         obj.addProperty("p_wh_code", wh_code);                     //창고코드
         obj.addProperty("p_cst_code", cst_code);                   //거래처코드
-        obj.addProperty("p_deli_place", "");                 //deli_place
+        obj.addProperty("p_deli_place", deli_code);                 //deli_place
         obj.addProperty("p_plt_wgt", buffer.toString());           //중량
         obj.addProperty("p_lbl_list", buffer1.toString());         //바코드+PLTNO
         obj.addProperty("p_user_id", userID);    //로그인ID

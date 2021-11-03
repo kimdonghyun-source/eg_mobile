@@ -61,6 +61,7 @@ public class ShipOkFragment extends CommonFragment {
     MyDatabaseHelper myDB;
     SimpleCursorAdapter adapter = null;
     ListViewAdapter mAdapter;
+    ShipFragment.ShipScanAdapter mScanAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,14 +157,12 @@ public class ShipOkFragment extends CommonFragment {
             buffer.append("s_mac: " + res.getString(4) + ", ");
             buffer.append("s_position: " + res.getString(5) + "");
         }
-        Log.d("데이터", buffer.toString());
 
     }
 
     public void view(String fg) {
         Cursor res = myDB.getData(fg);
         if (res.getCount() == 0) {
-            Log.d("실패", "데이터를 찾을 수 없습니다.");
             return;
         }
     }
@@ -250,15 +249,15 @@ public class ShipOkFragment extends CommonFragment {
                     if (mAdapter.getCount() == 0) {
                         tv_scan_tot_qty.setText(Utils.setComma(0));
                     }
-                    Log.d("개수", String.valueOf(mAdapter.getCount()));
 
                     for (int i = 0; i < mAdapter.getCount(); i++) {
                         count += mAdapter.list.get(i).getScan_qty();
                     }
                     tv_scan_tot_qty.setText(Utils.setComma(count));
+                    mAdapter.notifyDataSetChanged();
+
                 }
             });
-
 
             return view;
         }

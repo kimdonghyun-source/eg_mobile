@@ -16,7 +16,7 @@
 
     <!-- 로케이션 edittext 스타일 -->
     <style name="EditTextLocation">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">220dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_gravity">center|left</item>

@@ -51,7 +51,7 @@ import retrofit2.Response;
 public class ShipChangeFragment extends CommonFragment {
 
     Context mContext;
-    String cst_name, m_date, wh_code, cst_code;
+    String cst_name, m_date, wh_code, cst_code, deli_code;
     TextView tv_cst_code, tv_edit_scan_cnt, tv_plt_cnt, tv_scan_cnt;
     MyDatabaseHelper myDB;
     ListViewAdapter mAdapter;
@@ -89,6 +89,7 @@ public class ShipChangeFragment extends CommonFragment {
         cst_name = arguments.getString("cst_name");
         cst_code = arguments.getString("cst_code");
         wh_code = arguments.getString("wh_code");
+        deli_code = arguments.getString("deli_code");
         m_date = arguments.getString("date");
 
         tv_edit_scan_cnt = v.findViewById(R.id.tv_edit_scan_cnt);
@@ -262,14 +263,13 @@ public class ShipChangeFragment extends CommonFragment {
         while (res.moveToNext()) {
             cnt++;
             if (cnt == res.getCount()) {
-                buffer.append(res.getString(0));
+                buffer.append(res.getString(0) + ";" + res.getString(1));
             } else {
-                buffer.append(res.getString(0) + ";");
+                buffer.append(res.getString(0) + ";" + res.getString(1) + ";");
             }
 
 
         }
-        Log.d("중량값마지막제외::", buffer.toString());
 
         Cursor res1 = myDB.getbarplt();
         //Cursor res1 = myDB.getplt();
@@ -286,8 +286,6 @@ public class ShipChangeFragment extends CommonFragment {
             }
         }
 
-        Log.d("바코드plt::", buffer1.toString());
-
         JsonObject obj = new JsonObject();
         JsonArray list = new JsonArray();
 
@@ -296,7 +294,7 @@ public class ShipChangeFragment extends CommonFragment {
         obj.addProperty("p_ship_no", "");                    //ship_no
         obj.addProperty("p_wh_code", wh_code);                     //창고코드
         obj.addProperty("p_cst_code", cst_code);                   //거래처코드
-        obj.addProperty("p_deli_place", "");                 //deli_place
+        obj.addProperty("p_deli_place", deli_code);                 //deli_place
         obj.addProperty("p_plt_wgt", buffer.toString());           //중량
         obj.addProperty("p_lbl_list", buffer1.toString());         //바코드+PLTNO
         obj.addProperty("p_user_id", userID);    //로그인ID
