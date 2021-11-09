@@ -63,7 +63,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
 
         final ShipListModel.Item item = itemsList.get(position);
 
-        holder.tv_name.setText(item.getFg_name() +"  "+ item.getCst_stock_name() );
+        holder.tv_name.setText(item.getFg_name());
         holder.et_sp_qty.setText(Float.toString(item.getSp_qty()));
         holder.et_stock_qty.setText(Float.toString(item.getStock_qty()));
         holder.et_scan_qty.setText(Float.toString(item.getScan_qty()));

@@ -131,7 +131,6 @@ public class ShipFragment extends CommonFragment {
         System.out.println("첫번째 단어:" + word1);
         System.out.println("두번째 단어:" + word2);*/
 
-        Log.d("화면", "onCreate");
 
     }//Close onCreate
 
@@ -140,7 +139,6 @@ public class ShipFragment extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.frag_ship, container, false);
-        Log.d("화면", "onCreateView");
         et_scan_qty = v.findViewById(R.id.et_scan_qty);
         et_plt_no = v.findViewById(R.id.et_plt_no);
         ship_listview = v.findViewById(R.id.ship_listview);
@@ -299,7 +297,6 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("화면", "onResume");
         AidcReader.getInstance().claim(mContext);
         AidcReader.getInstance().setListenerHandler(new Handler() {
             @Override
@@ -914,25 +911,25 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("화면", "onStart");
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("화면", "onPause");
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("화면", "onStop");
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("화면", "onDestroy");
+
         Integer deleteRows = myDB.deleteDatas();
         deleteDatas();
     }

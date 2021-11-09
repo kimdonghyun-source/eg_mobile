@@ -111,6 +111,16 @@ public class AidcReader {
                     // Disable bad read response, handle in onFailureEvent
                     properties.put(BarcodeReader.PROPERTY_NOTIFICATION_BAD_READ_ENABLED, false);
                     // Apply the settings
+
+                    //신규추가
+                    properties.put(BarcodeReader.PROPERTY_CODE_11_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_CODE_39_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_CODE_93_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_EAN_8_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_GS1_128_ENABLED, true);
+
+
                     barcodeReader.setProperties(properties);
                 }
                 catch (InvalidScannerNameException e){
