@@ -1,9 +1,6 @@
 package kr.co.leeku.wms.menu.ship;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,17 +24,13 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 import kr.co.leeku.wms.R;
-import kr.co.leeku.wms.common.Define;
 import kr.co.leeku.wms.common.SharedData;
 import kr.co.leeku.wms.common.Utils;
 import kr.co.leeku.wms.custom.CommonFragment;
-import kr.co.leeku.wms.menu.main.BaseActivity;
 import kr.co.leeku.wms.menu.popup.OneBtnPopup;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
 import kr.co.leeku.wms.model.ResultModel;
-import kr.co.leeku.wms.model.ShipListModel;
 import kr.co.leeku.wms.model.ShipScanData;
-import kr.co.leeku.wms.model.ShipScanModel;
 import kr.co.leeku.wms.network.ApiClientService;
 import kr.co.leeku.wms.network.MyDatabaseHelper;
 import okhttp3.MediaType;
@@ -125,10 +116,7 @@ public class ShipChangeFragment extends CommonFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_next_ok:
-
                     request_ship_save();
-
-
                     break;
 
             }
@@ -322,6 +310,7 @@ public class ShipChangeFragment extends CommonFragment {
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         getActivity().finish();
+                                        deleteDatas();
                                         btn_next_ok.setEnabled(true);
                                     }
                                 }
@@ -375,6 +364,23 @@ public class ShipChangeFragment extends CommonFragment {
         });
 
     }//Close
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        deleteDatas();
+    }
+
+    // 데이터베이스 삭제하기
+    public void deleteDatas() {
+        Integer deleteRows = myDB.deleteDatas();
+        if (deleteRows > 0)
+            //Toast.makeText(mContext,"데이터 삭제 성공",Toast.LENGTH_LONG ).show();
+            Log.d("삭제여부", "OK!");
+        else
+            //Toast.makeText(mContext,"데이터 삭제 실패", Toast.LENGTH_LONG ).show();
+            Log.d("삭제여부?", "NO!");
+    }
 
 
 }

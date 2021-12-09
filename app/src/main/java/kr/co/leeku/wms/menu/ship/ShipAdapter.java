@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,6 +69,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         for (int i = 0; i < itemsList.size(); i++) {
             if (itemsList.get(position).getScan_qty() > itemsList.get(position).getSp_qty()) {
                 holder.et_scan_qty.setBackgroundColor(Color.parseColor("#9bbb59"));
+                Utils.Toast(mActivity, "의뢰수량을 초과했습니다.");
             }
         }
 

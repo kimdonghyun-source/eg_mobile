@@ -26,6 +26,8 @@ import kr.co.leeku.wms.common.Define;
 import kr.co.leeku.wms.custom.BusProvider;
 import kr.co.leeku.wms.custom.CommonCompatActivity;
 import kr.co.leeku.wms.custom.CommonFragment;
+import kr.co.leeku.wms.menu.osr.OsrDetailFragment;
+import kr.co.leeku.wms.menu.osr.OsrFragment;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
 import kr.co.leeku.wms.menu.ship.ShipChangeFragment;
 import kr.co.leeku.wms.menu.ship.ShipFragment;
@@ -74,6 +76,7 @@ public class BaseActivity extends CommonCompatActivity {
 
         ArrayList<String> list = new ArrayList<>();
         list.add("출하등록");
+        list.add("외주출고");
 
 
         ListView listView = findViewById(R.id.list);
@@ -124,6 +127,22 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //외주출고
+            case Define.MENU_OSR: {
+                CommonFragment fragment = new OsrFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_OSR, R.id.fl_content);
+                break;
+            }
+
+            //외주출고상세
+            case Define.MENU_OSR_DETAIL: {
+                CommonFragment fragment = new OsrDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_OSR_DETAIL, R.id.fl_content);
+                break;
+            }
+
         }
 
         setTitleImage(menu);
@@ -158,6 +177,18 @@ public class BaseActivity extends CommonCompatActivity {
             //출하PLT중량변경확인
             case Define.MENU_SHIP_CHANGE: {
                 image = R.drawable.ssis_title3;
+                break;
+            }
+
+            //외주출고
+            case Define.MENU_OSR: {
+                image = R.drawable.eg_title2;
+                break;
+            }
+
+            //외주출고상세
+            case Define.MENU_OSR_DETAIL: {
+                image = R.drawable.eg_title2;
                 break;
             }
 
@@ -325,6 +356,20 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_SHIP_CHANGE: {
                                         CommonFragment fragment = new ShipChangeFragment();
                                         replaceContent(fragment, Define.TAG_SHIP_CHANGE, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //외주출고
+                                    case Define.MENU_OSR: {
+                                        CommonFragment fragment = new OsrFragment();
+                                        replaceContent(fragment, Define.TAG_OSR, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //외주출고상세
+                                    case Define.MENU_OSR_DETAIL: {
+                                        CommonFragment fragment = new OsrDetailFragment();
+                                        replaceContent(fragment, Define.TAG_OSR_DETAIL, R.id.fl_content);
                                         break;
                                     }
 

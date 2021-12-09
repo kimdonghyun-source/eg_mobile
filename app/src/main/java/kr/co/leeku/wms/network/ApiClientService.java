@@ -4,6 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 
 import kr.co.leeku.wms.BuildConfig;
+import kr.co.leeku.wms.model.OsrDetailModel;
+import kr.co.leeku.wms.model.OsrListModel;
 import kr.co.leeku.wms.model.ResultModel;
 import kr.co.leeku.wms.model.ShipCustomListModel;
 import kr.co.leeku.wms.model.ShipListModel;
@@ -51,6 +53,19 @@ public interface ApiClientService {
             @Query("param1") String p_mode,
             @Query("param2") String p_fac_code,
             @Query("param3") String p_plan_date
+    );
+
+    /**
+     * 창고리스트
+     * @param proc 프로시저
+     * @param p_mode
+     * @param p_plan_date
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ShipWhListModel> WhList1(
+            @Query("proc") String proc,
+            @Query("param1") String p_mode,
+            @Query("param2") String p_plan_date
     );
 
     /**
@@ -147,6 +162,47 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_ship_add.asp")
     Call<ResultModel> postShipSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 외주출고의뢰 조회
+     * @param proc 프로시저
+     * @param p_mode 구분
+     * @param m_date 일자
+     * */
+    @POST("R2JsonProc.asp")
+    Call<OsrListModel> OsrList(
+            @Query("proc") String proc,
+            @Query("param1") String p_mode,
+            @Query("param2") String m_date
+    );
+
+    /**
+     * 외주출고의뢰 바코드스캔
+     * @param proc 프로시저
+     * @param p_mode 구분
+     * @param m_date 일자
+     * @param wh_code 창고코드
+     * @param ood_no 전표번호
+     * @param barcode 바코드스캔
+     * */
+    @POST("R2JsonProc.asp")
+    Call<OsrDetailModel> OsrDetailList(
+            @Query("proc") String proc,
+            @Query("param1") String p_mode,
+            @Query("param2") String m_date,
+            @Query("param3") String wh_code,
+            @Query("param4") String ood_no,
+            @Query("param5") String barcode
+    );
+
+    /**
+     * 외주출고 저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_osr_add.asp")
+    Call<ResultModel> postOsrSave(
             @Body RequestBody body
     );
 

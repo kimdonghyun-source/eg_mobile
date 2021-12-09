@@ -29,6 +29,7 @@ public class MainActivity extends CommonCompatActivity {
 
 
         findViewById(R.id.bt_menu_1).setOnClickListener(onClickListener); //출하등록
+        findViewById(R.id.bt_menu_2).setOnClickListener(onClickListener); //외주출고
 
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,13 +58,15 @@ public class MainActivity extends CommonCompatActivity {
             Intent intent = new Intent(mContext, BaseActivity.class);
             switch (view){
 
-
-
                 //출하등록
                 case R.id.bt_menu_1:
                     intent.putExtra("menu", Define.MENU_SHIP);
                     break;
 
+                //외주출고
+                case R.id.bt_menu_2:
+                    intent.putExtra("menu", Define.MENU_OSR);
+                    break;
 
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

@@ -100,12 +100,14 @@ public class AidcReader {
                     properties.put(BarcodeReader.PROPERTY_DATAMATRIX_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_UPC_A_ENABLE, true);
                     properties.put(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
+
                     properties.put(BarcodeReader.PROPERTY_AZTEC_ENABLED, false);
                     properties.put(BarcodeReader.PROPERTY_CODABAR_ENABLED, false);
                     properties.put(BarcodeReader.PROPERTY_INTERLEAVED_25_ENABLED, false);
-                    properties.put(BarcodeReader.PROPERTY_PDF_417_ENABLED, false);
+                    properties.put(BarcodeReader.PROPERTY_PDF_417_ENABLED, true);
+
                     // Set Max Code 39 barcode length
-                    properties.put(BarcodeReader.PROPERTY_CODE_39_MAXIMUM_LENGTH, 10);
+                    properties.put(BarcodeReader.PROPERTY_CODE_39_MAXIMUM_LENGTH, 20);
                     // Turn on center decoding
                     properties.put(BarcodeReader.PROPERTY_CENTER_DECODE, true);
                     // Disable bad read response, handle in onFailureEvent
@@ -114,12 +116,26 @@ public class AidcReader {
 
                     //신규추가
                     properties.put(BarcodeReader.PROPERTY_CODE_11_ENABLED, true);
-                    properties.put(BarcodeReader.PROPERTY_CODE_39_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_CODE_93_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_GS1_128_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_IATA_25_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_INTERLEAVED_25_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_ISBT_128_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_MATRIX_25_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_MAXICODE_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_MICRO_PDF_417_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_MSI_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_PDF_417_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_RSS_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_TLC_39_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_CODE_39_FULL_ASCII_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
                     properties.put(BarcodeReader.PROPERTY_EAN_8_ENABLED, true);
-                    properties.put(BarcodeReader.PROPERTY_GS1_128_ENABLED, true);
-
+                    properties.put(BarcodeReader.IMAGER_EXPOSURE_MODE_AUTO_EXPOSURE, true);
+                    properties.put(BarcodeReader.IMAGER_EXPOSURE_MODE_CONTEXT_SENSITIVE, true);
+                    properties.put(BarcodeReader.IMAGER_SAMPLE_METHOD_CENTER, true);
+                    properties.put(BarcodeReader.PROPERTY_CODE_39_START_STOP_TRANSMIT_ENABLED, true);
+                    properties.put(BarcodeReader.PROPERTY_NOTIFICATION_GOOD_READ_ENABLED, true);
 
                     barcodeReader.setProperties(properties);
                 }

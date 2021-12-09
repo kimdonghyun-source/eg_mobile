@@ -6,8 +6,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -17,16 +15,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,11 +31,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.honeywell.aidc.BarcodeReadEvent;
 
-import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,10 +56,7 @@ import kr.co.leeku.wms.model.ShipListModel;
 import kr.co.leeku.wms.model.ShipScanModel;
 import kr.co.leeku.wms.model.ShipWhListModel;
 import kr.co.leeku.wms.network.ApiClientService;
-import kr.co.leeku.wms.network.DBHelper;
 import kr.co.leeku.wms.network.MyDatabaseHelper;
-import kr.co.leeku.wms.network.SQLiteControl;
-import kr.co.leeku.wms.network.SQLiteHelper;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -203,6 +193,9 @@ public class ShipFragment extends CommonFragment {
         sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
+        et_wh.setText("[W01] 포승완제창고");
+        wh_code = "W01";
+
         return v;
 
     }//Close onCreateView
@@ -305,15 +298,27 @@ public class ShipFragment extends CommonFragment {
 
                     BarcodeReadEvent event = (BarcodeReadEvent) msg.obj;
                     String barcode = event.getBarcodeData();
+
                     barcodeScan = barcode;
 
-                    if (mIncode != null) {
-                        Log.d("버퍼onResume", String.valueOf(mIncode));
+                    if (barcodeScan.substring(0, 1).equals("*")) {
+                        barcodeScan = barcode.replace("*", "");
+                    } else {
+                        barcodeScan = barcode;
                     }
 
-                    if (mIncode.contains(barcode)) {
-                        Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
-                        return;
+                    if (mIncode != null) {
+                        if (mIncode.contains(barcode)) {
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
+                    }
+
+                    if (beg_barcode != null) {
+                        if (beg_barcode.equals(barcodeScan)) {
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
                     }
 
                     if (wh_code == null) {
@@ -336,7 +341,22 @@ public class ShipFragment extends CommonFragment {
                         return;
                     }
 
-                    pdaSerialScan();
+                    pdaSerialScan(barcodeScan);
+
+
+                    /*if (barcodeScan.substring(0, 1).equals("*")) {
+                        String s_bar = barcodeScan.replace("*", "");
+
+                        if (mIncode.contains(s_bar)) {
+                            Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            return;
+                        }
+                        beg_barcode = barcodeScan;
+                        pdaSerialScan(s_bar);
+                    } else {
+                        pdaSerialScan(barcodeScan);
+                    }*/
+
 
                     //beg_barcode = barcodeScan;
                 }
@@ -359,6 +379,11 @@ public class ShipFragment extends CommonFragment {
                                 if (msg.what == 1) {
                                     mTwoBtnPopup.hideDialog();
                                     mAdapter.clearData();
+                                    mAdapter.itemsList.clear();
+                                    if (mScanAdapter.itemsList != null) {
+                                        mScanAdapter.clearData();
+                                        mScanAdapter.itemsList.clear();
+                                    }
                                     mAdapter.notifyDataSetChanged();
                                     cst_code = null;
                                     cst_name = null;
@@ -399,6 +424,11 @@ public class ShipFragment extends CommonFragment {
                                 if (msg.what == 1) {
                                     mTwoBtnPopup.hideDialog();
                                     mAdapter.clearData();
+                                    mAdapter.itemsList.clear();
+                                    if (mScanAdapter.itemsList != null) {
+                                        mScanAdapter.clearData();
+                                        mScanAdapter.itemsList.clear();
+                                    }
                                     mAdapter.notifyDataSetChanged();
                                     cst_code = null;
                                     cst_name = null;
@@ -429,6 +459,11 @@ public class ShipFragment extends CommonFragment {
                                 if (msg.what == 1) {
                                     mTwoBtnPopup.hideDialog();
                                     mAdapter.clearData();
+                                    mAdapter.itemsList.clear();
+                                    if (mScanAdapter.itemsList != null) {
+                                        mScanAdapter.clearData();
+                                        mScanAdapter.itemsList.clear();
+                                    }
                                     mAdapter.notifyDataSetChanged();
                                     cst_code = null;
                                     cst_name = null;
@@ -455,6 +490,10 @@ public class ShipFragment extends CommonFragment {
                     break;
 
                 case R.id.btn_next:
+                    if (mAdapter.getItemCount() == 0 || mScanAdapter.getItemCount() == 0) {
+                        Utils.Toast(mContext, "출하 등록할 내역이 없습니다.");
+                        return;
+                    }
                     final String m_date = item_date.getText().toString().replace("-", "");
                     mTwoBtnShipPopup = new TwoBtnShipPopup(getActivity(), "PLT의 중량을 변경 합니다.\n'아니오' 처리시 PLT중량은\n 30KG으로 자동 출하등록 됩니다. ", R.drawable.popup_title_alert, new Handler() {
                         @Override
@@ -473,16 +512,20 @@ public class ShipFragment extends CommonFragment {
                                 startActivityForResult(intent, 100);
                                 //getActivity().finish();
                                 mAdapter.clearData();
+                                mAdapter.itemsList.clear();
                                 mScanAdapter.clearData();
+                                mScanAdapter.itemsList.clear();
                                 et_scan_qty.setText("");
                                 et_cst.setText("");
-                                et_wh.setText("");
+                                //et_wh.setText("");
                                 cst_code = null;
                                 cst_name = null;
                                 deli_code = null;
-                                wh_code = null;
+                                //wh_code = null;
                                 mIncode.clear();
                                 mAdapter.notifyDataSetChanged();
+                                et_wh.setText("[W01] 포승완제창고");
+                                wh_code = "W01";
                             } else {
                                 request_ship_save();
                             }
@@ -525,7 +568,7 @@ public class ShipFragment extends CommonFragment {
                         return;
                     }
 
-                    pdaSerialScan();
+                    pdaSerialScan(barcodeScan);
                     beg_barcode = barcodeScan;
                     et_serial.setText("");
 
@@ -626,7 +669,7 @@ public class ShipFragment extends CommonFragment {
 
         String m_date = item_date.getText().toString().replace("-", "");
         String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
-        Call<ShipCustomListModel> call = service.CustomList("sp_api_shipment_plan_list", "CUSTOM_LIST", fac_code, m_date, mWhModel.getWh_code());
+        Call<ShipCustomListModel> call = service.CustomList("sp_api_shipment_plan_list", "CUSTOM_LIST", fac_code, m_date, wh_code);
 
         call.enqueue(new Callback<ShipCustomListModel>() {
             @Override
@@ -738,12 +781,12 @@ public class ShipFragment extends CommonFragment {
     /**
      * 출하등록 바코드스캔
      */
-    private void pdaSerialScan() {
+    private void pdaSerialScan(final String bar) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
         String m_date = item_date.getText().toString().replace("-", "");
-        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, deli_code, barcodeScan);
+        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, deli_code, bar);
 
         call.enqueue(new Callback<ShipScanModel>() {
             @Override
@@ -753,7 +796,22 @@ public class ShipFragment extends CommonFragment {
                     final ShipScanModel model = response.body();
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (mShipScanModel != null) {
-                        if (mShipScanModel.getFlag() == ResultModel.SUCCESS) {
+                        if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
+                            if (mShipScanModel.getFlag() == -2) {
+                                sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                                mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                                mediaPlayer.start();
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        if (msg.what == 1) {
+                                            mOneBtnPopup.hideDialog();
+
+                                        }
+                                    }
+                                });
+                            }
+
                             float c_cnt = 0;
                             if (model.getItems().size() > 0) {
                                 mShipScanList = model.getItems();
@@ -765,8 +823,10 @@ public class ShipFragment extends CommonFragment {
                             for (int k = 0; k < mAdapter.getItemCount(); k++) {
                                 if (mShipList.get(k).getFg_name().equals(mShipScanModel.getItems().get(0).getFg_name())) {
                                     if (mAdapter.itemsList.get(k).getScan_qty() > mAdapter.itemsList.get(k).getSp_qty()) {
-                                        Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
-                                        return;
+                                        //Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                        //return;
                                     } else {
                                         //c_cnt = mShipList.get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
                                         c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
@@ -781,8 +841,7 @@ public class ShipFragment extends CommonFragment {
 
                             mScanAdapter.notifyDataSetChanged();
                             mAdapter.notifyDataSetChanged();
-                            mIncode.add(barcodeScan);
-
+                            mIncode.add(bar);
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
@@ -861,7 +920,13 @@ public class ShipFragment extends CommonFragment {
             holder.scan_qty.setText(Float.toString(item.getScan_qty()));
             pos++;
 
-            AddData(pos, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+            if (barcodeScan.substring(0, 1).equals("*")) {
+                String s_bar = barcodeScan.replace("*", "");
+                AddData(pos, s_bar, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+            } else {
+                AddData(pos, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+            }
+
             viewAll();
 
             if (mShipScanModel.getFlag() == ResultModel.SUCCESS) {
@@ -1011,7 +1076,22 @@ public class ShipFragment extends CommonFragment {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
-                                        getActivity().finish();
+                                        mOneBtnPopup.hideDialog();
+                                        mAdapter.clearData();
+                                        mAdapter.itemsList.clear();
+                                        mScanAdapter.clearData();
+                                        mScanAdapter.itemsList.clear();
+                                        mAdapter.notifyDataSetChanged();
+                                        cst_code = null;
+                                        cst_name = null;
+                                        deli_code = null;
+                                        //wh_code = null;
+                                        //et_wh.setText("");
+                                        et_cst.setText("");
+                                        mIncode.clear();
+                                        et_scan_qty.setText("");
+                                        deleteDatas();
+                                        //getActivity().finish();
                                         btn_next.setEnabled(true);
                                     }
                                 }

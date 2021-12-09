@@ -1,35 +1,21 @@
 package kr.co.leeku.wms.menu.ship;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.co.leeku.wms.R;
 import kr.co.leeku.wms.common.Utils;
@@ -37,10 +23,7 @@ import kr.co.leeku.wms.custom.CommonFragment;
 import kr.co.leeku.wms.model.ShipListModel;
 import kr.co.leeku.wms.model.ShipScanData;
 import kr.co.leeku.wms.model.ShipScanModel;
-import kr.co.leeku.wms.network.DBHelper;
 import kr.co.leeku.wms.network.MyDatabaseHelper;
-import kr.co.leeku.wms.network.SQLiteControl;
-import kr.co.leeku.wms.network.SQLiteHelper;
 
 public class ShipOkFragment extends CommonFragment {
     Context mContext;
