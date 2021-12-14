@@ -89,6 +89,7 @@ public class OsrFragment extends CommonFragment {
         item_date.setOnClickListener(onClickListener);
         bt_search.setOnClickListener(onClickListener);
         bt_wh.setOnClickListener(onClickListener);
+        et_wh.setOnClickListener(onClickListener);
 
         int year1 = Integer.parseInt(yearFormat.format(currentTime));
         int month1 = Integer.parseInt(monthFormat.format(currentTime));
@@ -222,6 +223,10 @@ public class OsrFragment extends CommonFragment {
                     break;
 
                 case R.id.bt_wh:
+                    requestWhlist();
+                    break;
+
+                case R.id.et_wh:
                     requestWhlist();
                     break;
             }

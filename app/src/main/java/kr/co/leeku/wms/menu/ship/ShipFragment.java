@@ -310,6 +310,9 @@ public class ShipFragment extends CommonFragment {
                     if (mIncode != null) {
                         if (mIncode.contains(barcode)) {
                             Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                             return;
                         }
                     }
@@ -317,6 +320,9 @@ public class ShipFragment extends CommonFragment {
                     if (beg_barcode != null) {
                         if (beg_barcode.equals(barcodeScan)) {
                             Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                             return;
                         }
                     }
@@ -544,6 +550,9 @@ public class ShipFragment extends CommonFragment {
                     if (mIncode != null) {
                         if (mIncode.contains(et_serial.getText().toString())) {
                             Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                             return;
                         }
                     }
