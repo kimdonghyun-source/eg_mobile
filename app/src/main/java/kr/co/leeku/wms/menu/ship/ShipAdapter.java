@@ -66,12 +66,12 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         holder.et_stock_qty.setText(Float.toString(item.getStock_qty()));
         holder.et_scan_qty.setText(Float.toString(item.getScan_qty()));
 
-        for (int i = 0; i < itemsList.size(); i++) {
+        //for (int i = 0; i < itemsList.size(); i++) {
             if (itemsList.get(position).getScan_qty() > itemsList.get(position).getSp_qty()) {
                 holder.et_scan_qty.setBackgroundColor(Color.parseColor("#9bbb59"));
-                Utils.Toast(mActivity, "의뢰수량을 초과했습니다.");
+                //Utils.Toast(mActivity, "의뢰수량을 초과했습니다.");
             }
-        }
+        //}
 
     }
 

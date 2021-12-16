@@ -822,6 +822,7 @@ public class ShipFragment extends CommonFragment {
                             }
 
                             float c_cnt = 0;
+
                             if (model.getItems().size() > 0) {
                                 mShipScanList = model.getItems();
                                 for (int i = 0; i < model.getItems().size(); i++) {
@@ -829,21 +830,7 @@ public class ShipFragment extends CommonFragment {
                                     mScanAdapter.addData(item);
                                 }
                             }
-                            for (int k = 0; k < mAdapter.getItemCount(); k++) {
-                                if (mShipList.get(k).getFg_name().equals(mShipScanModel.getItems().get(0).getFg_name())) {
-                                    if (mAdapter.itemsList.get(k).getScan_qty() > mAdapter.itemsList.get(k).getSp_qty()) {
-                                        //Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
-                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
-                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
-                                        //return;
-                                    } else {
-                                        //c_cnt = mShipList.get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
-                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
-                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
-                                        //mShipList.get(1).setScan_qty(c_cnt);
-                                    }
-                                }
-                            }
+
 
                             et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
 
@@ -851,6 +838,21 @@ public class ShipFragment extends CommonFragment {
                             mScanAdapter.notifyDataSetChanged();
                             mAdapter.notifyDataSetChanged();
                             mIncode.add(bar);
+
+                            float s_cnt = 0;
+                            for (int k = 0; k < mAdapter.getItemCount(); k++) {
+                                if (mShipList.get(k).getFg_name().equals(mShipScanModel.getItems().get(0).getFg_name())) {
+                                    s_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                    if (mShipList.get(k).getSp_qty() < s_cnt) {
+                                        Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                    } else {
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                    }
+                                }
+                            }
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
@@ -878,7 +880,7 @@ public class ShipFragment extends CommonFragment {
     }//Close
 
     public class ShipScanAdapter extends RecyclerView.Adapter<ShipScanAdapter.ViewHolder> {
-
+        float c_cnt = 0;
         ShipScanModel.Item mModel;
         List<ShipScanModel.Item> itemsList;
         Activity mActivity;
@@ -943,6 +945,7 @@ public class ShipFragment extends CommonFragment {
                 ss_cnt = res.getCount();
                 et_scan_qty.setText(Integer.toString(ss_cnt) + " 건");
             }
+
 
         }
 
