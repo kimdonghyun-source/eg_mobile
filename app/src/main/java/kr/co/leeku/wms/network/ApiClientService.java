@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import kr.co.leeku.wms.BuildConfig;
 import kr.co.leeku.wms.model.OsrDetailModel;
 import kr.co.leeku.wms.model.OsrListModel;
+import kr.co.leeku.wms.model.RemeltModel;
 import kr.co.leeku.wms.model.ResultModel;
 import kr.co.leeku.wms.model.ShipCustomListModel;
 import kr.co.leeku.wms.model.ShipListModel;
@@ -203,6 +204,30 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_osr_add.asp")
     Call<ResultModel> postOsrSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 제품재용해등록 바코드스캔
+     * @param proc 프로시저
+     * @param gubun 구분
+     * @param m_date 일자
+     * @param barcode 바코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<RemeltModel> RemeltList(
+            @Query("proc") String proc,
+            @Query("param1") String gubun,
+            @Query("param2") String m_date,
+            @Query("param3") String barcode
+    );
+
+    /**
+     * 제품재용해 저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_remelt_add.asp")
+    Call<ResultModel> postRemeltSave(
             @Body RequestBody body
     );
 

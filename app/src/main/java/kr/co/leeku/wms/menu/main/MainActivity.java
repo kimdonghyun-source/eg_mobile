@@ -27,9 +27,9 @@ public class MainActivity extends CommonCompatActivity {
         setContentView(R.layout.act_main);
 
 
-
         findViewById(R.id.bt_menu_1).setOnClickListener(onClickListener); //출하등록
         findViewById(R.id.bt_menu_2).setOnClickListener(onClickListener); //외주출고
+        findViewById(R.id.bt_menu_3).setOnClickListener(onClickListener); //제품재용해등록
 
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,17 +46,18 @@ public class MainActivity extends CommonCompatActivity {
         });
     }
 
-    private void goLogin(){
-        Intent i = new Intent(mContext,LoginActivity.class);
+    private void goLogin() {
+        Intent i = new Intent(mContext, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             int view = v.getId();
             Intent intent = new Intent(mContext, BaseActivity.class);
-            switch (view){
+            switch (view) {
 
                 //출하등록
                 case R.id.bt_menu_1:
@@ -66,6 +67,11 @@ public class MainActivity extends CommonCompatActivity {
                 //외주출고
                 case R.id.bt_menu_2:
                     intent.putExtra("menu", Define.MENU_OSR);
+                    break;
+
+                //제품재용해등록
+                case R.id.bt_menu_3:
+                    intent.putExtra("menu", Define.MENU_REMELT);
                     break;
 
             }

@@ -17,6 +17,9 @@ public class Define {
     //외주출고상세(바코드)
     public static final int MENU_OSR_DETAIL = 31;
 
+    //제품재용해등록
+    public static final int MENU_REMELT = 4;
+
     //---------------------------------------------------------
 
     //출하등록
@@ -30,6 +33,9 @@ public class Define {
     public static final String TAG_OSR = "osr";
     //외주출고상세(바코드)
     public static final String TAG_OSR_DETAIL = "osr_datail";
+
+    //제품재용해등록
+    public static final String TAG_REMELT = "remelt";
 
 
 }

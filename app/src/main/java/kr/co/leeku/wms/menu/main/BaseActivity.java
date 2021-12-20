@@ -29,6 +29,7 @@ import kr.co.leeku.wms.custom.CommonFragment;
 import kr.co.leeku.wms.menu.osr.OsrDetailFragment;
 import kr.co.leeku.wms.menu.osr.OsrFragment;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
+import kr.co.leeku.wms.menu.remelt.RemeltFragment;
 import kr.co.leeku.wms.menu.ship.ShipChangeFragment;
 import kr.co.leeku.wms.menu.ship.ShipFragment;
 import kr.co.leeku.wms.menu.ship.ShipOkFragment;
@@ -77,6 +78,7 @@ public class BaseActivity extends CommonCompatActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add("출하등록");
         list.add("외주출고");
+        list.add("제품재용해둥록");
 
 
         ListView listView = findViewById(R.id.list);
@@ -143,6 +145,13 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //제품재용해등록
+            case Define.MENU_REMELT: {
+                CommonFragment fragment = new RemeltFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_REMELT, R.id.fl_content);
+                break;
+            }
         }
 
         setTitleImage(menu);
@@ -189,6 +198,12 @@ public class BaseActivity extends CommonCompatActivity {
             //외주출고상세
             case Define.MENU_OSR_DETAIL: {
                 image = R.drawable.eg_title2;
+                break;
+            }
+
+            //제품재용해등록
+            case Define.MENU_REMELT: {
+                image = R.drawable.eg_title4;
                 break;
             }
 
@@ -370,6 +385,13 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_OSR_DETAIL: {
                                         CommonFragment fragment = new OsrDetailFragment();
                                         replaceContent(fragment, Define.TAG_OSR_DETAIL, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //제픔재용해등록
+                                    case Define.MENU_REMELT: {
+                                        CommonFragment fragment = new RemeltFragment();
+                                        replaceContent(fragment, Define.TAG_REMELT, R.id.fl_content);
                                         break;
                                     }
 
