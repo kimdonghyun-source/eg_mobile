@@ -32,8 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""       //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""       //이구산업
+            //buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""       //이구산업
+            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""         //이구산업
+            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""            //이구산업
         }
 
         release {
@@ -41,8 +42,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""       //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""       //이구산업
+            //buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""       //이구산업
+            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""         //이구산업
+            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""            //이구산업
 
             signingConfig signingConfigs.release
         }

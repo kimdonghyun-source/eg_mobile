@@ -10,6 +10,7 @@ import kr.co.leeku.wms.model.RemeltModel;
 import kr.co.leeku.wms.model.ResultModel;
 import kr.co.leeku.wms.model.ShipCustomListModel;
 import kr.co.leeku.wms.model.ShipListModel;
+import kr.co.leeku.wms.model.ShipListPcodeModel;
 import kr.co.leeku.wms.model.ShipScanModel;
 import kr.co.leeku.wms.model.ShipWhListModel;
 import kr.co.leeku.wms.model.UserInfoModel;
@@ -135,7 +136,7 @@ public interface ApiClientService {
     );
 
     /**
-     * 출하등록 바코드 스캔
+     * 출하등록 바코드 스캔(P코드미포함)
      * @param proc 프로시저
      * @param p_mode
      * @param p_fac_code
@@ -143,6 +144,7 @@ public interface ApiClientService {
      * @param p_wh_code
      * @param p_cst_code
      * @param p_deli_place
+     * @param p_pack_no
      * @param p_lbl_id
      * */
     @POST("R2JsonProc.asp")
@@ -154,7 +156,33 @@ public interface ApiClientService {
             @Query("param4") String p_wh_code,
             @Query("param5") String p_cst_code,
             @Query("param6") String p_deli_place,
-            @Query("param7") String p_lbl_id
+            @Query("param7") String p_pack_no,
+            @Query("param8") String p_lbl_id
+    );
+
+    /**
+     * 출하등록 바코드 스캔(P코드포함)
+     * @param proc 프로시저
+     * @param p_mode
+     * @param p_fac_code
+     * @param p_plan_date
+     * @param p_wh_code
+     * @param p_cst_code
+     * @param p_deli_place
+     * @param p_pack_no
+     * @param p_lbl_id
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ShipListPcodeModel> ShipBarcodeScanPcode(
+            @Query("proc") String proc,
+            @Query("param1") String p_mode,
+            @Query("param2") String p_fac_code,
+            @Query("param3") String p_plan_date,
+            @Query("param4") String p_wh_code,
+            @Query("param5") String p_cst_code,
+            @Query("param6") String p_deli_place,
+            @Query("param7") String p_pack_no,
+            @Query("param8") String p_lbl_id
     );
 
     /**
