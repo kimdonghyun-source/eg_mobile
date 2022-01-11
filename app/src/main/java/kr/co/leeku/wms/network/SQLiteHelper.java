@@ -1,3 +1,4 @@
+/*
 package kr.co.leeku.wms.network;
 
 import android.content.Context;
@@ -48,4 +49,4 @@ public class SQLiteHelper extends android.database.sqlite.SQLiteOpenHelper{
         // onCreate를 호출해서 Table 다시 생성
         onCreate(sqLiteDatabase);
     }
-}
+}*/

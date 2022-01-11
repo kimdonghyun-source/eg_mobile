@@ -1,3 +1,4 @@
+/*
 
 package kr.co.leeku.wms.network;
 
@@ -78,4 +79,4 @@ public class SQLiteControl {
         sqlite.close();
         helper.close();
     }
-}
+}*/

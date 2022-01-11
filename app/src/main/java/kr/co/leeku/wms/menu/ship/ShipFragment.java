@@ -13,6 +13,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import kr.co.leeku.wms.common.SharedData;
 import kr.co.leeku.wms.common.Utils;
 import kr.co.leeku.wms.custom.CommonFragment;
 import kr.co.leeku.wms.honeywell.AidcReader;
+import kr.co.leeku.wms.menu.login.LoginActivity;
 import kr.co.leeku.wms.menu.main.BaseActivity;
 import kr.co.leeku.wms.menu.popup.LocationShipCustomList;
 import kr.co.leeku.wms.menu.popup.LocationShipWhList;
@@ -95,7 +97,7 @@ public class ShipFragment extends CommonFragment {
     List<ShipListPcodeModel.Item> mPcodeList;
     ShipListPcodeModel mPcodeModel;
 
-    String wh_code, cst_code, barcodeScan = null, beg_barcode, cst_name, mac, deli_code;
+    String wh_code, cst_code, barcodeScan = null, beg_barcode, cst_name, mac, deli_code, error_str;
 
     private SoundPool sound_pool;
     int soundId;
@@ -108,9 +110,9 @@ public class ShipFragment extends CommonFragment {
     TwoBtnPopup mTwoBtnPopup;
     TwoBtnShipPopup mTwoBtnShipPopup;
     int ss_cnt = 0;
-    int chk = 0, ckh2 = 0, p_pos = 0;
+    int chk = 0, ckh2 = 0, p_pos = 0, chk3 = 0, error_chk = 0;
     String mode;
-
+    Handler sHandler;
     List list = new ArrayList<>();
 
     MyDatabaseHelper myDB;
@@ -207,6 +209,7 @@ public class ShipFragment extends CommonFragment {
         et_wh.setText("[W01] 포승완제창고");
         wh_code = "W01";
 
+
         return v;
 
     }//Close onCreateView
@@ -222,31 +225,30 @@ public class ShipFragment extends CommonFragment {
     // 데이터베이스 읽어오기
     public void viewAll() {
         Cursor res = myDB.getAllData();
+
         if (res.getCount() == 0) {
             return;
         }
 
         StringBuffer buffer = new StringBuffer();
+
         while (res.moveToNext()) {
-            buffer.append("s_pltno: " + res.getString(0) + ", ");
+            Log.d("로그카운트", "s_pltno: " + res.getString(0) + "   s_barcode:" + res.getString(1) + "    s_scanqty:" + res.getString(2)
+                    + "    s_fgname:" + res.getString(3) + "    s_mac:" + res.getString(4) + "    s_position:" + res.getString(5) + "    " +
+                    "s_wgt:" + res.getString(6));
+            /*buffer.append("s_pltno: " + res.getString(0) + ", ");
             buffer.append("s_barcode: " + res.getString(1) + ", ");
             buffer.append("s_scanqty: " + res.getString(2) + ", ");
             buffer.append("s_fgname: " + res.getString(3) + ", ");
             buffer.append("s_mac: " + res.getString(4) + ", ");
             buffer.append("s_position: " + res.getString(5) + ", ");
-            buffer.append("s_wg: " + res.getString(6) + "");
+            buffer.append("s_wgt: " + res.getString(6) + "");*/
         }
     }
 
     // 데이터베이스 삭제하기
     public void deleteDatas() {
         Integer deleteRows = myDB.deleteDatas();
-        if (deleteRows > 0)
-            //Toast.makeText(mContext,"데이터 삭제 성공",Toast.LENGTH_LONG ).show();
-            Log.d("삭제여부", "OK!");
-        else
-            //Toast.makeText(mContext,"데이터 삭제 실패", Toast.LENGTH_LONG ).show();
-            Log.d("삭제여부?", "NO!");
     }
 
 
@@ -259,7 +261,7 @@ public class ShipFragment extends CommonFragment {
         Bundle extras = new Bundle();
         extras.putSerializable("model", mShipModel);
         extras.putSerializable("model1", mShipScanModel);
-        extras.putString("cst_code", cst_code);
+        extras.putString("cst_name", cst_name);
         extras.putSerializable("position", position);
         intent.putExtra("args", extras);
         startActivityForResult(intent, 100);
@@ -301,12 +303,13 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
+
         AidcReader.getInstance().claim(mContext);
         AidcReader.getInstance().setListenerHandler(new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
-
+                    mode = "";
                     BarcodeReadEvent event = (BarcodeReadEvent) msg.obj;
                     String barcode = event.getBarcodeData();
 
@@ -369,9 +372,11 @@ public class ShipFragment extends CommonFragment {
                     }
 
                     if (barcodeScan.substring(0, 1).equals("P")) {
+                        mode = "G";
                         pdaSerialScanPcode(barcodeScan);
                         PIncode.add(barcodeScan);
                     } else {
+                        mode = "S";
                         pdaSerialScan(barcodeScan);
                     }
 
@@ -547,6 +552,7 @@ public class ShipFragment extends CommonFragment {
                                 mAdapter.notifyDataSetChanged();
                                 et_wh.setText("[W01] 포승완제창고");
                                 wh_code = "W01";
+                                onStop();
                             } else {
                                 request_ship_save();
                             }
@@ -840,16 +846,33 @@ public class ShipFragment extends CommonFragment {
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (mShipScanModel != null) {
                         if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
+                            chk3++;
                             if (mShipScanModel.getFlag() == -2) {
+                                error_chk++;
+                                error_str = model.getMSG();
                                 sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                                 mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                                 mediaPlayer.start();
-                                mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+
+                                if (mode.equals("S")) {
+                                    mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                        @Override
+                                        public void handleMessage(Message msg) {
+                                            if (msg.what == 1) {
+                                                mOneBtnPopup.hideDialog();
+                                                chk3 = 0;
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            if (PcodeList.size() == chk3 && error_chk >= 1) {
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), error_str, R.drawable.popup_title_alert, new Handler() {
                                     @Override
                                     public void handleMessage(Message msg) {
                                         if (msg.what == 1) {
                                             mOneBtnPopup.hideDialog();
-
+                                            error_chk = 0;
                                         }
                                     }
                                 });
@@ -864,7 +887,6 @@ public class ShipFragment extends CommonFragment {
                                     mScanAdapter.addData(item);
                                 }
                             }
-
 
                             et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
 
@@ -891,12 +913,12 @@ public class ShipFragment extends CommonFragment {
                             barcodeScan = bar;
 
                             AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+                            //AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), 100, mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
 
-
-                            if (PcodeList.size() == ckh2) {
-
+                            if (PcodeList.size() == chk3) {
                                 chk = 0;
                                 ckh2 = 0;
+                                chk3 = 0;
                                 PcodeList.clear();
                             }
 
@@ -1015,19 +1037,22 @@ public class ShipFragment extends CommonFragment {
                     if (mShipScanModel != null) {
                         if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
 
-                            if (mShipScanModel.getFlag() == -2) {
+                            /*if (mShipScanModel.getFlag() == -2) {
+
                                 sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                                 mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                                 mediaPlayer.start();
+
                                 mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
                                     @Override
                                     public void handleMessage(Message msg) {
+
                                         if (msg.what == 1) {
                                             mOneBtnPopup.hideDialog();
                                         }
                                     }
                                 });
-                            }
+                            }*/
 
                             chk++;
 
@@ -1171,9 +1196,11 @@ public class ShipFragment extends CommonFragment {
         }
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
+
 
     }
 
@@ -1292,6 +1319,12 @@ public class ShipFragment extends CommonFragment {
                                         deleteDatas();
                                         //getActivity().finish();
                                         btn_next.setEnabled(true);
+
+                                        Intent intent = ((Activity) mContext).getIntent();
+                                        ((Activity) mContext).finish(); //현재 액티비티 종료 실시
+                                        ((Activity) mContext).overridePendingTransition(0, 0); //효과 없애기
+                                        ((Activity) mContext).startActivity(intent); //현재 액티비티 재실행 실시
+                                        ((Activity) mContext).overridePendingTransition(0, 0); //효과 없애기
                                     }
                                 }
                             });

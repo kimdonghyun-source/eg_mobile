@@ -93,6 +93,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         //Cursor res = db.rawQuery("select s_pltno, s_barcode, s_scanqty  from "+TABLE_NAME,null);
         Cursor res = db.rawQuery("select s_pltno, s_barcode, s_scanqty, s_fgname, s_mac, s_position, s_wgt from ShipScan ", null);
+
         //
         return res;
     }
@@ -101,7 +102,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public Cursor getData(String fg_nm) {
         SQLiteDatabase db = this.getWritableDatabase();
         //Cursor res = db.rawQuery("select s_pltno, s_barcode, s_scanqty  from "+TABLE_NAME,null);
-        Cursor res = db.rawQuery("select s_pltno, s_barcode, s_scanqty, s_fgname, s_mac, s_position, s_wgt from ShipScan where s_fgname='" + fg_nm + "' ", null);
+        Cursor res = db.rawQuery("select s_pltno, s_barcode, s_scanqty, s_fgname, s_mac, s_position, s_wgt from ShipScan where s_fgname='" + fg_nm + "' order by s_barcode", null);
         //
         return res;
     }

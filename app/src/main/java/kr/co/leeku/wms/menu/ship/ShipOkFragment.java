@@ -36,7 +36,7 @@ public class ShipOkFragment extends CommonFragment {
     int mPosition = -1, cnt;
     //float count = 0;
     ListView ship_ok_listview;
-    String cst_code;
+    String cst_name;
 
     TextView tv_cst_code, tv_itm_name, tv_sp_qty, tv_scan_tot_qty;
     ImageButton btn_next_ok;
@@ -62,7 +62,7 @@ public class ShipOkFragment extends CommonFragment {
         Bundle arguments = getArguments();
         mShipListModel = (ShipListModel) arguments.getSerializable("model");
         mShipScanModel = (ShipScanModel) arguments.getSerializable("model1");
-        cst_code = arguments.getString("cst_code");
+        cst_name = arguments.getString("cst_name");
         mPosition = arguments.getInt("position");
         order = mShipListModel.getItems().get(mPosition);
 
@@ -75,7 +75,7 @@ public class ShipOkFragment extends CommonFragment {
 
         btn_next_ok.setOnClickListener(onClickListener);
 
-        tv_cst_code.setText(cst_code);
+        tv_cst_code.setText(cst_name);
         tv_itm_name.setText(order.getFg_name());
         tv_sp_qty.setText(Float.toString(order.getSp_qty()));
         tv_scan_tot_qty.setText(Float.toString(order.getScan_qty()));

@@ -30,7 +30,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text10" />
+                android:background="@drawable/text1" />
 
             <TextView
                 android:id="@+id/tv_cst_code"
@@ -53,7 +53,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text5" />
+                android:background="@drawable/text6" />
 
             <TextView
                 android:id="@+id/tv_itm_name"
