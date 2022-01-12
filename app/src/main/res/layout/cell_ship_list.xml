@@ -22,8 +22,31 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:layout_gravity="center|left"
+            android:gravity="center|left"
             android:textSize="15dp"
             android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="수량:"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:layout_marginRight="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_stock_qty"
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:layout_marginRight="3dp"/>
 
     </LinearLayout>
 

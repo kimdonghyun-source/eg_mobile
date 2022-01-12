@@ -1207,19 +1207,16 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Integer deleteRows = myDB.deleteDatas();
         deleteDatas();
     }

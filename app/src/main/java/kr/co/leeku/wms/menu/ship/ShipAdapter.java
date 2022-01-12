@@ -65,6 +65,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         holder.et_sp_qty.setText(Float.toString(item.getSp_qty()));
         holder.et_stock_qty.setText(Float.toString(item.getStock_qty()));
         holder.et_scan_qty.setText(Float.toString(item.getScan_qty()));
+        holder.tv_stock_qty.setText(Integer.toString(item.getStock_cnt()));
 
         //for (int i = 0; i < itemsList.size(); i++) {
             if (itemsList.get(position).getScan_qty() > itemsList.get(position).getSp_qty()) {
@@ -89,6 +90,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
         TextView et_plt_no;
         TextView tv_barcode;
         TextView tv_scan_qty;
+        TextView tv_stock_qty;
 
 
         public ViewHolder(View view) {
@@ -98,6 +100,7 @@ public class ShipAdapter extends RecyclerView.Adapter<ShipAdapter.ViewHolder> {
             et_sp_qty = view.findViewById(R.id.et_sp_qty);
             et_stock_qty = view.findViewById(R.id.et_stock_qty);
             et_scan_qty = view.findViewById(R.id.et_scan_qty);
+            tv_stock_qty = view.findViewById(R.id.tv_stock_qty);
 
 
             view.setOnClickListener(new View.OnClickListener() {

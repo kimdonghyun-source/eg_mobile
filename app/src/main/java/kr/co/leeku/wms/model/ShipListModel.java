@@ -24,6 +24,8 @@ public class ShipListModel extends ResultModel {
         float stock_qty;
         //스캔수량
         float scan_qty;
+        //제품수량
+        int stock_cnt;
 
         public String getFg_name() {
             return fg_name;
@@ -67,6 +69,14 @@ public class ShipListModel extends ResultModel {
 
         public void setScan_qty(float scan_qty) {
             this.scan_qty = scan_qty;
+        }
+
+        public int getStock_cnt() {
+            return stock_cnt;
+        }
+
+        public void setStock_cnt(int stock_cnt) {
+            this.stock_cnt = stock_cnt;
         }
     }
 }
