@@ -4,6 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 
 import kr.co.leeku.wms.BuildConfig;
+import kr.co.leeku.wms.model.ItmChkBarcodeModel;
+import kr.co.leeku.wms.model.ItmChkWhModel;
 import kr.co.leeku.wms.model.OsrDetailModel;
 import kr.co.leeku.wms.model.OsrListModel;
 import kr.co.leeku.wms.model.RemeltModel;
@@ -256,6 +258,41 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_remelt_add.asp")
     Call<ResultModel> postRemeltSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 재고실사 창고찾기
+     * @param proc 프로시저
+     * @param gubun 구분
+     * @param m_date 일자
+     * @param fac_code fac_code
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ItmChkWhModel> ItmChkWhList(
+            @Query("proc") String proc,
+            @Query("param1") String gubun,
+            @Query("param2") String m_date,
+            @Query("param3") String fac_code
+    );
+
+    /**
+     * 재고실사 바코드스캔
+     * @param proc 프로시저
+     * @param barcode 바코드
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ItmChkBarcodeModel> ItmChkBarcode(
+            @Query("proc") String proc,
+            @Query("param1") String barcode
+    );
+
+    /**
+     * 재고실사 저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_stockopname_add.asp")
+    Call<ResultModel> postItmChkSave(
             @Body RequestBody body
     );
 

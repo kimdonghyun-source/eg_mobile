@@ -20,6 +20,9 @@ public class Define {
     //제품재용해등록
     public static final int MENU_REMELT = 4;
 
+    //재고실사
+    public static final int MENU_ITEM_CHK = 5;
+
     //---------------------------------------------------------
 
     //출하등록
@@ -36,6 +39,9 @@ public class Define {
 
     //제품재용해등록
     public static final String TAG_REMELT = "remelt";
+
+    //재고실사
+    public static final String TAG_ITEM_CHK = "item_chk";
 
 
 }

@@ -68,7 +68,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean insertData(int position, String barcode, String plt, float scan, String fg, String mac, int wg) {
+    public boolean insertData(int position, String barcode, String plt, float scan, String fg, String mac, float wg) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_POSITION, position);

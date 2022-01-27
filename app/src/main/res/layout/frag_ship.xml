@@ -209,7 +209,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text2"
             android:layout_gravity="center"
-            android:layout_marginLeft="12dp"/>
+            android:layout_marginLeft="8dp"/>
 
         <EditText
             android:id="@+id/et_plt_no"
@@ -231,7 +231,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/text3"
+            android:background="@drawable/text12"
             android:layout_gravity="center"
             android:layout_marginLeft="12dp"/>
 
@@ -248,7 +248,31 @@
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
             android:paddingLeft="3dp"
-            android:paddingRight="3dp"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/tv_slash"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"
+            android:text="/"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/et_wg_qty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.2"
+            android:digits="0123456789.,"
+            android:gravity="center"
+            android:imeOptions="actionDone"
             android:textColor="@color/black"
             android:textSize="15dp" />
 

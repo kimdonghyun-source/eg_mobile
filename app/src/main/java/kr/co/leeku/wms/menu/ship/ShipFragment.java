@@ -74,7 +74,7 @@ public class ShipFragment extends CommonFragment {
     DatePickerDialog.OnDateSetListener callbackMethod;
     EditText et_plt_no, et_cst, et_wh, et_serial;
     RecyclerView ship_listview, ship_scan_listview;
-    TextView item_date, et_scan_qty;
+    TextView item_date, et_scan_qty, et_wg_qty, tv_slash;
     ImageButton bt_cst, bt_wh, btn_next, bt_serial;
 
     LocationShipWhList mLocationWhListPopup;
@@ -120,6 +120,7 @@ public class ShipFragment extends CommonFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mContext = getActivity();
         mIncode = new ArrayList<>();
         PIncode = new ArrayList<>();
@@ -154,7 +155,10 @@ public class ShipFragment extends CommonFragment {
         btn_next = v.findViewById(R.id.btn_next);
         et_serial = v.findViewById(R.id.et_serial);
         bt_serial = v.findViewById(R.id.bt_serial);
+        et_wg_qty = v.findViewById(R.id.et_wg_qty);
+        tv_slash = v.findViewById(R.id.tv_slash);
 
+        tv_slash.setVisibility(View.GONE);
         et_plt_no.setText("1");
 
         ship_listview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
@@ -209,13 +213,15 @@ public class ShipFragment extends CommonFragment {
         et_wh.setText("[W01] 포승완제창고");
         wh_code = "W01";
 
+        Integer deleteRows = myDB.deleteDatas();
+        deleteDatas();
 
         return v;
 
     }//Close onCreateView
 
     //데이터베이스 추가하기
-    public void AddData(int pos, String bar, String plt, float qty, String fg, String mac, int wg) {
+    public void AddData(int pos, String bar, String plt, float qty, String fg, String mac, float wg) {
 
         boolean isInserted = myDB.insertData(pos, bar, plt, qty, fg, mac, wg);
 
@@ -273,14 +279,20 @@ public class ShipFragment extends CommonFragment {
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) {
                 int cnt = 0, c_cnt = 0;
+                float s_qty = 0;
                 mShipModel = (ShipListModel) data.getSerializableExtra("model");
                 mAdapter.setData(mShipModel.getItems());
                 mAdapter.notifyDataSetChanged();
                 ss_cnt = 0;
+                for (int i =0; i < mAdapter.getItemCount(); i++){
+                    s_qty+= mAdapter.itemsList.get(i).getScan_qty();
+                }
                 Cursor res = myDB.getAllData();
                 cnt = res.getCount();
                 et_scan_qty.setText(Integer.toString(cnt) + " 건");
-
+                et_wg_qty.setText(Float.toString(s_qty));
+                tv_slash.setVisibility(View.VISIBLE);
+                Log.d("개수", String.valueOf(mScanAdapter.getItemCount()));
 
                 mIncode.clear();
 
@@ -374,7 +386,7 @@ public class ShipFragment extends CommonFragment {
                     if (barcodeScan.substring(0, 1).equals("P")) {
                         mode = "G";
                         pdaSerialScanPcode(barcodeScan);
-                        PIncode.add(barcodeScan);
+                        //PIncode.add(barcodeScan);
                     } else {
                         mode = "S";
                         pdaSerialScan(barcodeScan);
@@ -416,6 +428,8 @@ public class ShipFragment extends CommonFragment {
                                     mIncode.clear();
                                     PIncode.clear();
                                     et_scan_qty.setText("");
+                                    et_wg_qty.setText("");
+                                    tv_slash.setVisibility(View.GONE);
                                     deleteDatas();
 
                                     int c_year = Integer.parseInt(item_date.getText().toString().substring(0, 4));
@@ -462,6 +476,8 @@ public class ShipFragment extends CommonFragment {
                                     mIncode.clear();
                                     PIncode.clear();
                                     et_scan_qty.setText("");
+                                    et_wg_qty.setText("");
+                                    tv_slash.setVisibility(View.GONE);
                                     deleteDatas();
 
                                     requestWhlist();
@@ -498,6 +514,8 @@ public class ShipFragment extends CommonFragment {
                                     mIncode.clear();
                                     PIncode.clear();
                                     et_scan_qty.setText("");
+                                    et_wg_qty.setText("");
+                                    tv_slash.setVisibility(View.GONE);
                                     deleteDatas();
                                     requestCstlist();
                                 }
@@ -515,7 +533,11 @@ public class ShipFragment extends CommonFragment {
                     break;
 
                 case R.id.btn_next:
-                    if (mAdapter.getItemCount() == 0 || mScanAdapter.getItemCount() == 0) {
+                    int cnt = 0;
+                    Cursor res = myDB.getAllData();
+                    cnt = res.getCount();
+                    Log.d("개수>>>>????", String.valueOf(cnt));
+                    if (mAdapter.getItemCount() == 0 || mScanAdapter.getItemCount() == 0 || cnt == 0 ) {
                         Utils.Toast(mContext, "출하 등록할 내역이 없습니다.");
                         return;
                     }
@@ -541,6 +563,8 @@ public class ShipFragment extends CommonFragment {
                                 mScanAdapter.clearData();
                                 mScanAdapter.itemsList.clear();
                                 et_scan_qty.setText("");
+                                et_wg_qty.setText("");
+                                tv_slash.setVisibility(View.GONE);
                                 et_cst.setText("");
                                 //et_wh.setText("");
                                 cst_code = null;
@@ -746,6 +770,8 @@ public class ShipFragment extends CommonFragment {
                                         mAdapter.clearData();
                                         mAdapter.notifyDataSetChanged();
                                         et_scan_qty.setText("");
+                                        et_wg_qty.setText("");
+                                        tv_slash.setVisibility(View.GONE);
                                     }
                                     ShipListSearch();
 
@@ -846,6 +872,7 @@ public class ShipFragment extends CommonFragment {
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (mShipScanModel != null) {
                         if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
+                            float s_qty = 0;
                             chk3++;
                             if (mShipScanModel.getFlag() == -2) {
                                 error_chk++;
@@ -885,11 +912,13 @@ public class ShipFragment extends CommonFragment {
                                 for (int i = 0; i < model.getItems().size(); i++) {
                                     ShipScanModel.Item item = (ShipScanModel.Item) model.getItems().get(i);
                                     mScanAdapter.addData(item);
+                                    s_qty+= mAdapter.itemsList.get(i).getScan_qty();
                                 }
                             }
 
                             et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
-
+                            et_wg_qty.setText(Float.toString(s_qty));
+                            tv_slash.setVisibility(View.VISIBLE);
                             mScanAdapter.notifyDataSetChanged();
                             mAdapter.notifyDataSetChanged();
                             mIncode.add(bar);
@@ -912,7 +941,8 @@ public class ShipFragment extends CommonFragment {
 
                             barcodeScan = bar;
 
-                            AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(), mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+                            AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(),
+                                    mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
                             //AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), 100, mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
 
                             if (PcodeList.size() == chk3) {
@@ -969,6 +999,7 @@ public class ShipFragment extends CommonFragment {
                         if (mPcodeModel.getFlag() == ResultModel.SUCCESS || mPcodeModel.getFlag() == -2) {
 
                             if (model.getItems().size() > 0) {
+                                PcodeList.clear();
                                 float sum = 0;
                                 mPcodeList = model.getItems();
                                 for (int i = 0; i < model.getItems().size(); i++) {
@@ -976,6 +1007,7 @@ public class ShipFragment extends CommonFragment {
                                     PcodeList.add(mPcodeModel.getItems().get(i).getBarcode());
                                     sum += mPcodeModel.getItems().get(i).getQty();
                                 }
+                                Log.d("p코드리스트", String.valueOf(PcodeList));
 
 
                                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "총 " + mPcodeList.size() + "건" + "     " + sum + "kg\n처리하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
@@ -983,6 +1015,7 @@ public class ShipFragment extends CommonFragment {
                                     public void handleMessage(Message msg) {
                                         if (msg.what == 1) {
                                             mTwoBtnPopup.hideDialog();
+                                            PIncode.add(barcodeScan);
                                             for (int j = 0; j < mPcodeList.size(); j++) {
                                                 pdaSerialChk(PcodeList.get(j));
                                             }
@@ -1152,9 +1185,16 @@ public class ShipFragment extends CommonFragment {
             viewAll();
 
             if (mShipScanModel.getFlag() == ResultModel.SUCCESS) {
+                float s_qty = 0;
                 Cursor res = myDB.getAllData();
                 ss_cnt = res.getCount();
+                for (int i = 0; i<mAdapter.getItemCount(); i++){
+                    mShipList.get(i).getScan_qty();
+                    s_qty+= mAdapter.itemsList.get(i).getScan_qty();
+                }
                 et_scan_qty.setText(Integer.toString(ss_cnt) + " 건");
+                et_wg_qty.setText(Float.toString(s_qty));
+                tv_slash.setVisibility(View.VISIBLE);
             }
 
 
@@ -1313,6 +1353,8 @@ public class ShipFragment extends CommonFragment {
                                         mIncode.clear();
                                         PIncode.clear();
                                         et_scan_qty.setText("");
+                                        et_wg_qty.setText("");
+                                        tv_slash.setVisibility(View.GONE);
                                         deleteDatas();
                                         //getActivity().finish();
                                         btn_next.setEnabled(true);

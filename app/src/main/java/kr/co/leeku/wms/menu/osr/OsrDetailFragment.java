@@ -155,6 +155,7 @@ public class OsrDetailFragment extends CommonFragment {
                         }
                     }
 
+                    beg_barcode = barcodeScan;
                     OsrDetailList(barcodeScan);
 
                 }

@@ -26,6 +26,7 @@ import kr.co.leeku.wms.common.Define;
 import kr.co.leeku.wms.custom.BusProvider;
 import kr.co.leeku.wms.custom.CommonCompatActivity;
 import kr.co.leeku.wms.custom.CommonFragment;
+import kr.co.leeku.wms.menu.itmchk.ItmChkFragment;
 import kr.co.leeku.wms.menu.osr.OsrDetailFragment;
 import kr.co.leeku.wms.menu.osr.OsrFragment;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
@@ -79,6 +80,7 @@ public class BaseActivity extends CommonCompatActivity {
         list.add("출하등록");
         list.add("외주출고");
         list.add("제품재용해둥록");
+        list.add("재고실사");
 
 
         ListView listView = findViewById(R.id.list);
@@ -152,6 +154,15 @@ public class BaseActivity extends CommonCompatActivity {
                 replaceContent(fragment, Define.TAG_REMELT, R.id.fl_content);
                 break;
             }
+
+            //재고실사
+            case Define.MENU_ITEM_CHK: {
+                CommonFragment fragment = new ItmChkFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_ITEM_CHK, R.id.fl_content);
+                break;
+            }
+
         }
 
         setTitleImage(menu);
@@ -204,6 +215,12 @@ public class BaseActivity extends CommonCompatActivity {
             //제품재용해등록
             case Define.MENU_REMELT: {
                 image = R.drawable.eg_title4;
+                break;
+            }
+
+            //재고실사
+            case Define.MENU_ITEM_CHK: {
+                image = R.drawable.eg_title5;
                 break;
             }
 
@@ -392,6 +409,13 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_REMELT: {
                                         CommonFragment fragment = new RemeltFragment();
                                         replaceContent(fragment, Define.TAG_REMELT, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //재고실사
+                                    case Define.MENU_ITEM_CHK: {
+                                        CommonFragment fragment = new ItmChkFragment();
+                                        replaceContent(fragment, Define.TAG_ITEM_CHK, R.id.fl_content);
                                         break;
                                     }
 
