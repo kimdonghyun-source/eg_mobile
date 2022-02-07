@@ -65,6 +65,7 @@ public class ItmChkFragment extends CommonFragment {
     ImageButton btn_next, bt_serial;
     EditText et_serial;
 
+
     Spinner mSpinner;
     int mSpinnerSelect = 0;
     List<Map<String, Object>> spList;
