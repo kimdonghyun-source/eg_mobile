@@ -66,6 +66,7 @@ public class ItmChkFragment extends CommonFragment {
     EditText et_serial;
 
 
+
     Spinner mSpinner;
     int mSpinnerSelect = 0;
     List<Map<String, Object>> spList;
