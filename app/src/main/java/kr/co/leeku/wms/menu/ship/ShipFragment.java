@@ -533,6 +533,7 @@ public class ShipFragment extends CommonFragment {
                     break;
 
                 case R.id.btn_next:
+                    btn_next.setEnabled(false);
                     int cnt = 0;
                     Cursor res = myDB.getAllData();
                     cnt = res.getCount();
@@ -576,6 +577,7 @@ public class ShipFragment extends CommonFragment {
                                 mAdapter.notifyDataSetChanged();
                                 et_wh.setText("[W01] 포승완제창고");
                                 wh_code = "W01";
+                                btn_next.setEnabled(true);
                                 onStop();
                             } else {
                                 request_ship_save();

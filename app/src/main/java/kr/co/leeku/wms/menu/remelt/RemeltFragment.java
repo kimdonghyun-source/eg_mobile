@@ -230,7 +230,7 @@ public class RemeltFragment extends CommonFragment {
                                 if (msg.what == 1) {
                                     request_remelt_save();
                                     mTwoBtnPopup.hideDialog();
-                                    btn_next.setEnabled(true);
+
 
                                 }
                             }

@@ -169,8 +169,10 @@ public class OsrDetailFragment extends CommonFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_next_ok:
+                    btn_next_ok.setEnabled(false);
                     if (mAdapter.getItemCount() <= 0) {
                         Utils.Toast(mContext, "SerialNo를 스캔해주세요.");
+                        btn_next_ok.setEnabled(true);
                         return;
                     }else{
                         request_osr_save();

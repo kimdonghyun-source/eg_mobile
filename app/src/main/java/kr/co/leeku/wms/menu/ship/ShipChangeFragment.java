@@ -116,6 +116,7 @@ public class ShipChangeFragment extends CommonFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_next_ok:
+                    btn_next_ok.setEnabled(false);
                     request_ship_save();
                     break;
 
