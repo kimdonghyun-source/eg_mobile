@@ -26,11 +26,16 @@ import kr.co.leeku.wms.common.Define;
 import kr.co.leeku.wms.custom.BusProvider;
 import kr.co.leeku.wms.custom.CommonCompatActivity;
 import kr.co.leeku.wms.custom.CommonFragment;
+import kr.co.leeku.wms.menu.config.ConfigFragment;
 import kr.co.leeku.wms.menu.itmchk.ItmChkFragment;
 import kr.co.leeku.wms.menu.osr.OsrDetailFragment;
 import kr.co.leeku.wms.menu.osr.OsrFragment;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
 import kr.co.leeku.wms.menu.remelt.RemeltFragment;
+import kr.co.leeku.wms.menu.scrap.LabelFragment;
+import kr.co.leeku.wms.menu.scrap.PrinterFragment;
+import kr.co.leeku.wms.menu.scrap.ScrapDetailFragment;
+import kr.co.leeku.wms.menu.scrap.ScrapFragment;
 import kr.co.leeku.wms.menu.ship.ShipChangeFragment;
 import kr.co.leeku.wms.menu.ship.ShipFragment;
 import kr.co.leeku.wms.menu.ship.ShipOkFragment;
@@ -81,6 +86,9 @@ public class BaseActivity extends CommonCompatActivity {
         list.add("외주출고");
         list.add("제품재용해둥록");
         list.add("재고실사");
+        list.add("스크랩재고현황");
+        list.add("프린터 설정");
+
 
 
         ListView listView = findViewById(R.id.list);
@@ -163,6 +171,44 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //스크랩재고현황
+            case Define.MENU_SCRAP_INSERT: {
+                CommonFragment fragment = new ScrapFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_SCRAP_INSERT, R.id.fl_content);
+                break;
+            }
+
+            //스크랩재고현황(라벨등록)
+            case Define.MENU_LABEL_INSERT: {
+                CommonFragment fragment = new LabelFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_LABEL_INSERT, R.id.fl_content);
+                break;
+            }
+
+            //스크랩재고현황(프린터)
+            case Define.MENU_SCRAP_PRINTER: {
+                CommonFragment fragment = new PrinterFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_SCRAP_PRINTER, R.id.fl_content);
+                break;
+            }
+
+            //스크랩 상세화면
+            case Define.MENU_SCRAP_DETAIL: {
+                CommonFragment fragment = new ScrapDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_SCRAP_DETAIL, R.id.fl_content);
+                break;
+            }
+
+            case Define.MENU_CONFIG: {
+                CommonFragment fragment = new ConfigFragment();
+                replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
+                break;
+            }
+
         }
 
         setTitleImage(menu);
@@ -221,6 +267,39 @@ public class BaseActivity extends CommonCompatActivity {
             //재고실사
             case Define.MENU_ITEM_CHK: {
                 image = R.drawable.eg_title5;
+                break;
+            }
+
+            //스크랩재고현황
+            case Define.MENU_SCRAP_INSERT: {
+                image = R.drawable.eg_title6;
+                break;
+            }
+
+            //스크랩재고현황(라벨등록)
+            case Define.MENU_LABEL_INSERT: {
+                image = R.drawable.eg_title7;
+                break;
+            }
+
+            //스크랩재고현황(프린터)
+            case Define.MENU_SCRAP_PRINTER: {
+                image = R.drawable.eg_title8;
+                /*gnb = R.drawable.titlebar_submenu;
+                isDrawer = View.GONE;
+                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;*/
+                bt_print.setVisibility(View.VISIBLE);
+                break;
+            }
+
+            //스크랩 상세화면
+            case Define.MENU_SCRAP_DETAIL: {
+                image = R.drawable.eg_title9;
+                break;
+            }
+
+            case Define.MENU_CONFIG: {
+                image = R.drawable.menu_setting_title;
                 break;
             }
 
@@ -416,6 +495,33 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_ITEM_CHK: {
                                         CommonFragment fragment = new ItmChkFragment();
                                         replaceContent(fragment, Define.TAG_ITEM_CHK, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //스크랩재고현황
+                                    case Define.MENU_SCRAP_INSERT: {
+                                        CommonFragment fragment = new ScrapFragment();
+                                        replaceContent(fragment, Define.TAG_SCRAP_INSERT, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //스크랩재고현황(라벨등록)
+                                    case Define.MENU_LABEL_INSERT: {
+                                        CommonFragment fragment = new LabelFragment();
+                                        replaceContent(fragment, Define.TAG_LABEL_INSERT, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //스크랩상세화면
+                                    case Define.MENU_SCRAP_DETAIL: {
+                                        CommonFragment fragment = new ScrapDetailFragment();
+                                        replaceContent(fragment, Define.TAG_SCRAP_DETAIL, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    case Define.MENU_CONFIG: {
+                                        CommonFragment fragment = new ConfigFragment();
+                                        replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
                                         break;
                                     }
 

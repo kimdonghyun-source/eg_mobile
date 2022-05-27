@@ -6,10 +6,12 @@ import java.util.concurrent.TimeUnit;
 import kr.co.leeku.wms.BuildConfig;
 import kr.co.leeku.wms.model.ItmChkBarcodeModel;
 import kr.co.leeku.wms.model.ItmChkWhModel;
+import kr.co.leeku.wms.model.LabelComboModel;
 import kr.co.leeku.wms.model.OsrDetailModel;
 import kr.co.leeku.wms.model.OsrListModel;
 import kr.co.leeku.wms.model.RemeltModel;
 import kr.co.leeku.wms.model.ResultModel;
+import kr.co.leeku.wms.model.ScrapListModel;
 import kr.co.leeku.wms.model.ShipCustomListModel;
 import kr.co.leeku.wms.model.ShipListModel;
 import kr.co.leeku.wms.model.ShipListPcodeModel;
@@ -293,6 +295,40 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_stockopname_add.asp")
     Call<ResultModel> postItmChkSave(
+            @Body RequestBody body
+    );
+
+    /**
+     * 스크랩재고현황 조회
+     * @param proc 프로시저
+     * @param s_date 시작일자
+     * @param f_date 종료일자
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ScrapListModel> ScrapList(
+            @Query("proc") String proc,
+            @Query("param1") String s_date,
+            @Query("param2") String f_date
+    );
+
+    /**
+     * 라벨등록 콤보박스 리스트
+     * @param proc
+     * @param gubun 저울=J, I=품명, D=도금
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<LabelComboModel> LabelComboList(
+            @Query("proc") String proc,
+            @Query("param1") String gubun
+    );
+
+    /**
+     * 라벨등록저장
+     * */
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_scrap_save.asp")
+    Call<ResultModel> postLabelSave(
             @Body RequestBody body
     );
 

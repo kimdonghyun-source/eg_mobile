@@ -97,7 +97,7 @@ public class ShipFragment extends CommonFragment {
     List<ShipListPcodeModel.Item> mPcodeList;
     ShipListPcodeModel mPcodeModel;
 
-    String wh_code, cst_code, barcodeScan = null, beg_barcode, cst_name, mac, deli_code, error_str;
+    String wh_code, cst_code, barcodeScan = null, beg_barcode, cst_name, mac, deli_code, error_str, p_barcode;
 
     private SoundPool sound_pool;
     int soundId;
@@ -111,7 +111,7 @@ public class ShipFragment extends CommonFragment {
     TwoBtnShipPopup mTwoBtnShipPopup;
     int ss_cnt = 0;
     int chk = 0, ckh2 = 0, p_pos = 0, chk3 = 0, error_chk = 0;
-    String mode;
+    String mode, cnt_bar;
     Handler sHandler;
     List list = new ArrayList<>();
 
@@ -169,7 +169,6 @@ public class ShipFragment extends CommonFragment {
         mScanAdapter = new ShipScanAdapter(getActivity());
         ship_scan_listview.setAdapter(mScanAdapter);
 
-
         myDB = new MyDatabaseHelper(mContext);
 
         item_date.setOnClickListener(onClickListener);
@@ -221,9 +220,9 @@ public class ShipFragment extends CommonFragment {
     }//Close onCreateView
 
     //데이터베이스 추가하기
-    public void AddData(int pos, String bar, String plt, float qty, String fg, String mac, float wg) {
+    public void AddData(int pos, String bar, String plt, float qty, String fg, String mac, float wg, String pno) {
 
-        boolean isInserted = myDB.insertData(pos, bar, plt, qty, fg, mac, wg);
+        boolean isInserted = myDB.insertData(pos, bar, plt, qty, fg, mac, wg, pno);
 
     }
 
@@ -239,9 +238,9 @@ public class ShipFragment extends CommonFragment {
         StringBuffer buffer = new StringBuffer();
 
         while (res.moveToNext()) {
-            Log.d("로그카운트", "s_pltno: " + res.getString(0) + "   s_barcode:" + res.getString(1) + "    s_scanqty:" + res.getString(2)
+            /*Log.d("로그카운트", "s_pltno: " + res.getString(0) + "   s_barcode:" + res.getString(1) + "    s_scanqty:" + res.getString(2)
                     + "    s_fgname:" + res.getString(3) + "    s_mac:" + res.getString(4) + "    s_position:" + res.getString(5) + "    " +
-                    "s_wgt:" + res.getString(6));
+                    "s_wgt:" + res.getString(6));*/
             /*buffer.append("s_pltno: " + res.getString(0) + ", ");
             buffer.append("s_barcode: " + res.getString(1) + ", ");
             buffer.append("s_scanqty: " + res.getString(2) + ", ");
@@ -252,9 +251,36 @@ public class ShipFragment extends CommonFragment {
         }
     }
 
+    // 데이터베이스 읽어오기
+    public void viewCnt(String bar) {
+        Cursor res = myDB.getCount(bar);
+
+        if (res.getCount() == 0) {
+            return;
+        }
+
+        StringBuffer buffer = new StringBuffer();
+
+        while (res.moveToNext()) {
+            //Log.d("로그카운트", res.getString(0));
+            cnt_bar = res.getString(0);
+        }
+    }
+
     // 데이터베이스 삭제하기
     public void deleteDatas() {
         Integer deleteRows = myDB.deleteDatas();
+    }
+
+    // 데이터베이스 삭제하기
+    public void deleteData_pno(String pno) {
+        Integer deleteRows = myDB.deleteData_pno(pno);
+        if (deleteRows > 0)
+            //Toast.makeText(mContext,"데이터 삭제 성공",Toast.LENGTH_LONG ).show();
+            Log.d("삭제여부", "OK!");
+        else
+            //Toast.makeText(mContext,"데이터 삭제 실패", Toast.LENGTH_LONG ).show();
+            Log.d("삭제여부?", "NO!");
     }
 
 
@@ -386,10 +412,12 @@ public class ShipFragment extends CommonFragment {
                     if (barcodeScan.substring(0, 1).equals("P")) {
                         mode = "G";
                         pdaSerialScanPcode(barcodeScan);
+                        p_barcode = barcodeScan;
                         //PIncode.add(barcodeScan);
                     } else {
                         mode = "S";
-                        pdaSerialScan(barcodeScan);
+                        pdaSerialScanNoP(barcodeScan);
+                        //pdaSerialScanNoP
                     }
 
 
@@ -640,7 +668,8 @@ public class ShipFragment extends CommonFragment {
                         pdaSerialScanPcode(barcodeScan);
                         PIncode.add(barcodeScan);
                     } else {
-                        pdaSerialScan(barcodeScan);
+                        //pdaSerialScan(barcodeScan);
+                        pdaSerialScanNoP(barcodeScan);
                     }
 
                     beg_barcode = barcodeScan;
@@ -857,7 +886,7 @@ public class ShipFragment extends CommonFragment {
     /**
      * 출하등록 바코드스캔(P코드XXX)
      */
-    private void pdaSerialScan(final String bar) {
+    private void pdaSerialScanNoP(final String bar) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
@@ -944,8 +973,224 @@ public class ShipFragment extends CommonFragment {
                             barcodeScan = bar;
 
                             AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(),
-                                    mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+                                    mShipScanModel.getItems().get(0).getFg_name(), mac, 30, p_barcode);
                             //AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), 100, mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+
+                            if (PcodeList.size() == chk3) {
+                                viewCnt(p_barcode);
+                                if (PcodeList.size() == chk3 && PcodeList.size() != Integer.parseInt(cnt_bar)) {
+                                    deleteData_pno(p_barcode);
+                                    PIncode.remove(p_barcode);
+                                    et_scan_qty.setText("0");
+                                    et_wg_qty.setText("0");
+                                    tv_slash.setVisibility(View.GONE);
+                                }
+                            }
+
+                            if (PcodeList.size() == chk3) {
+                                chk = 0;
+                                ckh2 = 0;
+                                chk3 = 0;
+                                PcodeList.clear();
+                            }
+
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
+                        }
+                    }
+                    p_pos = 0;
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ShipScanModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+
+
+    }//Close
+
+    /**
+     * 출하등록 바코드스캔(P코드XXX)
+     */
+    private void pdaSerialScan(final String bar) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
+        String m_date = item_date.getText().toString().replace("-", "");
+
+        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, deli_code, "", bar);
+
+        call.enqueue(new Callback<ShipScanModel>() {
+            @Override
+            public void onResponse(Call<ShipScanModel> call, Response<ShipScanModel> response) {
+                if (response.isSuccessful()) {
+                    mShipScanModel = response.body();
+                    final ShipScanModel model = response.body();
+                    Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (mShipScanModel != null) {
+                        if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
+                            float s_qty = 0;
+                            chk3++;
+
+                            if (model.getItems().size() > 0) {
+                                mShipScanList = model.getItems();
+                                for (int i = 0; i < model.getItems().size(); i++) {
+                                    s_qty+= mAdapter.itemsList.get(i).getScan_qty();
+                                }
+                            }
+
+                            ckh2++;
+                            barcodeScan = bar;
+
+                            AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(),
+                                    mShipScanModel.getItems().get(0).getFg_name(), mac, 30, p_barcode);
+
+                            if (PcodeList.size() == chk3) {
+                                viewCnt(p_barcode);
+
+                                if (PcodeList.size() == chk3 && PcodeList.size() != Integer.parseInt(cnt_bar)) {
+                                //if (PcodeList.size() == chk3 && PcodeList.size() != 1) {
+                                    deleteData_pno(p_barcode);
+                                    PIncode.remove(p_barcode);
+                                    tv_slash.setVisibility(View.GONE);
+                                }else{
+                                    for (int j = 0; j < mPcodeList.size(); j++) {
+                                        barcodeScan = mPcodeList.get(j).getBarcode();
+                                        pdaPcodeCheckOk(barcodeScan);
+                                    }
+                                }
+                            }
+
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
+                        }
+                    }
+                    p_pos = 0;
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ShipScanModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+
+
+    }//Close
+
+    /**
+     * 출하등록 바코드스캔(P코드체크 완료)
+     */
+    private void pdaPcodeCheckOk(final String bar) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        String fac_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.FAC_CODE.name(), "");
+        String m_date = item_date.getText().toString().replace("-", "");
+
+        Call<ShipScanModel> call = service.ShipBarcodeScan("sp_api_shipment_plan_list", "BARCODE_CHECK", fac_code, m_date, wh_code, cst_code, deli_code, "", bar);
+
+        call.enqueue(new Callback<ShipScanModel>() {
+            @Override
+            public void onResponse(Call<ShipScanModel> call, Response<ShipScanModel> response) {
+                if (response.isSuccessful()) {
+                    mShipScanModel = response.body();
+                    final ShipScanModel model = response.body();
+                    Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (mShipScanModel != null) {
+                        if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
+                            float s_qty = 0;
+                            chk3++;
+                            if (mShipScanModel.getFlag() == -2) {
+                                error_chk++;
+                                error_str = model.getMSG();
+                                sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                                mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                                mediaPlayer.start();
+
+                                if (mode.equals("S")) {
+                                    mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                        @Override
+                                        public void handleMessage(Message msg) {
+                                            if (msg.what == 1) {
+                                                mOneBtnPopup.hideDialog();
+                                                chk3 = 0;
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            if (PcodeList.size() == chk3 && error_chk >= 1) {
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), error_str, R.drawable.popup_title_alert, new Handler() {
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        if (msg.what == 1) {
+                                            mOneBtnPopup.hideDialog();
+                                            error_chk = 0;
+                                        }
+                                    }
+                                });
+                            }
+
+                            float c_cnt = 0;
+
+                            if (model.getItems().size() > 0) {
+                                mShipScanList = model.getItems();
+                                for (int i = 0; i < model.getItems().size(); i++) {
+                                    ShipScanModel.Item item = (ShipScanModel.Item) model.getItems().get(i);
+                                    mScanAdapter.addData(item);
+                                    s_qty+= mAdapter.itemsList.get(i).getScan_qty();
+                                }
+                            }
+
+                            et_scan_qty.setText(mScanAdapter.getItemCount() + " 건");
+                            et_wg_qty.setText(Float.toString(s_qty));
+                            tv_slash.setVisibility(View.VISIBLE);
+                            mScanAdapter.notifyDataSetChanged();
+                            mAdapter.notifyDataSetChanged();
+                            mIncode.add(bar);
+
+                            float s_cnt = 0;
+                            for (int k = 0; k < mAdapter.getItemCount(); k++) {
+                                if (mShipList.get(k).getFg_name().equals(mShipScanModel.getItems().get(0).getFg_name())) {
+                                    s_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                    if (mShipList.get(k).getSp_qty() < s_cnt) {
+                                        Utils.Toast(mContext, "의뢰수량을 초과했습니다.");
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                    } else {
+                                        c_cnt = mShipModel.getItems().get(k).getScan_qty() + mShipScanModel.getItems().get(0).getScan_qty();
+                                        mShipModel.getItems().get(k).setScan_qty(c_cnt);
+                                    }
+                                }
+                            }
+                            ckh2++;
+
+                            barcodeScan = bar;
+
+                           /* AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), mShipScanModel.getItems().get(0).getScan_qty(),
+                                    mShipScanModel.getItems().get(0).getFg_name(), mac, 30, p_barcode);*/
+                            //AddData(ckh2, barcodeScan, et_plt_no.getText().toString(), 100, mShipScanModel.getItems().get(0).getFg_name(), mac, 30);
+
 
                             if (PcodeList.size() == chk3) {
                                 chk = 0;
@@ -1009,15 +1254,13 @@ public class ShipFragment extends CommonFragment {
                                     PcodeList.add(mPcodeModel.getItems().get(i).getBarcode());
                                     sum += mPcodeModel.getItems().get(i).getQty();
                                 }
-                                Log.d("p코드리스트", String.valueOf(PcodeList));
-
 
                                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "총 " + mPcodeList.size() + "건" + "     " + sum + "kg\n처리하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                                     @Override
                                     public void handleMessage(Message msg) {
                                         if (msg.what == 1) {
                                             mTwoBtnPopup.hideDialog();
-                                            PIncode.add(barcodeScan);
+                                            //PIncode.add(barcodeScan);
                                             for (int j = 0; j < mPcodeList.size(); j++) {
                                                 pdaSerialChk(PcodeList.get(j));
                                             }
@@ -1071,23 +1314,6 @@ public class ShipFragment extends CommonFragment {
                     Utils.Log("model ==> :" + new Gson().toJson(model));
                     if (mShipScanModel != null) {
                         if (mShipScanModel.getFlag() == ResultModel.SUCCESS || mShipScanModel.getFlag() == -2) {
-
-                            /*if (mShipScanModel.getFlag() == -2) {
-
-                                sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
-                                mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
-                                mediaPlayer.start();
-
-                                mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
-                                    @Override
-                                    public void handleMessage(Message msg) {
-
-                                        if (msg.what == 1) {
-                                            mOneBtnPopup.hideDialog();
-                                        }
-                                    }
-                                });
-                            }*/
 
                             chk++;
 
@@ -1315,7 +1541,7 @@ public class ShipFragment extends CommonFragment {
         obj.addProperty("p_cst_code", cst_code);                   //거래처코드
         obj.addProperty("p_deli_place", deli_code);                 //deli_place
         obj.addProperty("p_plt_wgt", buffer.toString());           //중량
-        obj.addProperty("p_lbl_list", buffer1.toString());         //바코.+드+PLTNO
+        obj.addProperty("p_lbl_list", buffer1.toString());         //바코드+PLTNO
         obj.addProperty("p_user_id", userID);    //로그인ID
 
         list.add(obj);
@@ -1335,7 +1561,7 @@ public class ShipFragment extends CommonFragment {
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if (model.getFlag() == ResultModel.SUCCESS) {
-
+                            btn_next.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록 되었습니다.", R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -1359,7 +1585,7 @@ public class ShipFragment extends CommonFragment {
                                         tv_slash.setVisibility(View.GONE);
                                         deleteDatas();
                                         //getActivity().finish();
-                                        btn_next.setEnabled(true);
+
 
                                         Intent intent = ((Activity) mContext).getIntent();
                                         ((Activity) mContext).finish(); //현재 액티비티 종료 실시
@@ -1371,12 +1597,13 @@ public class ShipFragment extends CommonFragment {
                             });
 
                         } else {
+                            btn_next.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
-                                        btn_next.setEnabled(true);
+
 
                                     }
                                 }
@@ -1385,14 +1612,14 @@ public class ShipFragment extends CommonFragment {
                     }
                 } else {
                     Utils.LogLine(response.message());
-
+                    btn_next.setEnabled(true);
                     mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출하등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
                                 request_ship_save();
                                 mTwoBtnPopup.hideDialog();
-                                btn_next.setEnabled(true);
+
 
                             }
                         }
@@ -1403,13 +1630,14 @@ public class ShipFragment extends CommonFragment {
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
+                btn_next.setEnabled(true);
                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출하등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
                             request_ship_save();
                             mTwoBtnPopup.hideDialog();
-                            btn_next.setEnabled(true);
+
 
                         }
                     }

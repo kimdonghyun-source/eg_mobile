@@ -41,11 +41,11 @@ public class LoginActivity extends CommonCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.act_login);
-
         mContext = this;
+        bt_login = (Button)findViewById(R.id.bt_login);
 
-        Button bt_login = (Button)findViewById(R.id.bt_login);
-        /*bt_login.setOnClickListener(new View.OnClickListener() {
+
+      /*  bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MainActivity.class);
@@ -54,7 +54,7 @@ public class LoginActivity extends CommonCompatActivity {
             }
         });*/
 
-        findViewById(R.id.bt_login).setOnClickListener(new View.OnClickListener() {
+        bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(Utils.isEmpty(et_user_id.getText().toString())) {
@@ -67,9 +67,11 @@ public class LoginActivity extends CommonCompatActivity {
                     et_pass.requestFocus();
                     return;
                 }
+                bt_login.setEnabled(false);
                 requestLogin();
             }
         });
+
         TextView tv_version = findViewById(R.id.tv_version);
         tv_version.setText(Utils.appVersionName(mContext));
 
@@ -126,6 +128,7 @@ public class LoginActivity extends CommonCompatActivity {
                     if (model != null) {
                         //mShipScanModel.getFlag().equals("OK")
                         if(model.getFlag() == ResultModel.SUCCESS) {
+                            bt_login.setEnabled(true);
                             SharedData.setSharedData(mContext, SharedData.UserValue.USER_ID.name(), et_user_id.getText().toString());
                             SharedData.setSharedData(mContext, SharedData.UserValue.IS_LOGIN.name(), true);
                             SharedData.setSharedData(mContext, SharedData.UserValue.SAVE_ID.name(), bt_check.isSelected());
@@ -138,10 +141,12 @@ public class LoginActivity extends CommonCompatActivity {
                             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivityForResult(intent,1000);
                         }else{
+                            bt_login.setEnabled(true);
                             Utils.Toast(mContext, model.getMSG());
                         }
                     }
                 }else{
+                    bt_login.setEnabled(true);
                     Utils.LogLine(response.message());
                     Utils.Toast(mContext, response.code()+" : "+response.message());
                 }
@@ -149,6 +154,7 @@ public class LoginActivity extends CommonCompatActivity {
 
             @Override
             public void onFailure(Call<UserInfoModel> call, Throwable t) {
+                bt_login.setEnabled(true);
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mContext, getString(R.string.error_network));
             }

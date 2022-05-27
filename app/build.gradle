@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 20042201
-        versionName "1.0.0"
+        versionName "1.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -32,9 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""             //이구산업 내부DB
+            //buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""             //이구산업 내부DB(apk 파일 만들때)
             //buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""                 //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/LEEKU_TEST/Mobile/\""        //이구산업 테스트용 25번
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/LEEKU_TEST/Mobile/\""        //이구산업 테스트용 25번
         }
 
         release {
@@ -42,9 +42,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""             //이구산업 내부DB
+            //buildConfigField "String", "API_SERVER", "\"http://dbleeku.leeku.co.kr/ERP/Mobile/\""             //이구산업 내부DB(apk 파일 만들때)
             //buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""                 //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/LEEKU_TEST/Mobile/\""        //이구산업 테스트용 25번
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/LEEKU_TEST/Mobile/\""        //이구산업 테스트용 25번
 
             signingConfig signingConfigs.release
         }
@@ -90,4 +90,5 @@ dependencies {
 
     //activity에서 fragment에 이벤트를 알려주기 위한 라이브러리
     implementation 'com.squareup:otto:1.3.8'
+
 }

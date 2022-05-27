@@ -484,7 +484,7 @@ public class ItmChkFragment extends CommonFragment {
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if (model.getFlag() == ResultModel.SUCCESS) {
-
+                            btn_next.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), "등록되었습니다.", R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -494,7 +494,7 @@ public class ItmChkFragment extends CommonFragment {
                                         adapter.notifyDataSetChanged();
                                         AidcReader.getInstance().claim(mContext);    //스캐너 다시 활성화
                                         //getActivity().finish();
-                                        btn_next.setEnabled(true);
+
                                         mIncode.clear();
                                         beg_barcode = "";
                                         listViewItemList.clear();
@@ -503,13 +503,14 @@ public class ItmChkFragment extends CommonFragment {
                             });
 
                         } else {
+                            btn_next.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
                                         AidcReader.getInstance().claim(mContext);    //스캐너 다시 활성화
-                                        btn_next.setEnabled(true);
+
 
                                     }
                                 }
@@ -518,7 +519,7 @@ public class ItmChkFragment extends CommonFragment {
                     }
                 } else {
                     Utils.LogLine(response.message());
-
+                    btn_next.setEnabled(true);
                     mTwoBtnPopup = new TwoBtnPopup(getActivity(), "등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
@@ -526,7 +527,7 @@ public class ItmChkFragment extends CommonFragment {
                                 request_itm_chk_save();
                                 mTwoBtnPopup.hideDialog();
                                 AidcReader.getInstance().claim(mContext);    //스캐너 다시 활성화
-                                btn_next.setEnabled(true);
+
 
                             }
                         }
@@ -537,6 +538,7 @@ public class ItmChkFragment extends CommonFragment {
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
+                btn_next.setEnabled(true);
                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
@@ -544,7 +546,7 @@ public class ItmChkFragment extends CommonFragment {
                             request_itm_chk_save();
                             mTwoBtnPopup.hideDialog();
                             AidcReader.getInstance().claim(mContext);    //스캐너 다시 활성화
-                            btn_next.setEnabled(true);
+
 
                         }
                     }

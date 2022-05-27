@@ -444,25 +444,26 @@ public class OsrDetailFragment extends CommonFragment {
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if (model.getFlag() == ResultModel.SUCCESS) {
-
+                            btn_next_ok.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), "출고등록 되었습니다.", R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
                                         getActivity().finish();
-                                        btn_next_ok.setEnabled(true);
+
                                     }
                                 }
                             });
 
                         } else {
+                            btn_next_ok.setEnabled(true);
                             mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     if (msg.what == 1) {
                                         mOneBtnPopup.hideDialog();
-                                        btn_next_ok.setEnabled(true);
+
 
                                     }
                                 }
@@ -471,14 +472,14 @@ public class OsrDetailFragment extends CommonFragment {
                     }
                 } else {
                     Utils.LogLine(response.message());
-
+                    btn_next_ok.setEnabled(true);
                     mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출고등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
                                 request_osr_save();
                                 mTwoBtnPopup.hideDialog();
-                                btn_next_ok.setEnabled(true);
+
 
                             }
                         }
@@ -489,13 +490,14 @@ public class OsrDetailFragment extends CommonFragment {
             @Override
             public void onFailure(Call<ResultModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
+                btn_next_ok.setEnabled(true);
                 mTwoBtnPopup = new TwoBtnPopup(getActivity(), "출고등록을 실패하였습니다.\n 재전송 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == 1) {
                             request_osr_save();
                             mTwoBtnPopup.hideDialog();
-                            btn_next_ok.setEnabled(true);
+
 
                         }
                     }
