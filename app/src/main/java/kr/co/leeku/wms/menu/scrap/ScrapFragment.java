@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,9 +35,11 @@ import kr.co.leeku.wms.common.Define;
 import kr.co.leeku.wms.common.SharedData;
 import kr.co.leeku.wms.common.Utils;
 import kr.co.leeku.wms.custom.CommonFragment;
+import kr.co.leeku.wms.honeywell.AidcReader;
 import kr.co.leeku.wms.menu.main.BaseActivity;
 import kr.co.leeku.wms.menu.main.MainActivity;
 import kr.co.leeku.wms.menu.osr.OsrFragment;
+import kr.co.leeku.wms.menu.popup.OneBtnPopup;
 import kr.co.leeku.wms.menu.popup.TwoBtnPopup;
 import kr.co.leeku.wms.menu.remelt.RemeltFragment;
 import kr.co.leeku.wms.model.OsrListModel;
@@ -60,6 +63,7 @@ public class ScrapFragment extends CommonFragment {
     List<ScrapListModel.Item> mScrapList;
     ListAdapter mAdapter;
     TwoBtnPopup mTwoBtnPopup = null;
+    OneBtnPopup mOneBtnPopup = null;
 
 
     @Override
@@ -185,7 +189,7 @@ public class ScrapFragment extends CommonFragment {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.item_date:
                     int c_year = Integer.parseInt(item_date.getText().toString().substring(0, 4));
                     int c_month = Integer.parseInt(item_date.getText().toString().substring(5, 7));
@@ -218,9 +222,6 @@ public class ScrapFragment extends CommonFragment {
             }
         }
     };
-
-
-
 
 
     private void ScrapLabelList(int position) {
@@ -257,7 +258,7 @@ public class ScrapFragment extends CommonFragment {
                         if (mScrapModel.getFlag() == ResultModel.SUCCESS) {
 
                             if (model.getItems().size() > 0) {
-                                if (mAdapter.itemsList != null){
+                                if (mAdapter.itemsList != null) {
                                     mAdapter.clearData();
                                     mAdapter.itemsList.clear();
                                     mAdapter.notifyDataSetChanged();
@@ -294,6 +295,43 @@ public class ScrapFragment extends CommonFragment {
         });
     }//Close
 
+    /**
+     * 스크랩재고현황 삭제
+     */
+    private void ScrapListDelete(String scrap_no) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<ScrapListModel> call = service.ScrapListDelete("sp_api_scrap_del", scrap_no);
+
+        call.enqueue(new Callback<ScrapListModel>() {
+            @Override
+            public void onResponse(Call<ScrapListModel> call, Response<ScrapListModel> response) {
+                if (response.isSuccessful()) {
+                    mScrapModel = response.body();
+                    final ScrapListModel model = response.body();
+                    Utils.Log("model ==> :" + new Gson().toJson(model));
+                    if (mScrapModel != null) {
+                        if (mScrapModel.getFlag() == ResultModel.SUCCESS) {
+                            //Utils.Toast(mContext, "삭제되었습니다.");
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ScrapListModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }//Close
 
 
     public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
@@ -347,6 +385,36 @@ public class ScrapFragment extends CommonFragment {
             holder.tv_location.setText(item.getLocation());
             holder.tv_cmp_nm.setText(item.getCmp_nm());
 
+            holder.bt_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mTwoBtnPopup = new TwoBtnPopup(getActivity(), item.getScrap_no()+" 번 삭제하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 1) {
+                                mTwoBtnPopup.hideDialog();
+                                ScrapListDelete(item.getScrap_no());
+
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), "삭제되었습니다.", R.drawable.popup_title_alert, new Handler() {
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        if (msg.what == 1) {
+                                            mOneBtnPopup.hideDialog();
+                                            itemsList.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, itemsList.size());
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                }
+            });
+
         }
 
         @Override
@@ -363,6 +431,7 @@ public class ScrapFragment extends CommonFragment {
             TextView tv_cnt;
             TextView tv_location;
             TextView tv_cmp_nm;
+            ImageButton bt_delete;
 
             public ViewHolder(View view) {
                 super(view);
@@ -374,6 +443,7 @@ public class ScrapFragment extends CommonFragment {
                 tv_cnt = view.findViewById(R.id.tv_cnt);
                 tv_location = view.findViewById(R.id.tv_location);
                 tv_cmp_nm = view.findViewById(R.id.tv_cmp_nm);
+                bt_delete = view.findViewById(R.id.bt_delete);
 
 
                 view.setOnClickListener(new View.OnClickListener() {
@@ -388,22 +458,6 @@ public class ScrapFragment extends CommonFragment {
             }
         }
     }//Close Adapter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }//Close Fragment

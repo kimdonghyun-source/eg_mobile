@@ -105,15 +105,25 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:gravity="center"/>
-
-
             </LinearLayout>
 
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
+            <ImageButton
+                android:id="@+id/bt_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/trans"
+                android:layout_gravity="center"
+                android:src="@drawable/pallet_merge_bt_delete"/>
 
 
         </LinearLayout>
+
 
 
 

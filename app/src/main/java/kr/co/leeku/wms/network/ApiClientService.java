@@ -312,6 +312,17 @@ public interface ApiClientService {
     );
 
     /**
+     * 스크랩재고현황 삭제
+     * @param proc 프로시저
+     * @param scrap_no 스크랩번호
+     * */
+    @POST("R2JsonProc.asp")
+    Call<ScrapListModel> ScrapListDelete(
+            @Query("proc") String proc,
+            @Query("param1") String scrap_no
+    );
+
+    /**
      * 라벨등록 콤보박스 리스트
      * @param proc
      * @param gubun 저울=J, I=품명, D=도금
