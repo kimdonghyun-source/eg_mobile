@@ -208,8 +208,8 @@ public class PrinterFragment extends CommonFragment {
         buffer.append("TEXT "+40+","+240+","+"\"4\",0,1,1,"+4+","+"\""+scrap_dt+"\""+"\r\n");
         buffer.append("TEXT "+40+","+290+","+"\"5\",0,1,1,"+5+","+"\""+cmp_nm+"\""+"\r\n");
         buffer.append("TEXT "+215+","+290+","+"\"4\",0,1,1,"+4+","+"\""+dogum_nm+"\""+"\r\n");
-        buffer.append(makeCommand(340, 290, CENTER, "위치:"));
-        buffer.append(makeCommand(400, 290, CENTER, location));
+        buffer.append(makeCommand(370, 290, CENTER, "위치:"));
+        buffer.append(makeCommand(430, 290, CENTER, location));
         //buffer.append("TEXT "+215+","+285+","+"\"2\",0,1,1,"+4+","+"\""+"Location:"+"\""+"\r\n");
         //buffer.append("TEXT "+255+","+285+","+"\"2\",0,1,1,"+4+","+"\""+location+"\""+"\r\n");
         buffer.append("TEXT "+40+","+350+","+"\"5\",0,1,1,"+5+","+"\""+cnt+"\""+"\r\n");

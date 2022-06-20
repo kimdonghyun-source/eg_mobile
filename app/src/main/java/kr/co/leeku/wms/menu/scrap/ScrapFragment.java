@@ -357,14 +357,13 @@ public class ScrapFragment extends CommonFragment {
         }
 
         public List<ScrapListModel.Item> getData() {
-            return itemsList;
+            return itemsList ;
         }
 
         public void addData(ScrapListModel.Item item) {
             if (itemsList == null) itemsList = new ArrayList<>();
             itemsList.add(item);
         }
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int z) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_scrap_list, viewGroup, false);

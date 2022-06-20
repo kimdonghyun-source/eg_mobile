@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,14 +54,17 @@ public class LabelFragment extends CommonFragment {
     EditText tv_weight, tv_location;
     Button bt_add, bt_cancel;
     int mSpinnerSelect = 0;
+    int mSpinnerSelect1 = 0;
+    int mSpinnerSelect2 = 0;
+    int mSpinnerSelect3 = 0;
     LabelComboModel mComboModel;
     List<LabelComboModel.Item> mComboList;
-    List<Map<String, Object>> spList;
-    List<Map<String, Object>> spList1;
-    List<Map<String, Object>> spList2;
+    List<Map<String, Object>> spList;       //저울
+    List<Map<String, Object>> spList1;      //품명
+    List<Map<String, Object>> spList2;      //도금
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
-    String cmp_id, cmp_rnk, dogum, cnt, weight;
+    String cmp_id, cmp_rnk, dogum, cnt, weight; //weight 저울?
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,7 @@ public class LabelFragment extends CommonFragment {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1) {
+                                mTwoBtnPopup.hideDialog();
                                 bt_add.setEnabled(false);
                                 request_label_save();
                             }
@@ -131,6 +136,7 @@ public class LabelFragment extends CommonFragment {
         }
     };
 
+    //구분 자동 or 수동
     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -148,6 +154,68 @@ public class LabelFragment extends CommonFragment {
                 spinner_j_no.setVisibility(View.GONE);
             }
 
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    };
+
+
+    //저울 select
+    AdapterView.OnItemSelectedListener onItemSelectedListener1 = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //최초에 setOnItemSelectedListener 하면 이벤트가 들어오기 때문에
+            //onResume에서 mSpinnerSelect에 현재 선택된 position을 넣고 여기서 비교
+            if (mSpinnerSelect1 == position) return;
+
+            mSpinnerSelect1 = position;
+            weight = spList.get(mSpinnerSelect1).get("code").toString();
+            Log.d("저울:", String.valueOf(mSpinnerSelect1));
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    };
+
+    //퓸명 select
+    AdapterView.OnItemSelectedListener onItemSelectedListener2 = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //최초에 setOnItemSelectedListener 하면 이벤트가 들어오기 때문에
+            //onResume에서 mSpinnerSelect에 현재 선택된 position을 넣고 여기서 비교
+            if (mSpinnerSelect2 == position) return;
+
+            mSpinnerSelect2 = position;
+            //cmp_rnk = spList1.get(mSpinnerSelect2).get("code").toString();
+            cmp_id = spList1.get(mSpinnerSelect2).get("id").toString();
+            cmp_rnk = spList1.get(mSpinnerSelect2).get("rnk").toString();
+            Log.d("품명:", String.valueOf(mSpinnerSelect2));
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    };
+
+    //도금 select
+    AdapterView.OnItemSelectedListener onItemSelectedListener3 = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            //최초에 setOnItemSelectedListener 하면 이벤트가 들어오기 때문에
+            //onResume에서 mSpinnerSelect에 현재 선택된 position을 넣고 여기서 비교
+            if (mSpinnerSelect3 == position) return;
+
+            mSpinnerSelect3 = position;
+            dogum = spList2.get(mSpinnerSelect3).get("code").toString();
+
+
+            Log.d("도금:", String.valueOf(mSpinnerSelect3));
 
         }
 
@@ -182,8 +250,8 @@ public class LabelFragment extends CommonFragment {
 
                     SpinnerAdapter spinnerAdapter = new SpinnerAdapter(mContext, list, spinner_j_no, 0);
                     spinner_j_no.setAdapter(spinnerAdapter);
-                    //spinner_j_no.setOnItemSelectedListener(onItemSelectedListener);
-                    spinner_j_no.setSelection(mSpinnerSelect);
+                    spinner_j_no.setOnItemSelectedListener(onItemSelectedListener1);
+                    spinner_j_no.setSelection(mSpinnerSelect1);
                     cnt = spList.get(mSpinnerSelect).get("name").toString();
                     weight = spList.get(mSpinnerSelect).get("value").toString();
                     tv_weight.setText(spList.get(mSpinnerSelect).get("value").toString());
@@ -229,10 +297,10 @@ public class LabelFragment extends CommonFragment {
 
                     SpinnerAdapter spinnerAdapter = new SpinnerAdapter(mContext, list, spinner_itm, 0);
                     spinner_itm.setAdapter(spinnerAdapter);
-                    //spinner_itm.setOnItemSelectedListener(onItemSelectedListener);
-                    spinner_itm.setSelection(mSpinnerSelect);
-                    cmp_id = spList1.get(mSpinnerSelect).get("id").toString();
-                    cmp_rnk = spList1.get(mSpinnerSelect).get("rnk").toString();
+                    spinner_itm.setOnItemSelectedListener(onItemSelectedListener2);
+                    cmp_id = spList1.get(mSpinnerSelect2).get("id").toString();
+                    cmp_rnk = spList1.get(mSpinnerSelect2).get("rnk").toString();
+                    spinner_itm.setSelection(mSpinnerSelect2);
 
 
                 }else{
@@ -274,10 +342,9 @@ public class LabelFragment extends CommonFragment {
 
                     SpinnerAdapter spinnerAdapter = new SpinnerAdapter(mContext, list, spinner_do, 0);
                     spinner_do.setAdapter(spinnerAdapter);
-                    //spinner_itm.setOnItemSelectedListener(onItemSelectedListener);
-                    spinner_do.setSelection(mSpinnerSelect);
-                    dogum = spList2.get(mSpinnerSelect).get("code").toString();
-
+                    spinner_do.setOnItemSelectedListener(onItemSelectedListener3);
+                    spinner_do.setSelection(mSpinnerSelect3);
+                    dogum = spList2.get(mSpinnerSelect1).get("code").toString();
 
                 }else{
                     Utils.LogLine(response.message());
