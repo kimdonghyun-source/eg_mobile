@@ -86,6 +86,7 @@
             android:layout_weight="0.03" />
 
         <EditText
+            android:text="future04!"
             android:id="@+id/et_pass"
             android:layout_width="0dp"
             android:layout_height="match_parent"

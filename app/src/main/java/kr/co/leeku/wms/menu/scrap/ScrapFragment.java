@@ -345,6 +345,7 @@ public class ScrapFragment extends CommonFragment {
             holder.tv_dogum.setText(Integer.toString(item.getDogum()));
             holder.tv_cnt.setText(Integer.toString(item.getCnt()));
             holder.tv_location.setText(item.getLocation());
+            holder.tv_cmp_nm.setText(item.getCmp_nm());
 
         }
 
@@ -361,6 +362,7 @@ public class ScrapFragment extends CommonFragment {
             TextView tv_dogum;
             TextView tv_cnt;
             TextView tv_location;
+            TextView tv_cmp_nm;
 
             public ViewHolder(View view) {
                 super(view);
@@ -371,6 +373,7 @@ public class ScrapFragment extends CommonFragment {
                 tv_dogum = view.findViewById(R.id.tv_dogum);
                 tv_cnt = view.findViewById(R.id.tv_cnt);
                 tv_location = view.findViewById(R.id.tv_location);
+                tv_cmp_nm = view.findViewById(R.id.tv_cmp_nm);
 
 
                 view.setOnClickListener(new View.OnClickListener() {

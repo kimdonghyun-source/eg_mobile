@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/print_text_palletsn"/>
+            android:background="@drawable/print_text_palletsn1"/>
         <TextView
             android:id="@+id/tv_pallet_sn"
             android:layout_width="match_parent"

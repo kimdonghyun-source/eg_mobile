@@ -34,7 +34,7 @@
 
 
         <ImageButton
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:id="@+id/bt_menu_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,6 @@
             android:src="@drawable/main_menu4" />
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/bt_menu_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

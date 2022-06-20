@@ -87,6 +87,7 @@ public class PrinterFragment extends CommonFragment {
             final String dogum_nm = args.getString("DOGUMNM");
             final String location = args.getString("LOCATION");
             final String cnt = args.getString("CNT");
+            tv_pallet_sn.setText(scrap_no);
 
             final String b_SN_2 = args.getString("B_SN_2");
             final String item_qty_2 = args.getString("QTY_2");
@@ -96,12 +97,19 @@ public class PrinterFragment extends CommonFragment {
             Utils.Log("dogum_nm:" + dogum_nm);
             Utils.Log("location:" + location);
             Utils.Log("cnt:" + cnt);
+            final String s_location = "위치: ";
+            final String s_scrap_no = "*" + scrap_no + "*";
+            final String scrapno = scrap_no;
+            String year = scrap_dt.substring(0, 4);
+            String month = scrap_dt.substring(4, 6);
+            String day = scrap_dt.substring(6, 8);
+            final String scrapdt = (year + "-" + month + "-" + day);
 
             btn_next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (btn_change.isSelected()) {
-                        print(scrap_no, scrap_dt, cmp_nm, dogum_nm, location, cnt);
+                        print(s_scrap_no, scrapdt, cmp_nm, dogum_nm, location, cnt, "(Kg)", s_location, scrapno);
 
                     } else {
                         String printer = (String) SharedData.getSharedData(mContext, "printer_info", "");
@@ -121,6 +129,7 @@ public class PrinterFragment extends CommonFragment {
                             });
                         }
                     }
+
                 }
             });
         }
@@ -164,6 +173,7 @@ public class PrinterFragment extends CommonFragment {
     public void onDestroy() {
         try {
             TSCPrinter.shared(mContext).closeSession();
+
         } catch (Exception e) {
 
         }
@@ -180,49 +190,74 @@ public class PrinterFragment extends CommonFragment {
         mContext.startActivity(intent);
     }
 
-    private void print(String scrap_no, String scrap_dt, String cmp_nm, String dogum_nm, String location, String cnt) {
+    private void print(String scrap_no, String scrap_dt, String cmp_nm, String dogum_nm, String location, String cnt, String kg, String loc, String scrapno) {
         StringBuffer buffer = new StringBuffer();
         //buffer.append("BOX 10,10,575,110,2\r\n").append("BAR 10,65,565,2\r\n").append("BAR 150,10,2,99\r\n").append("BAR 400,65,2,44\r\n");
 
-        buffer.append(makeCommand(13, 98, LEFT, "*"+scrap_no+"*"));
-        buffer.append(makeCommand(13, 158, LEFT, scrap_dt));
-        buffer.append(makeCommand(13, 218, LEFT, cmp_nm));
-        buffer.append(makeCommand(175, 218, CENTER, dogum_nm));
-        buffer.append(makeCommand(382, 218, CENTER, "위치: "+location));
-        //buffer.append(makeCommand(13, 278, LEFT, cnt + "(Kg)"));
-        buffer.append("TEXT " + 13 + "," + 278 + "," + "\"5\",0,1,1,0,"+ cnt +  "");
+        //buffer.append(makeCommand(20, 160, LEFT, "*"+scrap_no+"*"));
+        //buffer.append(makeCommand(20, 200, LEFT, scrap_dt));
+        //buffer.append(makeCommand(20, 240, LEFT, cmp_nm));
+        //buffer.append(makeCommand(175, 320, CENTER, dogum_nm));
+        //buffer.append(makeCommand(215, 320, CENTER, "위치: "+location));
+        //buffer.append(makeCommand(13, 258, LEFT, cnt + "(Kg)"));
+
+        //바코드 나오면 주석풀면됨
+        //buffer.append("TEXT "+40+","+190+","+"\"4\",0,1,1,"+4+","+"\""+scrap_no+"\""+"\r\n");
+
+        buffer.append("TEXT "+40+","+200+","+"\"4\",0,1,1,"+4+","+"\""+scrap_no+"\""+"\r\n");
+        buffer.append("TEXT "+40+","+240+","+"\"4\",0,1,1,"+4+","+"\""+scrap_dt+"\""+"\r\n");
+        buffer.append("TEXT "+40+","+290+","+"\"5\",0,1,1,"+5+","+"\""+cmp_nm+"\""+"\r\n");
+        buffer.append("TEXT "+215+","+290+","+"\"4\",0,1,1,"+4+","+"\""+dogum_nm+"\""+"\r\n");
+        buffer.append(makeCommand(340, 290, CENTER, "위치:"));
+        buffer.append(makeCommand(400, 290, CENTER, location));
+        //buffer.append("TEXT "+215+","+285+","+"\"2\",0,1,1,"+4+","+"\""+"Location:"+"\""+"\r\n");
+        //buffer.append("TEXT "+255+","+285+","+"\"2\",0,1,1,"+4+","+"\""+location+"\""+"\r\n");
+        buffer.append("TEXT "+40+","+350+","+"\"5\",0,1,1,"+5+","+"\""+cnt+"\""+"\r\n");
+        buffer.append("TEXT "+175+","+350+","+"\"5\",0,1,1,"+5+","+"\""+kg+"\""+"\r\n");
 
         //buffer.append("TEXT " + 295 + "," + 540 + "," + "\"3\",0,1,1," + 2 + "," + "\"" + "palletSN.trim()" + "\"" + "\r\n");
 
-        //TSCPrinter.shared(mContext).sendConmmand("SIZE 75 mm,75 mm\r\n");
-        TSCPrinter.shared(mContext).sendConmmand("SIZE 75 mm,75 mm\r\n");
-        /*TSCPrinter.shared(mContext).sendConmmand("GAP 3 mm,0\r\n");
-        TSCPrinter.shared(mContext).sendConmmand("DIRECTION 0\r\n");
+        /*TSCPrinter.shared(mContext).sendConmmand("SIZE 30 mm,30 mm\r\n");
+        TSCPrinter.shared(mContext).sendConmmand("GAP 0 mm,0\r\n");
+        TSCPrinter.shared(mContext).sendConmmand("DIRECTION 1\r\n");
         TSCPrinter.shared(mContext).sendConmmand("CLS\r\n");*/
 
-        TSCPrinter.shared(mContext).sendConmmand("GAP 0,0");
-        TSCPrinter.shared(mContext).sendConmmand("DIRECTION 1");
-        TSCPrinter.shared(mContext).sendConmmand("CLS");
+        //TSCPrinter.shared(mContext).sendConmmand("DOWNLOAD F, \"TEST.BAS\"");
+        TSCPrinter.shared(mContext).sendConmmand("SIZE 70 mm,53 mm\n");
+        TSCPrinter.shared(mContext).sendConmmand("GAP 0,0\n");
+        TSCPrinter.shared(mContext).sendConmmand("DIRECTION 0\n");
+        TSCPrinter.shared(mContext).sendConmmand("CLS\n");
+        /*TSCPrinter.shared(mContext).sendConmmand(":START");
+        TSCPrinter.shared(mContext).sendConmmand("INPUT \"CODE 39 : \",C39$\n");
+        TSCPrinter.shared(mContext).sendConmmand("CLS\n");*/
+
+        TSCPrinter.shared(mContext).sendConmmand(String.format("BARCODE 50,50, \"128\",100,1,0,2,2, \"%s\"\r\n",scrapno.trim()));
+        //TSCPrinter.shared(mContext).sendConmmand(String.format("BARCODE 50,50, \"39\",48,1,0,2,5,C39$"));
+
+        /*TSCPrinter.shared(mContext).sendConmmand("GOTO START");
+        TSCPrinter.shared(mContext).sendConmmand("EOP");
+        TSCPrinter.shared(mContext).sendConmmand("TEST");
+        TSCPrinter.shared(mContext).sendConmmand("123456\n");*/
 
 
-        //TSCPrinter.shared(mContext).sendConmmand(String.format("QRCODE 105,140,H,15,A,0, \"%s\"\r\n", scrap_no.trim()));
+
+        //TSCPrinter.shared(mContext).sendConmmand(String.format("QRCODE 105,140,H,15,A,0, \"%s\"\r\n", scrapno));
         //TSCPrinter.shared(mContext).sendConmmand(String.format("TLC39 10,300,0, \"123456,SN00000001,00601,01501\"\n", scrap_no.trim()));
+        //TSCPrinter.shared(mContext).sendConmmand(String.format("BARCODE 50,50, \"TELEPEN\",100,1,0,2,6, \"%s\"",scrapno));
 
-        TSCPrinter.shared(mContext).sendConmmand(String.format("BARCODE 10,350, \"128\",100,1,0,2,2, " + scrap_no));
-        //TSCPrinter.shared(mContext).sendConmmand(String.format("BARCODE 10,10, " +"128"+",100,1,0,2,2, " + scrap_no));
-        String a = String.format("BARCODE 10,10, \"128\",100,1,0,2,2, " + scrap_no );
-        //String a = String.format("BARCODE 10,10, " +"128"+",100,1,0,2,2, " + scrap_no);
-        Log.d("값::", a);
-        Log.d("값11::", scrap_no);
 
-        //TSCPrinter.shared(mContext).sendConmmand(String.format("TLC39 10,350,0, \"050505,\"scrap_no.trim(),\"00601,01501\"\n"));
+
+        //String a = String.format("BARCODE 13,50, 128,100,1,0,2,2, \"%s\"",scrapno);
+        //String a = String.format("QRCODE 105,140,H,15,A,0, \"%s\"\r\n", scrapno);
+        //Log.d("값::", a);
 
 
         try {
             TSCPrinter.shared(mContext).sendConmmand(buffer.toString().getBytes("EUC-KR"));
+            //TSCPrinter.shared(mContext).sendConmmand(buffer.toString().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
         }
-        TSCPrinter.shared(mContext).sendConmmand(String.format("PRINT %d\r\n", 1));
+        TSCPrinter.shared(mContext).sendConmmand(String.format("PRINT %d\n", 1));
     }
 }
